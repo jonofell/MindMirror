@@ -3,8 +3,11 @@ import { StyleSheet, View, TouchableOpacity, ScrollView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { ThemedText } from '@/components/ThemedText';
 import { Theme } from '@/constants/Theme';
+import { useRouter } from 'expo-router';
+import { TouchableOpacity } from 'react-native';
 
 export default function CoachSettingsScreen() {
+  const router = useRouter();
   const [selectedVoice, setSelectedVoice] = useState('mirror');
 
   const voices = [
@@ -43,6 +46,12 @@ export default function CoachSettingsScreen() {
       colors={[Theme.colors.gradientStart, Theme.colors.gradientEnd]}
       style={styles.container}
     >
+      <TouchableOpacity 
+        style={styles.backButton}
+        onPress={() => router.back()}
+      >
+        <ThemedText style={styles.backButtonText}>← Back</ThemedText>
+      </TouchableOpacity>
       <ScrollView style={styles.content}>
         <View style={styles.header}>
           <ThemedText style={styles.title}>Choose Your{'\n'}Journaling Voice</ThemedText>
@@ -90,6 +99,14 @@ export default function CoachSettingsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  backButton: {
+    padding: 20,
+    paddingBottom: 0,
+  },
+  backButtonText: {
+    fontSize: 18,
+    color: '#2D3142',
   },
   content: {
     padding: 20,
