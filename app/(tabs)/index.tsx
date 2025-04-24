@@ -29,9 +29,15 @@ export default function HomeScreen() {
     >
       <View style={styles.header}>
         <View style={styles.titleContainer}>
-          <ThemedText style={styles.greeting}>Good Morning, Jono</ThemedText>
+          <ThemedText style={styles.greeting}>Good {getTimeOfDay()}</ThemedText>
           <HelloWave />
         </View>
+        <ThemedText style={styles.subtitle}>Welcome to MindMirror, your personal journaling companion.</ThemedText>
+      </View>
+      
+      <View style={styles.statsContainer}>
+        <ThemedText style={styles.statsText}>You've written 0 entries</ThemedText>
+        <ThemedText style={styles.statsSubtext}>Start your journaling journey today!</ThemedText>
       </View>
       
       <TouchableOpacity
@@ -42,6 +48,13 @@ export default function HomeScreen() {
       </TouchableOpacity>
     </LinearGradient>
   );
+}
+
+function getTimeOfDay() {
+  const hour = new Date().getHours();
+  if (hour < 12) return "Morning";
+  if (hour < 17) return "Afternoon";
+  return "Evening";
 }
 
 const styles = StyleSheet.create({
@@ -62,6 +75,31 @@ const styles = StyleSheet.create({
     fontFamily: 'DMSerifDisplay_400Regular',
     fontSize: 32,
     color: Theme.colors.text,
+  },
+  subtitle: {
+    fontFamily: 'Inter_400Regular',
+    fontSize: 16,
+    color: Theme.colors.textLight,
+    textAlign: 'center',
+    marginTop: Theme.spacing.md,
+  },
+  statsContainer: {
+    backgroundColor: Theme.colors.card,
+    padding: Theme.spacing.lg,
+    borderRadius: Theme.borderRadius.md,
+    marginTop: Theme.spacing.xl * 2,
+    alignItems: 'center',
+  },
+  statsText: {
+    fontFamily: 'Inter_600SemiBold',
+    fontSize: 18,
+    color: Theme.colors.text,
+  },
+  statsSubtext: {
+    fontFamily: 'Inter_400Regular',
+    fontSize: 14,
+    color: Theme.colors.textLight,
+    marginTop: Theme.spacing.sm,
   },
   button: {
     position: 'absolute',
