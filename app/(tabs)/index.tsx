@@ -1,4 +1,3 @@
-
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
@@ -57,12 +56,12 @@ export default function HomeScreen() {
         </View>
         <ThemedText style={styles.subtitle}>Welcome to MindMirror, your personal journaling companion.</ThemedText>
       </View>
-      
+
       <View style={styles.statsContainer}>
         <ThemedText style={styles.statsText}>You've written {entryCount} entries</ThemedText>
         <ThemedText style={styles.statsSubtext}>Start your journaling journey today!</ThemedText>
       </View>
-      
+
       <TouchableOpacity
         style={styles.button}
         onPress={() => router.push('/journal')}
@@ -102,13 +101,13 @@ const styles = StyleSheet.create({
   },
   greeting: {
     fontFamily: 'Poppins_700Bold',
-    fontSize: Platform.OS === 'ios' ? '7vw' : 32,
+    fontSize: 32,
     color: '#FFFFFF',
     textAlign: 'center',
   },
   subtitle: {
     fontFamily: 'Poppins_400Regular',
-    fontSize: Platform.OS === 'ios' ? '4vw' : 16,
+    fontSize: 16,
     color: '#FFFFFF',
     textAlign: 'center',
     marginTop: '3%',
@@ -124,13 +123,13 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   statsText: {
-    fontFamily: 'Inter_600SemiBold',
-    fontSize: Platform.OS === 'ios' ? '4.5vw' : 18,
+    fontFamily: 'Poppins_600SemiBold',
+    fontSize: 18,
     color: Theme.colors.text,
   },
   statsSubtext: {
-    fontFamily: 'Inter_400Regular',
-    fontSize: Platform.OS === 'ios' ? '3.5vw' : 14,
+    fontFamily: 'Poppins_400Regular',
+    fontSize: 14,
     color: Theme.colors.textLight,
     marginTop: '2%',
   },
@@ -145,8 +144,8 @@ const styles = StyleSheet.create({
     marginBottom: '4%',
   },
   buttonText: {
-    fontFamily: 'Inter_600SemiBold',
-    fontSize: Platform.OS === 'ios' ? '4.5vw' : 18,
+    fontFamily: 'Poppins_600SemiBold',
+    fontSize: 18,
     color: '#FFFFFF',
     textAlign: 'center',
   },
