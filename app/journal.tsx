@@ -1,8 +1,7 @@
-
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, TextInput, TouchableOpacity, View, ScrollView } from 'react-native';
+import { StyleSheet, TouchableOpacity, View, ScrollView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
 import { ThemedText } from '@/components/ThemedText';
@@ -11,49 +10,20 @@ import { JournalEntry } from '@/types/journal';
 
 export default function JournalScreen() {
   const router = useRouter();
-  const [entry, setEntry] = useState('');
-  const [lastEntry, setLastEntry] = useState<JournalEntry | null>(null);
+  const [entries, setEntries] = useState<JournalEntry[]>([]);
 
   useEffect(() => {
-    loadLastEntry();
+    loadEntries();
   }, []);
 
-  const loadLastEntry = async () => {
+  const loadEntries = async () => {
     try {
-      const entries = await AsyncStorage.getItem('journal_entries');
-      if (entries) {
-        const parsedEntries: JournalEntry[] = JSON.parse(entries);
-        if (parsedEntries.length > 0) {
-          setLastEntry(parsedEntries[0]);
-        }
+      const storedEntries = await AsyncStorage.getItem('journal_entries');
+      if (storedEntries) {
+        setEntries(JSON.parse(storedEntries));
       }
     } catch (error) {
       console.error('Error loading entries:', error);
-    }
-  };
-
-  const saveEntry = async () => {
-    if (!entry.trim()) return;
-
-    try {
-      const newEntry: JournalEntry = {
-        id: Date.now().toString(),
-        content: entry,
-        timestamp: Date.now(),
-      };
-
-      const existingEntries = await AsyncStorage.getItem('journal_entries');
-      const entries: JournalEntry[] = existingEntries 
-        ? JSON.parse(existingEntries)
-        : [];
-
-      entries.unshift(newEntry);
-      await AsyncStorage.setItem('journal_entries', JSON.stringify(entries));
-      
-      setEntry('');
-      setLastEntry(newEntry);
-    } catch (error) {
-      console.error('Error saving entry:', error);
     }
   };
 
@@ -63,31 +33,21 @@ export default function JournalScreen() {
       style={styles.container}
     >
       <ScrollView style={styles.content}>
-        <TextInput
-          style={styles.input}
-          value={entry}
-          onChangeText={setEntry}
-          placeholder="What's on your mind?"
-          multiline
-          placeholderTextColor={Theme.colors.textLight}
-        />
-        
         <TouchableOpacity
           style={styles.button}
-          onPress={saveEntry}
+          onPress={() => router.push('/journal/new')}
         >
-          <ThemedText style={styles.buttonText}>Submit Entry</ThemedText>
+          <ThemedText style={styles.buttonText}>Write New Entry</ThemedText>
         </TouchableOpacity>
 
-        {lastEntry && (
-          <View style={styles.lastEntryCard}>
-            <ThemedText style={styles.lastEntryTitle}>Last Entry</ThemedText>
-            <ThemedText style={styles.lastEntryText}>{lastEntry.content}</ThemedText>
-            <ThemedText style={styles.lastEntryDate}>
-              {new Date(lastEntry.timestamp).toLocaleDateString()}
+        {entries.map((entry) => (
+          <View key={entry.id} style={styles.entryCard}>
+            <ThemedText style={styles.entryText}>{entry.content}</ThemedText>
+            <ThemedText style={styles.entryDate}>
+              {new Date(entry.timestamp).toLocaleDateString()}
             </ThemedText>
           </View>
-        )}
+        ))}
       </ScrollView>
     </LinearGradient>
   );
@@ -100,16 +60,6 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     padding: Theme.spacing.lg,
-  },
-  input: {
-    backgroundColor: Theme.colors.card,
-    padding: Theme.spacing.lg,
-    borderRadius: Theme.borderRadius.md,
-    minHeight: 200,
-    fontFamily: 'Inter_400Regular',
-    fontSize: 16,
-    color: Theme.colors.text,
-    ...Theme.shadows.soft,
   },
   button: {
     backgroundColor: Theme.colors.primary,
@@ -124,26 +74,20 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     textAlign: 'center',
   },
-  lastEntryCard: {
+  entryCard: {
     backgroundColor: Theme.colors.card,
     padding: Theme.spacing.lg,
     borderRadius: Theme.borderRadius.md,
     marginBottom: Theme.spacing.xl,
     ...Theme.shadows.soft,
   },
-  lastEntryTitle: {
-    fontFamily: 'DMSerifDisplay_400Regular',
-    fontSize: 24,
-    color: Theme.colors.text,
-    marginBottom: Theme.spacing.md,
-  },
-  lastEntryText: {
+  entryText: {
     fontFamily: 'Inter_400Regular',
     fontSize: 16,
     color: Theme.colors.text,
     marginBottom: Theme.spacing.md,
   },
-  lastEntryDate: {
+  entryDate: {
     fontFamily: 'Inter_400Regular',
     fontSize: 14,
     color: Theme.colors.textLight,
