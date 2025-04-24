@@ -101,8 +101,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   backButton: {
-    padding: 20,
-    paddingBottom: 0,
+    padding: 15,
+    paddingTop: 50,
   },
   backButtonText: {
     fontSize: 18,
@@ -110,9 +110,10 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: 20,
+    flex: 1,
   },
   header: {
-    marginTop: 40,
+    marginTop: 10,
     marginBottom: 30,
     alignItems: 'center',
   },
