@@ -84,9 +84,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: Theme.spacing.lg,
+    paddingBottom: Theme.spacing.xl * 4, // More bottom padding
   },
   header: {
-    marginTop: Theme.spacing.xl * 2,
+    marginTop: Theme.spacing.xl,
+    paddingHorizontal: Theme.spacing.md,
   },
   titleContainer: {
     flexDirection: 'row',
