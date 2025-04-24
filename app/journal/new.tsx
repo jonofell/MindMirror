@@ -1,6 +1,5 @@
-
 import { useRouter } from 'expo-router';
-import React, { useState } from 'react';
+import React, { useState, useLayoutEffect } from 'react';
 import { StyleSheet, TextInput, TouchableOpacity, View, ScrollView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -65,12 +64,33 @@ export default function NewJournalEntry() {
       const entries = existingEntries ? JSON.parse(existingEntries) : [];
       entries.unshift(newEntry);
       await AsyncStorage.setItem('journal_entries', JSON.stringify(entries));
-      
+
       router.replace('/(tabs)');
     } catch (error) {
       console.error('Error saving entry:', error);
     }
   };
+
+  useLayoutEffect(() => {
+    router.setParams({
+      headerShown: true,
+      headerLeft: () => (
+        <TouchableOpacity 
+          onPress={() => router.back()}
+          style={{ marginLeft: 16 }}
+        >
+          <ThemedText style={{ fontSize: 16, fontFamily: 'Poppins_600SemiBold' }}>
+            ← Back
+          </ThemedText>
+        </TouchableOpacity>
+      ),
+      headerTitle: '',
+      headerStyle: {
+        backgroundColor: 'transparent',
+      },
+      headerShadowVisible: false,
+    });
+  }, [router]);
 
   return (
     <LinearGradient
@@ -80,7 +100,7 @@ export default function NewJournalEntry() {
       <ScrollView style={styles.content}>
         <View style={styles.dialogueContainer}>
           <ThemedText style={styles.question}>What's on your mind?</ThemedText>
-          
+
           {conversation.map((entry, index) => (
             <View 
               key={index} 
@@ -103,7 +123,7 @@ export default function NewJournalEntry() {
             multiline
             placeholderTextColor={Theme.colors.textLight}
           />
-          
+
           <TouchableOpacity
             style={[styles.button, isFinished && styles.finishButton]}
             onPress={isFinished ? saveEntry : handleContinue}
