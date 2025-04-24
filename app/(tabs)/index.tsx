@@ -3,8 +3,12 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
-import { useFonts, Inter_400Regular, Inter_600SemiBold } from '@expo-google-fonts/inter';
-import { DMSerifDisplay_400Regular } from '@expo-google-fonts/dm-serif-display';
+import { 
+  useFonts,
+  Poppins_400Regular,
+  Poppins_600SemiBold,
+  Poppins_700Bold 
+} from '@expo-google-fonts/poppins';
 
 import { ThemedText } from '@/components/ThemedText';
 import { Theme } from '@/constants/Theme';
@@ -13,9 +17,9 @@ import { HelloWave } from '@/components/HelloWave';
 export default function HomeScreen() {
   const router = useRouter();
   const [fontsLoaded] = useFonts({
-    Inter_400Regular,
-    Inter_600SemiBold,
-    DMSerifDisplay_400Regular,
+    Poppins_400Regular,
+    Poppins_600SemiBold,
+    Poppins_700Bold,
   });
 
   if (!fontsLoaded) {
@@ -72,14 +76,14 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   greeting: {
-    fontFamily: 'DMSerifDisplay_400Regular',
+    fontFamily: 'Poppins_700Bold',
     fontSize: 32,
-    color: Theme.colors.text,
+    color: '#FFFFFF',
   },
   subtitle: {
-    fontFamily: 'Inter_400Regular',
+    fontFamily: 'Poppins_400Regular',
     fontSize: 16,
-    color: Theme.colors.textLight,
+    color: '#FFFFFF',
     textAlign: 'center',
     marginTop: Theme.spacing.md,
   },
