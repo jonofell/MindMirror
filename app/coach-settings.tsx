@@ -20,7 +20,7 @@ export default function CoachSettingsScreen() {
       id: 'mirror',
       title: 'The Mirror',
       description: 'Neutral & reflective',
-      example: '"You've mentioned this before—want to go deeper?"',
+      example: '"You\'ve mentioned this before—want to go deeper?"',
       icon: '🍃'
     },
     {
