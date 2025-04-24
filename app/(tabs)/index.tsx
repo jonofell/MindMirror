@@ -53,10 +53,13 @@ export default function HomeScreen() {
         </TouchableOpacity>
       </View>
 
-      <View style={styles.entryCard}>
-        <ThemedText style={styles.entryTitle}>April 12th Entry</ThemedText>
-        <ThemedText style={styles.entryText}>Felt a bit better today 😊</ThemedText>
-      </View>
+      <TouchableOpacity 
+        style={styles.entryCard}
+        onPress={() => router.push('/journal')}
+      >
+        <ThemedText style={styles.entryTitle}>View All Entries</ThemedText>
+        <ThemedText style={styles.entryText}>Click to see your journal history ✨</ThemedText>
+      </TouchableOpacity>
     </View>
   );
 }
