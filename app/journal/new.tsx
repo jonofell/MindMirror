@@ -31,7 +31,8 @@ export default function NewJournalEntry() {
       entries.unshift(newEntry);
       await AsyncStorage.setItem('journal_entries', JSON.stringify(entries));
       
-      router.back();
+      // Navigate back to journal screen and trigger refresh
+      router.replace('/journal');
     } catch (error) {
       console.error('Error saving entry:', error);
     }

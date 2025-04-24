@@ -13,7 +13,11 @@ export default function JournalScreen() {
   const [entries, setEntries] = useState<JournalEntry[]>([]);
 
   useEffect(() => {
+    const unsubscribe = router.addListener('focus', () => {
+      loadEntries();
+    });
     loadEntries();
+    return unsubscribe;
   }, []);
 
   const loadEntries = async () => {
