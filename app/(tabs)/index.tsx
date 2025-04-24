@@ -8,6 +8,7 @@ import { DMSerifDisplay_400Regular } from '@expo-google-fonts/dm-serif-display';
 
 import { ThemedText } from '@/components/ThemedText';
 import { Theme } from '@/constants/Theme';
+import { HelloWave } from '@/components/HelloWave';
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -27,7 +28,10 @@ export default function HomeScreen() {
       style={styles.container}
     >
       <View style={styles.header}>
-        <ThemedText style={styles.greeting}>Good Morning, Jono</ThemedText>
+        <View style={styles.titleContainer}>
+          <ThemedText style={styles.greeting}>Good Morning, Jono</ThemedText>
+          <HelloWave />
+        </View>
       </View>
       
       <TouchableOpacity
@@ -48,11 +52,16 @@ const styles = StyleSheet.create({
   header: {
     marginTop: Theme.spacing.xl * 2,
   },
+  titleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+  },
   greeting: {
     fontFamily: 'DMSerifDisplay_400Regular',
     fontSize: 32,
     color: Theme.colors.text,
-    textAlign: 'center',
   },
   button: {
     position: 'absolute',
@@ -62,7 +71,6 @@ const styles = StyleSheet.create({
     backgroundColor: Theme.colors.primary,
     padding: Theme.spacing.lg,
     borderRadius: Theme.borderRadius.md,
-    ...Theme.shadows.soft,
   },
   buttonText: {
     fontFamily: 'Inter_600SemiBold',
