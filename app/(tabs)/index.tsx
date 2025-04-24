@@ -1,7 +1,8 @@
 
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { 
   useFonts,
@@ -16,6 +17,24 @@ import { HelloWave } from '@/components/HelloWave';
 
 export default function HomeScreen() {
   const router = useRouter();
+  const [entryCount, setEntryCount] = useState(0);
+
+  useEffect(() => {
+    loadEntryCount();
+  }, []);
+
+  const loadEntryCount = async () => {
+    try {
+      const storedEntries = await AsyncStorage.getItem('journal_entries');
+      if (storedEntries) {
+        const entries = JSON.parse(storedEntries);
+        setEntryCount(entries.length);
+      }
+    } catch (error) {
+      console.error('Error loading entries:', error);
+    }
+  };
+
   const [fontsLoaded] = useFonts({
     Poppins_400Regular,
     Poppins_600SemiBold,
@@ -40,7 +59,7 @@ export default function HomeScreen() {
       </View>
       
       <View style={styles.statsContainer}>
-        <ThemedText style={styles.statsText}>You've written 0 entries</ThemedText>
+        <ThemedText style={styles.statsText}>You've written {entryCount} entries</ThemedText>
         <ThemedText style={styles.statsSubtext}>Start your journaling journey today!</ThemedText>
       </View>
       
