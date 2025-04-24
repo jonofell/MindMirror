@@ -1,10 +1,10 @@
+
 import React, { useState } from 'react';
 import { StyleSheet, View, TouchableOpacity, ScrollView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { ThemedText } from '@/components/ThemedText';
 import { Theme } from '@/constants/Theme';
 import { useRouter } from 'expo-router';
-import { TouchableOpacity } from 'react-native';
 
 export default function CoachSettingsScreen() {
   const router = useRouter();
