@@ -9,61 +9,60 @@ import { ThemedText } from '@/components/ThemedText';
 import { Theme } from '@/constants/Theme';
 import { JournalEntry } from '@/types/journal';
 
-interface DialogueEntry {
-  text: string;
-  isUser: boolean;
-}
+const FOLLOW_UP_RESPONSES = {
+  work: "That's great to hear about your work progress! How does it make you feel?",
+  good: "I'm glad you're feeling good! What made today special?",
+  tired: "I hear you about being tired. What would help you feel more energized?",
+  default: "Thanks for sharing. Could you tell me more about that?"
+};
 
 export default function NewJournalEntry() {
   const router = useRouter();
   const [currentInput, setCurrentInput] = useState('');
-  const [dialogue, setDialogue] = useState<DialogueEntry[]>([]);
+  const [conversation, setConversation] = useState([]);
   const [isFinished, setIsFinished] = useState(false);
 
-  const followUpQuestions = [
-    "That's great to hear! What specific accomplishments are you proud of?",
-    "How does this progress make you feel?",
-    "What helped you stay focused and productive today?",
-  ];
-  
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(-1);
-
-  const addToDialogue = (text: string, isUser: boolean) => {
-    setDialogue(prev => [...prev, { text, isUser }]);
+  const getResponse = (input) => {
+    const lowercaseInput = input.toLowerCase();
+    if (lowercaseInput.includes('work')) return FOLLOW_UP_RESPONSES.work;
+    if (lowercaseInput.includes('good')) return FOLLOW_UP_RESPONSES.good;
+    if (lowercaseInput.includes('tired')) return FOLLOW_UP_RESPONSES.tired;
+    return FOLLOW_UP_RESPONSES.default;
   };
 
   const handleContinue = () => {
     if (!currentInput.trim()) return;
 
-    addToDialogue(currentInput, true);
-    setCurrentInput('');
+    const newConversation = [...conversation, 
+      { text: currentInput, isUser: true }
+    ];
 
-    if (currentQuestionIndex < followUpQuestions.length - 1) {
-      const nextQuestion = followUpQuestions[currentQuestionIndex + 1];
-      addToDialogue(nextQuestion, false);
-      setCurrentQuestionIndex(prev => prev + 1);
+    if (conversation.length < 2) {
+      const response = getResponse(currentInput);
+      newConversation.push({ text: response, isUser: false });
+      setIsFinished(false);
     } else {
       setIsFinished(true);
     }
+
+    setConversation(newConversation);
+    setCurrentInput('');
   };
 
   const saveEntry = async () => {
     try {
-      const content = dialogue
-        .map(entry => `${entry.isUser ? "You" : "MindMirror"}: ${entry.text}`)
+      const content = conversation
+        .map(msg => `${msg.isUser ? "You" : "MindMirror"}: ${msg.text}`)
         .join('\n\n');
 
-      const newEntry: JournalEntry = {
+      const newEntry = {
         id: Date.now().toString(),
         content,
         timestamp: Date.now(),
       };
 
       const existingEntries = await AsyncStorage.getItem('journal_entries');
-      const entries: JournalEntry[] = existingEntries 
-        ? JSON.parse(existingEntries)
-        : [];
-
+      const entries = existingEntries ? JSON.parse(existingEntries) : [];
       entries.unshift(newEntry);
       await AsyncStorage.setItem('journal_entries', JSON.stringify(entries));
       
@@ -82,7 +81,7 @@ export default function NewJournalEntry() {
         <View style={styles.dialogueContainer}>
           <ThemedText style={styles.question}>What's on your mind?</ThemedText>
           
-          {dialogue.map((entry, index) => (
+          {conversation.map((entry, index) => (
             <View 
               key={index} 
               style={[
@@ -166,14 +165,12 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter_400Regular',
     fontSize: 16,
     color: Theme.colors.text,
-    ...Theme.shadows.soft,
   },
   button: {
     backgroundColor: Theme.colors.primary,
     padding: Theme.spacing.lg,
     borderRadius: Theme.borderRadius.md,
     marginTop: Theme.spacing.lg,
-    ...Theme.shadows.soft,
   },
   finishButton: {
     backgroundColor: '#4CAF50',
