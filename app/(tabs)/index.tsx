@@ -1,4 +1,3 @@
-
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import React from 'react';
@@ -9,7 +8,7 @@ import { Theme } from '@/constants/Theme';
 
 export default function HomeScreen() {
   const router = useRouter();
-  
+
   const [fontsLoaded] = useFonts({
     Poppins_400Regular,
     Poppins_600SemiBold,
@@ -47,7 +46,7 @@ export default function HomeScreen() {
         <TouchableOpacity style={styles.secondaryButton}>
           <ThemedText style={styles.secondaryButtonText}>🕯️ Set intention</ThemedText>
         </TouchableOpacity>
-        
+
         <TouchableOpacity 
           style={styles.secondaryButton}
           onPress={() => router.push('/coach-settings')}

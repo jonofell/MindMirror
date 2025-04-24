@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
     padding: Theme.spacing.lg,
     borderRadius: Theme.borderRadius.md,
     marginVertical: Theme.spacing.xl,
-    ...Theme.shadows.soft,
+    boxShadow: '0px 2px 10px rgba(0, 0, 0, 0.05)', // Updated shadow style
   },
   buttonText: {
     fontFamily: 'Inter_600SemiBold',
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
     padding: Theme.spacing.lg,
     borderRadius: Theme.borderRadius.md,
     marginBottom: Theme.spacing.xl,
-    ...Theme.shadows.soft,
+    boxShadow: '0px 2px 10px rgba(0, 0, 0, 0.05)', // Updated shadow style
   },
   entryText: {
     fontFamily: 'Inter_400Regular',

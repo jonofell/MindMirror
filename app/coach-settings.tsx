@@ -13,7 +13,7 @@ export default function CoachSettingsScreen() {
       id: 'coach',
       title: 'The Coach',
       description: 'Supportive & goal-oriented',
-      example: '"What's one thing you can take action on today?"',
+      example: '"What\'s one thing you can take action on today?"',
       icon: '⭐️'
     },
     {
