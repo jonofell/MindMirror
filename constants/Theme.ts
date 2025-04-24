@@ -1,13 +1,13 @@
 
 export const Theme = {
   colors: {
-    primary: '#7B88A8',
-    background: '#F8F9FC',
+    primary: '#FF7E67',
+    background: '#FFF5F5',
     text: '#2D3142',
     textLight: '#6B7280',
     card: '#FFFFFF',
-    gradientStart: '#E9ECFF',
-    gradientEnd: '#F8F9FC',
+    gradientStart: '#FF9190',
+    gradientEnd: '#B5C6E0',
   },
   spacing: {
     sm: 8,
