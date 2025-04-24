@@ -28,7 +28,10 @@ export default function HomeScreen() {
         <ThemedText style={styles.subtitle}>Let's tune in. What's on your mind?</ThemedText>
       </View>
 
-      <TouchableOpacity style={styles.mainButton}>
+      <TouchableOpacity 
+        style={styles.mainButton}
+        onPress={() => router.push('/journal/new')}
+      >
         <LinearGradient
           colors={['#FFB6A9', '#B5C6E0']}
           start={{ x: 0, y: 0 }}
