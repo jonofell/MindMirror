@@ -84,10 +84,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: Theme.spacing.lg,
-    paddingBottom: Theme.spacing.xl * 4, // More bottom padding
+    paddingTop: Theme.spacing.xl,
+    paddingBottom: Theme.spacing.xl * 5,
   },
   header: {
-    marginTop: Theme.spacing.xl,
+    marginTop: Theme.spacing.lg,
     paddingHorizontal: Theme.spacing.md,
   },
   titleContainer: {
@@ -95,6 +96,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
+    flexWrap: 'wrap',
   },
   greeting: {
     fontFamily: 'Poppins_700Bold',
@@ -128,12 +130,13 @@ const styles = StyleSheet.create({
   },
   button: {
     position: 'absolute',
-    bottom: Theme.spacing.xl * 2,
+    bottom: Theme.spacing.xl * 3,
     left: Theme.spacing.lg,
     right: Theme.spacing.lg,
     backgroundColor: Theme.colors.primary,
     padding: Theme.spacing.lg,
     borderRadius: Theme.borderRadius.md,
+    marginBottom: Theme.spacing.lg,
   },
   buttonText: {
     fontFamily: 'Inter_600SemiBold',
