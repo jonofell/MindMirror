@@ -48,8 +48,11 @@ export default function HomeScreen() {
           <ThemedText style={styles.secondaryButtonText}>🕯️ Set intention</ThemedText>
         </TouchableOpacity>
         
-        <TouchableOpacity style={styles.secondaryButton}>
-          <ThemedText style={styles.secondaryButtonText}>🎙️ Talk to a Coach</ThemedText>
+        <TouchableOpacity 
+          style={styles.secondaryButton}
+          onPress={() => router.push('/coach-settings')}
+        >
+          <ThemedText style={styles.secondaryButtonText}>⚙️ Coach Settings</ThemedText>
         </TouchableOpacity>
       </View>
 
