@@ -3,7 +3,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View, Platform, Dimensions } from 'react-native';
 import { 
   useFonts,
   Poppins_400Regular,
@@ -83,13 +83,14 @@ function getTimeOfDay() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: Theme.spacing.lg,
-    paddingTop: Theme.spacing.xl,
-    paddingBottom: Theme.spacing.xl * 5,
+    padding: '5%',
+    paddingTop: '8%',
+    paddingBottom: '15%',
   },
   header: {
-    marginTop: Theme.spacing.lg,
-    paddingHorizontal: Theme.spacing.md,
+    marginTop: '5%',
+    paddingHorizontal: '4%',
+    width: '100%',
   },
   titleContainer: {
     flexDirection: 'row',
@@ -97,50 +98,55 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: 8,
     flexWrap: 'wrap',
+    width: '100%',
   },
   greeting: {
     fontFamily: 'Poppins_700Bold',
-    fontSize: 32,
+    fontSize: Platform.OS === 'ios' ? '7vw' : 32,
     color: '#FFFFFF',
+    textAlign: 'center',
   },
   subtitle: {
     fontFamily: 'Poppins_400Regular',
-    fontSize: 16,
+    fontSize: Platform.OS === 'ios' ? '4vw' : 16,
     color: '#FFFFFF',
     textAlign: 'center',
-    marginTop: Theme.spacing.md,
+    marginTop: '3%',
+    paddingHorizontal: '5%',
   },
   statsContainer: {
     backgroundColor: Theme.colors.card,
-    padding: Theme.spacing.lg,
+    padding: '5%',
     borderRadius: Theme.borderRadius.md,
-    marginTop: Theme.spacing.xl * 2,
+    marginTop: '10%',
     alignItems: 'center',
+    width: '90%',
+    alignSelf: 'center',
   },
   statsText: {
     fontFamily: 'Inter_600SemiBold',
-    fontSize: 18,
+    fontSize: Platform.OS === 'ios' ? '4.5vw' : 18,
     color: Theme.colors.text,
   },
   statsSubtext: {
     fontFamily: 'Inter_400Regular',
-    fontSize: 14,
+    fontSize: Platform.OS === 'ios' ? '3.5vw' : 14,
     color: Theme.colors.textLight,
-    marginTop: Theme.spacing.sm,
+    marginTop: '2%',
   },
   button: {
     position: 'absolute',
-    bottom: Theme.spacing.xl * 3,
-    left: Theme.spacing.lg,
-    right: Theme.spacing.lg,
+    bottom: '8%',
+    left: '5%',
+    right: '5%',
     backgroundColor: Theme.colors.primary,
-    padding: Theme.spacing.lg,
+    padding: '4%',
     borderRadius: Theme.borderRadius.md,
-    marginBottom: Theme.spacing.lg,
+    marginBottom: '4%',
   },
   buttonText: {
     fontFamily: 'Inter_600SemiBold',
-    fontSize: 18,
+    fontSize: Platform.OS === 'ios' ? '4.5vw' : 18,
     color: '#FFFFFF',
     textAlign: 'center',
   },
