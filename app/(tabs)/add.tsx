@@ -21,3 +21,13 @@ const styles = StyleSheet.create({
     marginTop: 60,
   },
 });
+import { View } from 'react-native';
+import { ThemedText } from '@/components/ThemedText';
+
+export default function AddScreen() {
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <ThemedText>Add Entry</ThemedText>
+    </View>
+  );
+}
