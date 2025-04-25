@@ -147,8 +147,9 @@ const styles = StyleSheet.create({
   },
   dialogueContainer: {
     padding: Theme.spacing.lg,
-    paddingTop: 60,
-    paddingBottom: 100,
+    paddingTop: 20,
+    paddingBottom: 150,
+    flex: 1,
   },
   question: {
     fontSize: 24,
