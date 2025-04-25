@@ -111,11 +111,13 @@ const styles = StyleSheet.create({
   content: {
     padding: 20,
     flex: 1,
+    paddingBottom: 100,
   },
   header: {
-    marginTop: 10,
-    marginBottom: 30,
+    marginTop: 20,
+    marginBottom: 40,
     alignItems: 'center',
+    paddingHorizontal: 20,
   },
   title: {
     fontSize: 36,
