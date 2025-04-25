@@ -173,7 +173,8 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: 'row',
-    padding: 16,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
     borderTopWidth: 1,
     borderTopColor: '#eee',
     backgroundColor: '#fff',
