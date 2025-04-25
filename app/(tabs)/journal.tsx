@@ -37,7 +37,14 @@ export default function JournalScreen() {
             <ThemedText style={styles.entryDate}>
               {new Date(entry.timestamp).toLocaleDateString()}
             </ThemedText>
-            <ThemedText style={styles.entryContent}>{entry.content}</ThemedText>
+            {entry.content.split('\n\n').map((section, index) => {
+              const [prompt, response] = section.split('\n');
+              return (
+                <Collapsible key={index} title={prompt}>
+                  <ThemedText style={styles.entryContent}>{response}</ThemedText>
+                </Collapsible>
+              );
+            })}
           </View>
         ))}
       </ScrollView>
@@ -79,5 +86,6 @@ const styles = StyleSheet.create({
   entryContent: {
     fontSize: 16,
     fontFamily: 'Poppins_400Regular',
+    marginTop: 8,
   },
 });
