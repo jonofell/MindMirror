@@ -163,10 +163,8 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: '#eee',
     backgroundColor: '#fff',
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
+    position: 'relative',
+    marginTop: 'auto',
   },
   button: {
     flex: 1,
