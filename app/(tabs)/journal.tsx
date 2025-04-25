@@ -39,12 +39,14 @@ export default function JournalScreen() {
               {new Date(entry.timestamp).toLocaleDateString()}
             </ThemedText>
             {entry.content.split('\n\n').map((section, index) => {
-              const [prompt, response] = section.split('\n');
-              return (
+              const parts = section.split('\n');
+              const prompt = parts[0] || '';
+              const response = parts.slice(1).join('\n') || '';
+              return prompt && response ? (
                 <Collapsible key={index} title={prompt}>
                   <ThemedText style={styles.entryContent}>{response}</ThemedText>
                 </Collapsible>
-              );
+              ) : null;
             })}
           </View>
         ))}
