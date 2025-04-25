@@ -1,6 +1,7 @@
+
 import { useRouter } from 'expo-router';
-import React, { useState } from 'react';
-import { StyleSheet, TextInput, TouchableOpacity, View, KeyboardAvoidingView, Platform } from 'react-native';
+import React, { useState, useLayoutEffect } from 'react';
+import { StyleSheet, TextInput, TouchableOpacity, View, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ThemedText } from '@/components/ThemedText';
 import { Theme } from '@/constants/Theme';
@@ -16,6 +17,12 @@ export default function NewJournalEntry() {
   const [currentPrompt, setCurrentPrompt] = useState(0);
   const [currentEntry, setCurrentEntry] = useState('');
   const [entries, setEntries] = useState<{text: string, prompt: string}[]>([]);
+
+  useLayoutEffect(() => {
+    router.setParams({
+      headerShown: false
+    });
+  }, [router]);
 
   const handleSubmitEntry = () => {
     if (!currentEntry.trim()) return;
@@ -52,7 +59,14 @@ export default function NewJournalEntry() {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.container}
     >
-      <View style={styles.content}>
+      <TouchableOpacity 
+        onPress={() => router.back()}
+        style={styles.backButton}
+      >
+        <ThemedText style={styles.backButtonText}>← Back</ThemedText>
+      </TouchableOpacity>
+
+      <ScrollView style={styles.content} keyboardShouldPersistTaps="handled">
         {entries.map((entry, index) => (
           <View key={index} style={styles.entryContainer}>
             <ThemedText style={styles.entryPrompt}>{entry.prompt}</ThemedText>
@@ -68,10 +82,10 @@ export default function NewJournalEntry() {
             onChangeText={setCurrentEntry}
             multiline
             placeholder="Write..."
-            placeholderTextColor="#666"
+            placeholderTextColor="#999"
           />
         </View>
-      </View>
+      </ScrollView>
 
       <View style={styles.buttonContainer}>
         <TouchableOpacity 
@@ -84,7 +98,9 @@ export default function NewJournalEntry() {
           style={[styles.button, styles.finishButton]} 
           onPress={saveEntry}
         >
-          <ThemedText style={styles.buttonText}>Finish entry</ThemedText>
+          <ThemedText style={[styles.buttonText, styles.finishButtonText]}>
+            Finish entry
+          </ThemedText>
         </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>
@@ -96,40 +112,50 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
+  backButton: {
+    paddingHorizontal: 16,
+    paddingTop: 60,
+    paddingBottom: 20,
+  },
+  backButtonText: {
+    fontSize: 16,
+    fontFamily: 'Poppins_600SemiBold',
+    color: Theme.colors.text,
+  },
   content: {
     flex: 1,
     paddingHorizontal: 16,
-    paddingTop: 60,
   },
   currentPromptContainer: {
-    marginBottom: 20,
+    marginBottom: 100,
   },
   entryContainer: {
     marginBottom: 24,
   },
   prompt: {
     fontSize: 16,
-    color: '#4A78C8',
+    color: Theme.colors.primary,
     marginBottom: 12,
     fontFamily: 'Poppins_400Regular',
   },
   entryPrompt: {
     fontSize: 16,
-    color: '#4A78C8',
+    color: Theme.colors.primary,
     marginBottom: 8,
     fontFamily: 'Poppins_400Regular',
   },
   entryText: {
     fontSize: 16,
-    color: '#000',
+    color: Theme.colors.text,
     marginBottom: 16,
     fontFamily: 'Poppins_400Regular',
   },
   input: {
     fontSize: 16,
-    color: '#000',
+    color: Theme.colors.text,
     fontFamily: 'Poppins_400Regular',
     padding: 0,
+    minHeight: 40,
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -137,6 +163,10 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: '#eee',
     backgroundColor: '#fff',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
   },
   button: {
     flex: 1,
@@ -145,15 +175,19 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     marginHorizontal: 4,
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: Theme.colors.primary,
   },
   finishButton: {
-    backgroundColor: '#000',
+    backgroundColor: Theme.colors.primary,
+    borderColor: Theme.colors.primary,
   },
   buttonText: {
-    color: '#000',
+    color: Theme.colors.primary,
     textAlign: 'center',
     fontSize: 16,
     fontFamily: 'Poppins_600SemiBold',
+  },
+  finishButtonText: {
+    color: '#fff',
   },
 });
