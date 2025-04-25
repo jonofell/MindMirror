@@ -89,7 +89,7 @@ export default function NewJournalEntry() {
       style={styles.container}
       keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
     >
-      <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+      <TouchableOpacity onPress={() => router.push('/(tabs)')} style={styles.backButton}>
         <ThemedText style={styles.backButtonText}>← Back</ThemedText>
       </TouchableOpacity>
 
