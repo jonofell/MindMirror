@@ -1,62 +1,21 @@
 import { useRouter } from 'expo-router';
 import React, { useState, useLayoutEffect } from 'react';
-import { StyleSheet, TextInput, TouchableOpacity, View, ScrollView, Keyboard, TouchableWithoutFeedback } from 'react-native';
+import { StyleSheet, TextInput, TouchableOpacity, View, KeyboardAvoidingView, Platform } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { ThemedText } from '@/components/ThemedText';
 import { Theme } from '@/constants/Theme';
-import { JournalEntry } from '@/types/journal';
-
-const FOLLOW_UP_RESPONSES = {
-  work: "That's great to hear about your work progress! How does it make you feel?",
-  good: "I'm glad you're feeling good! What made today special?",
-  tired: "I hear you about being tired. What would help you feel more energized?",
-  default: "Thanks for sharing. Could you tell me more about that?"
-};
 
 export default function NewJournalEntry() {
   const router = useRouter();
-  const [currentInput, setCurrentInput] = useState('');
-  const [conversation, setConversation] = useState([]);
-  const [isFinished, setIsFinished] = useState(false);
-
-  const getResponse = (input) => {
-    const lowercaseInput = input.toLowerCase();
-    if (lowercaseInput.includes('work')) return FOLLOW_UP_RESPONSES.work;
-    if (lowercaseInput.includes('good')) return FOLLOW_UP_RESPONSES.good;
-    if (lowercaseInput.includes('tired')) return FOLLOW_UP_RESPONSES.tired;
-    return FOLLOW_UP_RESPONSES.default;
-  };
-
-  const handleContinue = () => {
-    if (!currentInput.trim()) return;
-
-    const newConversation = [...conversation, 
-      { text: currentInput, isUser: true }
-    ];
-
-    if (conversation.length < 2) {
-      const response = getResponse(currentInput);
-      newConversation.push({ text: response, isUser: false });
-      setIsFinished(false);
-    } else {
-      setIsFinished(true);
-    }
-
-    setConversation(newConversation);
-    setCurrentInput('');
-  };
+  const [entry, setEntry] = useState('');
 
   const saveEntry = async () => {
     try {
-      const content = conversation
-        .map(msg => `${msg.isUser ? "You" : "MindMirror"}: ${msg.text}`)
-        .join('\n\n');
-
       const newEntry = {
         id: Date.now().toString(),
-        content,
+        content: entry,
         timestamp: Date.now(),
       };
 
@@ -90,50 +49,39 @@ export default function NewJournalEntry() {
   }, [router]);
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+    <KeyboardAvoidingView 
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={styles.container}
+    >
       <LinearGradient
         colors={[Theme.colors.gradientStart, Theme.colors.gradientEnd]}
         style={styles.container}
       >
-      <ScrollView style={styles.content}>
-        <View style={styles.dialogueContainer}>
+        <View style={styles.content}>
           <ThemedText style={styles.question}>What's on your mind?</ThemedText>
 
-          {conversation.map((entry, index) => (
-            <View 
-              key={index} 
-              style={[
-                styles.messageContainer,
-                entry.isUser ? styles.userMessage : styles.aiMessage
-              ]}
-            >
-              <ThemedText style={styles.messageText}>{entry.text}</ThemedText>
-            </View>
-          ))}
-        </View>
-
-        <View style={styles.inputContainer}>
           <TextInput
             style={styles.input}
-            value={currentInput}
-            onChangeText={setCurrentInput}
+            value={entry}
+            onChangeText={setEntry}
             placeholder="Write your thoughts..."
             multiline
             placeholderTextColor={Theme.colors.textLight}
           />
+        </View>
 
+        <View style={styles.buttonContainer}>
           <TouchableOpacity
-            style={[styles.button, isFinished && styles.finishButton]}
-            onPress={isFinished ? saveEntry : handleContinue}
+            style={styles.button}
+            onPress={saveEntry}
           >
             <ThemedText style={styles.buttonText}>
-              {isFinished ? 'Finish Entry' : 'Continue'}
+              Finish Entry
             </ThemedText>
           </TouchableOpacity>
         </View>
-      </ScrollView>
-    </LinearGradient>
-    </TouchableWithoutFeedback>
+      </LinearGradient>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -143,61 +91,34 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    paddingBottom: 250,
-  },
-  dialogueContainer: {
     padding: Theme.spacing.lg,
-    paddingTop: 120,
-    flex: 1,
-    marginTop: -20,
+    paddingTop: 100,
   },
   question: {
     fontSize: 24,
     fontFamily: 'Inter_600SemiBold',
     marginBottom: Theme.spacing.xl,
     color: Theme.colors.text,
-    paddingTop: 20,
-  },
-  messageContainer: {
-    marginVertical: Theme.spacing.md,
-    padding: Theme.spacing.lg,
-    borderRadius: Theme.borderRadius.lg,
-    maxWidth: '85%',
-  },
-  userMessage: {
-    backgroundColor: Theme.colors.primary,
-    alignSelf: 'flex-end',
-  },
-  aiMessage: {
-    backgroundColor: Theme.colors.card,
-    alignSelf: 'flex-start',
-  },
-  messageText: {
-    fontSize: 16,
-    color: Theme.colors.text,
-    fontFamily: 'Inter_400Regular',
-  },
-  inputContainer: {
-    padding: Theme.spacing.lg,
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
   },
   input: {
+    flex: 1,
     backgroundColor: Theme.colors.card,
     padding: Theme.spacing.lg,
     borderRadius: Theme.borderRadius.md,
-    minHeight: 100,
     fontFamily: 'Inter_400Regular',
     fontSize: 16,
     color: Theme.colors.text,
+    textAlignVertical: 'top',
+  },
+  buttonContainer: {
+    padding: Theme.spacing.lg,
+    paddingBottom: Platform.OS === 'ios' ? 34 : Theme.spacing.lg,
+    backgroundColor: 'white',
   },
   button: {
     backgroundColor: Theme.colors.primary,
     padding: Theme.spacing.lg,
     borderRadius: Theme.borderRadius.md,
-    marginTop: Theme.spacing.lg,
-  },
-  finishButton: {
-    backgroundColor: '#4CAF50',
   },
   buttonText: {
     fontFamily: 'Inter_600SemiBold',
