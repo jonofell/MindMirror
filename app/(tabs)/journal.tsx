@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ThemedText } from '@/components/ThemedText';
+import { Collapsible } from '@/components/Collapsible';
 import { JournalEntry } from '@/types/journal';
 import { Theme } from '@/constants/Theme';
 import { LinearGradient } from 'expo-linear-gradient';
