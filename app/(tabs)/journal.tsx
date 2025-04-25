@@ -10,6 +10,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 export default function JournalScreen() {
   const [entries, setEntries] = useState<JournalEntry[]>([]);
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   useEffect(() => {
     loadEntries();
@@ -32,7 +33,14 @@ export default function JournalScreen() {
       style={styles.container}
     >
       <ScrollView style={styles.scrollView}>
-        <ThemedText style={styles.title}>Journal Entries</ThemedText>
+        <View style={styles.headerContainer}>
+          <ThemedText style={styles.title}>Journal Entries</ThemedText>
+          <TouchableOpacity onPress={() => setIsCollapsed(!isCollapsed)}>
+            <ThemedText style={styles.toggleButton}>
+              {isCollapsed ? 'Show prompts' : 'Hide prompts'}
+            </ThemedText>
+          </TouchableOpacity>
+        </View>
         {entries.map((entry) => (
           <View key={entry.id} style={styles.entryCard}>
             <ThemedText style={styles.entryDate}>
@@ -43,9 +51,12 @@ export default function JournalScreen() {
               const prompt = parts[0] || '';
               const response = parts.slice(1).join('\n') || '';
               return prompt && response ? (
-                <Collapsible key={index} title={prompt}>
+                <View key={index}>
+                  {!isCollapsed && (
+                    <ThemedText style={styles.promptText}>{prompt}</ThemedText>
+                  )}
                   <ThemedText style={styles.entryContent}>{response}</ThemedText>
-                </Collapsible>
+                </View>
               ) : null;
             })}
           </View>
@@ -56,6 +67,23 @@ export default function JournalScreen() {
 }
 
 const styles = StyleSheet.create({
+  headerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  toggleButton: {
+    color: Theme.colors.primary,
+    fontSize: 16,
+    fontFamily: 'Poppins_600SemiBold',
+  },
+  promptText: {
+    fontSize: 14,
+    fontFamily: 'Poppins_600SemiBold',
+    color: Theme.colors.textLight,
+    marginBottom: 4,
+  },
   container: {
     flex: 1,
   },
