@@ -5,7 +5,7 @@ import { ThemedText } from '@/components/ThemedText';
 export default function StatsScreen() {
   return (
     <View style={styles.container}>
-      <ThemedText style={styles.title}>Statistics</ThemedText>
+      <ThemedText style={styles.title}>Stats</ThemedText>
     </View>
   );
 }
