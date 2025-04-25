@@ -74,21 +74,18 @@ export default function NewJournalEntry() {
   useLayoutEffect(() => {
     router.setParams({
       headerShown: true,
+      headerTransparent: true,
+      headerTitle: '',
       headerLeft: () => (
         <TouchableOpacity 
           onPress={() => router.back()}
-          style={{ marginLeft: 16 }}
+          style={{ marginLeft: 16, marginTop: 8 }}
         >
-          <ThemedText style={{ fontSize: 16, fontFamily: 'Poppins_600SemiBold' }}>
+          <ThemedText style={{ fontSize: 16, fontFamily: 'Poppins_600SemiBold', color: '#2D3142' }}>
             ← Back
           </ThemedText>
         </TouchableOpacity>
       ),
-      headerTitle: '',
-      headerStyle: {
-        backgroundColor: 'transparent',
-      },
-      headerShadowVisible: false,
     });
   }, [router]);
 
