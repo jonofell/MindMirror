@@ -1,4 +1,3 @@
-
 import { useRouter } from 'expo-router';
 import React, { useState, useLayoutEffect, useRef } from 'react';
 import { StyleSheet, TextInput, TouchableOpacity, View, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
@@ -25,7 +24,7 @@ export default function NewJournalEntry() {
   }, [router]);
 
   const scrollViewRef = useRef(null);
-  
+
   const handleSubmitEntry = () => {
     if (!currentEntry.trim()) return;
 
@@ -35,7 +34,7 @@ export default function NewJournalEntry() {
     if (currentPrompt < PROMPTS.length - 1) {
       setCurrentPrompt(prev => prev + 1);
     }
-    
+
     // Scroll to the bottom after a short delay to ensure the new content is rendered
     setTimeout(() => {
       scrollViewRef.current?.scrollToEnd({ animated: true });
