@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   currentPromptContainer: {
-    marginBottom: 100,
+    marginBottom: 120,
   },
   entryContainer: {
     marginBottom: 24,
@@ -163,8 +163,11 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: '#eee',
     backgroundColor: '#fff',
-    position: 'relative',
-    marginTop: 'auto',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    zIndex: 1,
   },
   button: {
     flex: 1,
