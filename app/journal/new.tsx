@@ -1,10 +1,7 @@
-
 import { useRouter } from 'expo-router';
-import React, { useState, useLayoutEffect, useRef } from 'react';
-import { StyleSheet, TextInput, TouchableOpacity, View, ScrollView, Keyboard, Text } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import React, { useState } from 'react';
+import { StyleSheet, TextInput, TouchableOpacity, View, KeyboardAvoidingView, Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
 import { ThemedText } from '@/components/ThemedText';
 import { Theme } from '@/constants/Theme';
 
@@ -12,32 +9,23 @@ const PROMPTS = [
   "What's on your mind?",
   "It sounds like you might be feeling a bit frustrated or overwhelmed. What's been going on that's led you to feel this way?",
   "It seems like there's a lot you might want to express. What's been the most challenging part of your day or week so far?",
-  "It sounds like you might be feeling a bit stuck or unsure about how to express yourself right now. Is there something specific you'd like to dive into?",
 ];
 
 export default function NewJournalEntry() {
   const router = useRouter();
-  const [entries, setEntries] = useState([]);
   const [currentPrompt, setCurrentPrompt] = useState(0);
-  const [isWriting, setIsWriting] = useState(true);
   const [currentEntry, setCurrentEntry] = useState('');
-  const scrollViewRef = useRef(null);
+  const [entries, setEntries] = useState<{text: string, prompt: string}[]>([]);
 
   const handleSubmitEntry = () => {
     if (!currentEntry.trim()) return;
-    
+
     setEntries([...entries, { text: currentEntry, prompt: PROMPTS[currentPrompt] }]);
     setCurrentEntry('');
-    setIsWriting(false);
-    Keyboard.dismiss();
-    
+
     if (currentPrompt < PROMPTS.length - 1) {
       setCurrentPrompt(prev => prev + 1);
     }
-    
-    setTimeout(() => {
-      scrollViewRef.current?.scrollToEnd({ animated: true });
-    }, 100);
   };
 
   const saveEntry = async () => {
@@ -59,99 +47,62 @@ export default function NewJournalEntry() {
     }
   };
 
-  useLayoutEffect(() => {
-    router.setParams({
-      headerShown: true,
-      headerTransparent: true,
-      headerTitle: '',
-      headerLeft: () => (
-        <TouchableOpacity 
-          onPress={() => router.back()}
-          style={{ marginLeft: 16, marginTop: 8 }}
-        >
-          <ThemedText style={{ fontSize: 16, fontFamily: 'Poppins_600SemiBold', color: '#2D3142' }}>
-            ← Back
-          </ThemedText>
-        </TouchableOpacity>
-      ),
-    });
-  }, [router]);
-
   return (
-    <LinearGradient
-      colors={[Theme.colors.gradientStart, Theme.colors.gradientEnd]}
+    <KeyboardAvoidingView 
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.container}
     >
-      <ScrollView 
-        ref={scrollViewRef}
-        style={styles.content}
-        contentContainerStyle={styles.scrollContent}
-      >
+      <View style={styles.content}>
         {entries.map((entry, index) => (
           <View key={index} style={styles.entryContainer}>
-            <ThemedText style={styles.prompt}>{entry.prompt}</ThemedText>
-            <View style={styles.textBubble}>
-              <ThemedText>{entry.text}</ThemedText>
-            </View>
+            <ThemedText style={styles.entryPrompt}>{entry.prompt}</ThemedText>
+            <ThemedText style={styles.entryText}>{entry.text}</ThemedText>
           </View>
         ))}
-        
-        {!isWriting && (
-          <View style={styles.entryContainer}>
-            <ThemedText style={styles.prompt}>{PROMPTS[currentPrompt]}</ThemedText>
-            <TouchableOpacity 
-              style={styles.writeButton} 
-              onPress={() => setIsWriting(true)}
-            >
-              <Text style={styles.writeButtonText}>Write</Text>
-            </TouchableOpacity>
-          </View>
-        )}
-      </ScrollView>
 
-      {isWriting && (
-        <View style={styles.inputContainer}>
+        <View style={styles.currentPromptContainer}>
+          <ThemedText style={styles.prompt}>{PROMPTS[currentPrompt]}</ThemedText>
           <TextInput
             style={styles.input}
             value={currentEntry}
             onChangeText={setCurrentEntry}
             multiline
-            autoFocus
-            placeholder="Write your thoughts..."
-            placeholderTextColor={Theme.colors.textLight}
+            placeholder="Write..."
+            placeholderTextColor="#666"
           />
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity 
-              style={styles.button} 
-              onPress={handleSubmitEntry}
-            >
-              <ThemedText style={styles.buttonText}>Continue</ThemedText>
-            </TouchableOpacity>
-            {entries.length > 0 && (
-              <TouchableOpacity 
-                style={[styles.button, styles.finishButton]} 
-                onPress={saveEntry}
-              >
-                <ThemedText style={styles.buttonText}>Finish Entry</ThemedText>
-              </TouchableOpacity>
-            )}
-          </View>
         </View>
-      )}
-    </LinearGradient>
+      </View>
+
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity 
+          style={styles.button} 
+          onPress={handleSubmitEntry}
+        >
+          <ThemedText style={styles.buttonText}>Suggest</ThemedText>
+        </TouchableOpacity>
+        <TouchableOpacity 
+          style={[styles.button, styles.finishButton]} 
+          onPress={saveEntry}
+        >
+          <ThemedText style={styles.buttonText}>Finish entry</ThemedText>
+        </TouchableOpacity>
+      </View>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#fff',
   },
   content: {
     flex: 1,
+    paddingHorizontal: 16,
+    paddingTop: 60,
   },
-  scrollContent: {
-    padding: Theme.spacing.lg,
-    paddingTop: 100,
+  currentPromptContainer: {
+    marginBottom: 20,
   },
   entryContainer: {
     marginBottom: 24,
@@ -160,57 +111,49 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#4A78C8',
     marginBottom: 12,
+    fontFamily: 'Poppins_400Regular',
   },
-  textBubble: {
-    backgroundColor: 'white',
-    padding: 16,
-    borderRadius: 16,
-    maxWidth: '85%',
-    alignSelf: 'flex-end',
-  },
-  writeButton: {
-    alignSelf: 'flex-start',
-    paddingVertical: 8,
-  },
-  writeButtonText: {
-    color: '#666',
+  entryPrompt: {
     fontSize: 16,
+    color: '#4A78C8',
+    marginBottom: 8,
+    fontFamily: 'Poppins_400Regular',
   },
-  inputContainer: {
-    padding: Theme.spacing.lg,
-    backgroundColor: 'white',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+  entryText: {
+    fontSize: 16,
+    color: '#000',
+    marginBottom: 16,
+    fontFamily: 'Poppins_400Regular',
   },
   input: {
-    backgroundColor: '#F5F5F5',
-    padding: Theme.spacing.lg,
-    borderRadius: Theme.borderRadius.md,
-    minHeight: 100,
-    maxHeight: 150,
-    fontFamily: 'Inter_400Regular',
     fontSize: 16,
-    color: Theme.colors.text,
+    color: '#000',
+    fontFamily: 'Poppins_400Regular',
+    padding: 0,
   },
   buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: Theme.spacing.md,
+    padding: 16,
+    borderTopWidth: 1,
+    borderTopColor: '#eee',
+    backgroundColor: '#fff',
   },
   button: {
-    backgroundColor: Theme.colors.primary,
-    padding: Theme.spacing.md,
-    borderRadius: Theme.borderRadius.md,
     flex: 1,
+    backgroundColor: '#fff',
+    padding: 12,
+    borderRadius: 20,
     marginHorizontal: 4,
+    borderWidth: 1,
+    borderColor: '#ddd',
   },
   finishButton: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: '#000',
   },
   buttonText: {
-    color: 'white',
+    color: '#000',
     textAlign: 'center',
-    fontFamily: 'Inter_600SemiBold',
     fontSize: 16,
+    fontFamily: 'Poppins_600SemiBold',
   },
 });
