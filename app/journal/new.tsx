@@ -23,9 +23,19 @@ export default function NewJournalEntry() {
   const router = useRouter();
   const [currentPrompt, setCurrentPrompt] = useState(0);
   const [currentEntry, setCurrentEntry] = useState("");
+  const [showButtons, setShowButtons] = useState(false);
   const [entries, setEntries] = useState<{ text: string; prompt: string }[]>(
     [],
   );
+
+  const handleTextChange = (text: string) => {
+    setCurrentEntry(text);
+    if (text.length > 0 && !showButtons) {
+      setShowButtons(true);
+    } else if (text.length === 0 && showButtons) {
+      setShowButtons(false);
+    }
+  };
 
   useLayoutEffect(() => {
     router.setParams({
@@ -103,7 +113,7 @@ export default function NewJournalEntry() {
           <TextInput
             style={styles.input}
             value={currentEntry}
-            onChangeText={setCurrentEntry}
+            onChangeText={handleTextChange}
             multiline
             placeholder="Write..."
             placeholderTextColor="#999"
@@ -111,7 +121,7 @@ export default function NewJournalEntry() {
         </View>
       </ScrollView>
 
-      <View style={styles.buttonContainer}>
+      {showButtons && <View style={styles.buttonContainer}>
         <TouchableOpacity style={styles.button} onPress={handleSubmitEntry}>
           <ThemedText style={styles.buttonText}>Suggest</ThemedText>
         </TouchableOpacity>
@@ -123,7 +133,7 @@ export default function NewJournalEntry() {
             Finish entry
           </ThemedText>
         </TouchableOpacity>
-      </View>
+      </View>}
     </KeyboardAvoidingView>
   );
 }
