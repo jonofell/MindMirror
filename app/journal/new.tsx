@@ -1,6 +1,6 @@
 
 import { useRouter } from 'expo-router';
-import React, { useState, useLayoutEffect } from 'react';
+import React, { useState, useLayoutEffect, useRef } from 'react';
 import { StyleSheet, TextInput, TouchableOpacity, View, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ThemedText } from '@/components/ThemedText';
@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
     paddingBottom: 16,
   },
   currentPromptContainer: {
-    paddingBottom: 80,
+    paddingBottom: 16,
   },
   entryContainer: {
     marginBottom: 24,
