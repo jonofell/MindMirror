@@ -31,36 +31,36 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: '',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house" color={color} />,
+          title: 'Home',
+          tabBarIcon: ({ color }) => <IconSymbol name="house.fill" size={28} color={color} />,
         }}
       />
       <Tabs.Screen
         name="journal"
         options={{
-          title: '',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="book" color={color} />,
+          title: 'Journal',
+          tabBarIcon: ({ color }) => <IconSymbol name="book.fill" size={28} color={color} />,
         }}
       />
       <Tabs.Screen
         name="add"
         options={{
-          title: '',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="plus.circle" color={color} />,
+          title: 'Add',
+          tabBarIcon: ({ color }) => <IconSymbol name="plus.circle.fill" size={28} color={color} />,
         }}
       />
       <Tabs.Screen
         name="stats"
         options={{
-          title: '',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="chart.bar" color={color} />,
+          title: 'Stats', 
+          tabBarIcon: ({ color }) => <IconSymbol name="chart.bar.fill" size={28} color={color} />,
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
-          title: '',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="person" color={color} />,
+          title: 'Profile',
+          tabBarIcon: ({ color }) => <IconSymbol name="person.fill" size={28} color={color} />,
         }}
       />
     </Tabs>
