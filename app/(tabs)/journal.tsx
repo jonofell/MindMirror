@@ -34,10 +34,10 @@ export default function JournalScreen() {
         <ThemedText style={styles.title}>Journal Entries</ThemedText>
         {entries.map((entry) => (
           <View key={entry.id} style={styles.entryCard}>
-            <ThemedText style={styles.entryContent}>{entry.content}</ThemedText>
             <ThemedText style={styles.entryDate}>
               {new Date(entry.timestamp).toLocaleDateString()}
             </ThemedText>
+            <ThemedText style={styles.entryContent}>{entry.content}</ThemedText>
           </View>
         ))}
       </ScrollView>
@@ -70,14 +70,14 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 3,
   },
-  entryContent: {
-    fontSize: 16,
-    fontFamily: 'Poppins_400Regular',
-    marginBottom: 8,
-  },
   entryDate: {
     fontSize: 14,
     fontFamily: 'Poppins_400Regular',
     color: Theme.colors.textLight,
+    marginBottom: 8,
+  },
+  entryContent: {
+    fontSize: 16,
+    fontFamily: 'Poppins_400Regular',
   },
 });
