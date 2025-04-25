@@ -1,9 +1,17 @@
-import { useRouter } from 'expo-router';
-import React, { useState, useLayoutEffect, useRef } from 'react';
-import { StyleSheet, TextInput, TouchableOpacity, View, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ThemedText } from '@/components/ThemedText';
-import { Theme } from '@/constants/Theme';
+import { useRouter } from "expo-router";
+import React, { useState, useLayoutEffect, useRef } from "react";
+import {
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  View,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+} from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ThemedText } from "@/components/ThemedText";
+import { Theme } from "@/constants/Theme";
 
 const PROMPTS = [
   "What's on your mind?",
@@ -14,12 +22,14 @@ const PROMPTS = [
 export default function NewJournalEntry() {
   const router = useRouter();
   const [currentPrompt, setCurrentPrompt] = useState(0);
-  const [currentEntry, setCurrentEntry] = useState('');
-  const [entries, setEntries] = useState<{text: string, prompt: string}[]>([]);
+  const [currentEntry, setCurrentEntry] = useState("");
+  const [entries, setEntries] = useState<{ text: string; prompt: string }[]>(
+    [],
+  );
 
   useLayoutEffect(() => {
     router.setParams({
-      headerShown: false
+      headerShown: false,
     });
   }, [router]);
 
@@ -28,11 +38,14 @@ export default function NewJournalEntry() {
   const handleSubmitEntry = () => {
     if (!currentEntry.trim()) return;
 
-    setEntries([...entries, { text: currentEntry, prompt: PROMPTS[currentPrompt] }]);
-    setCurrentEntry('');
+    setEntries([
+      ...entries,
+      { text: currentEntry, prompt: PROMPTS[currentPrompt] },
+    ]);
+    setCurrentEntry("");
 
     if (currentPrompt < PROMPTS.length - 1) {
-      setCurrentPrompt(prev => prev + 1);
+      setCurrentPrompt((prev) => prev + 1);
     }
 
     // Scroll to the bottom after a short delay to ensure the new content is rendered
@@ -45,37 +58,34 @@ export default function NewJournalEntry() {
     try {
       const newEntry = {
         id: Date.now().toString(),
-        content: entries.map(e => `${e.prompt}\n${e.text}`).join('\n\n'),
+        content: entries.map((e) => `${e.prompt}\n${e.text}`).join("\n\n"),
         timestamp: Date.now(),
       };
 
-      const existingEntries = await AsyncStorage.getItem('journal_entries');
+      const existingEntries = await AsyncStorage.getItem("journal_entries");
       const allEntries = existingEntries ? JSON.parse(existingEntries) : [];
       allEntries.unshift(newEntry);
-      await AsyncStorage.setItem('journal_entries', JSON.stringify(allEntries));
+      await AsyncStorage.setItem("journal_entries", JSON.stringify(allEntries));
 
-      router.replace('/(tabs)');
+      router.replace("/(tabs)");
     } catch (error) {
-      console.error('Error saving entry:', error);
+      console.error("Error saving entry:", error);
     }
   };
 
   return (
-    <KeyboardAvoidingView 
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={styles.container}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 88 : 0}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
     >
-      <TouchableOpacity 
-        onPress={() => router.back()}
-        style={styles.backButton}
-      >
+      <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
         <ThemedText style={styles.backButtonText}>← Back</ThemedText>
       </TouchableOpacity>
 
-      <ScrollView 
+      <ScrollView
         ref={scrollViewRef}
-        style={styles.content} 
+        style={styles.content}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
@@ -87,7 +97,9 @@ export default function NewJournalEntry() {
         ))}
 
         <View style={styles.currentPromptContainer}>
-          <ThemedText style={styles.prompt}>{PROMPTS[currentPrompt]}</ThemedText>
+          <ThemedText style={styles.prompt}>
+            {PROMPTS[currentPrompt]}
+          </ThemedText>
           <TextInput
             style={styles.input}
             value={currentEntry}
@@ -100,14 +112,11 @@ export default function NewJournalEntry() {
       </ScrollView>
 
       <View style={styles.buttonContainer}>
-        <TouchableOpacity 
-          style={styles.button} 
-          onPress={handleSubmitEntry}
-        >
+        <TouchableOpacity style={styles.button} onPress={handleSubmitEntry}>
           <ThemedText style={styles.buttonText}>Suggest</ThemedText>
         </TouchableOpacity>
-        <TouchableOpacity 
-          style={[styles.button, styles.finishButton]} 
+        <TouchableOpacity
+          style={[styles.button, styles.finishButton]}
           onPress={saveEntry}
         >
           <ThemedText style={[styles.buttonText, styles.finishButtonText]}>
@@ -122,7 +131,7 @@ export default function NewJournalEntry() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   backButton: {
     paddingHorizontal: 16,
@@ -131,7 +140,7 @@ const styles = StyleSheet.create({
   },
   backButtonText: {
     fontSize: 16,
-    fontFamily: 'Poppins_600SemiBold',
+    fontFamily: "Poppins_600SemiBold",
     color: Theme.colors.text,
   },
   content: {
@@ -149,38 +158,38 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: Theme.colors.primary,
     marginBottom: 12,
-    fontFamily: 'Poppins_400Regular',
+    fontFamily: "Poppins_400Regular",
   },
   entryPrompt: {
     fontSize: 16,
     color: Theme.colors.primary,
     marginBottom: 8,
-    fontFamily: 'Poppins_400Regular',
+    fontFamily: "Poppins_400Regular",
   },
   entryText: {
     fontSize: 16,
     color: Theme.colors.text,
     marginBottom: 16,
-    fontFamily: 'Poppins_400Regular',
+    fontFamily: "Poppins_400Regular",
   },
   input: {
     fontSize: 16,
     color: Theme.colors.text,
-    fontFamily: 'Poppins_400Regular',
+    fontFamily: "Poppins_400Regular",
     padding: 0,
     minHeight: 40,
   },
   buttonContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderTopWidth: 1,
-    borderTopColor: '#eee',
-    backgroundColor: '#fff',
+    borderTopColor: "#eee",
+    backgroundColor: "#fff",
   },
   button: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     padding: 12,
     borderRadius: 20,
     marginHorizontal: 4,
@@ -193,11 +202,11 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: Theme.colors.primary,
-    textAlign: 'center',
+    textAlign: "center",
     fontSize: 16,
-    fontFamily: 'Poppins_600SemiBold',
+    fontFamily: "Poppins_600SemiBold",
   },
   finishButtonText: {
-    color: '#fff',
+    color: "#fff",
   },
 });
