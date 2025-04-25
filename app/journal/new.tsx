@@ -24,6 +24,8 @@ export default function NewJournalEntry() {
     });
   }, [router]);
 
+  const scrollViewRef = useRef(null);
+  
   const handleSubmitEntry = () => {
     if (!currentEntry.trim()) return;
 
@@ -33,6 +35,11 @@ export default function NewJournalEntry() {
     if (currentPrompt < PROMPTS.length - 1) {
       setCurrentPrompt(prev => prev + 1);
     }
+    
+    // Scroll to the bottom after a short delay to ensure the new content is rendered
+    setTimeout(() => {
+      scrollViewRef.current?.scrollToEnd({ animated: true });
+    }, 100);
   };
 
   const saveEntry = async () => {
@@ -67,7 +74,12 @@ export default function NewJournalEntry() {
         <ThemedText style={styles.backButtonText}>← Back</ThemedText>
       </TouchableOpacity>
 
-      <ScrollView style={styles.content} keyboardShouldPersistTaps="handled">
+      <ScrollView 
+        ref={scrollViewRef}
+        style={styles.content} 
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+      >
         {entries.map((entry, index) => (
           <View key={index} style={styles.entryContainer}>
             <ThemedText style={styles.entryPrompt}>{entry.prompt}</ThemedText>
@@ -126,10 +138,10 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     paddingHorizontal: 16,
-    paddingBottom: 100, // Add padding to prevent content from being hidden behind buttons
+    paddingBottom: 16,
   },
   currentPromptContainer: {
-    flex: 1,
+    paddingBottom: 80,
   },
   entryContainer: {
     marginBottom: 24,
