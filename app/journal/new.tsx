@@ -58,6 +58,7 @@ export default function NewJournalEntry() {
     <KeyboardAvoidingView 
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.container}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 88 : 0}
     >
       <TouchableOpacity 
         onPress={() => router.back()}
@@ -125,9 +126,10 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     paddingHorizontal: 16,
+    paddingBottom: 100, // Add padding to prevent content from being hidden behind buttons
   },
   currentPromptContainer: {
-    marginBottom: 120,
+    flex: 1,
   },
   entryContainer: {
     marginBottom: 24,
@@ -163,11 +165,6 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: '#eee',
     backgroundColor: '#fff',
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    zIndex: 1,
   },
   button: {
     flex: 1,
