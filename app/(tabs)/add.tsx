@@ -1,23 +1,13 @@
 
-import { View, StyleSheet } from 'react-native';
-import { ThemedText } from '@/components/ThemedText';
+import { useRouter } from 'expo-router';
+import { useEffect } from 'react';
 
 export default function AddScreen() {
-  return (
-    <View style={styles.container}>
-      <ThemedText style={styles.title}>New Entry</ThemedText>
-    </View>
-  );
-}
+  const router = useRouter();
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-  },
-  title: {
-    fontSize: 24,
-    fontFamily: 'Poppins_600SemiBold',
-    marginTop: 60,
-  },
-});
+  useEffect(() => {
+    router.replace('/journal/new');
+  }, []);
+
+  return null;
+}
