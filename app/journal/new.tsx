@@ -27,10 +27,6 @@ export default function NewJournalEntry() {
     [],
   );
 
-  const handleTextChange = (text: string) => {
-    setCurrentEntry(text);
-  };
-
   useLayoutEffect(() => {
     router.setParams({
       headerShown: false,
@@ -107,7 +103,7 @@ export default function NewJournalEntry() {
           <TextInput
             style={styles.input}
             value={currentEntry}
-            onChangeText={handleTextChange}
+            onChangeText={setCurrentEntry}
             multiline
             placeholder="Write..."
             placeholderTextColor="#999"
@@ -150,7 +146,7 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     paddingHorizontal: 16,
-    paddingBottom: 80,
+    paddingBottom: 16,
   },
   currentPromptContainer: {
     paddingBottom: 16,
