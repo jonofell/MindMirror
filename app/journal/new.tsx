@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
 import React, { useState, useLayoutEffect } from 'react';
-import { StyleSheet, TextInput, TouchableOpacity, View, ScrollView } from 'react-native';
+import { StyleSheet, TextInput, TouchableOpacity, View, ScrollView, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -90,10 +90,11 @@ export default function NewJournalEntry() {
   }, [router]);
 
   return (
-    <LinearGradient
-      colors={[Theme.colors.gradientStart, Theme.colors.gradientEnd]}
-      style={styles.container}
-    >
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <LinearGradient
+        colors={[Theme.colors.gradientStart, Theme.colors.gradientEnd]}
+        style={styles.container}
+      >
       <ScrollView style={styles.content}>
         <View style={styles.dialogueContainer}>
           <ThemedText style={styles.question}>What's on your mind?</ThemedText>
@@ -132,6 +133,7 @@ export default function NewJournalEntry() {
         </View>
       </ScrollView>
     </LinearGradient>
+    </TouchableWithoutFeedback>
   );
 }
 
@@ -141,11 +143,11 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
+    paddingBottom: 250,
   },
   dialogueContainer: {
     padding: Theme.spacing.lg,
     paddingTop: 120,
-    paddingBottom: 200,
     flex: 1,
     marginTop: -20,
   },
