@@ -147,18 +147,21 @@ const styles = StyleSheet.create({
   },
   dialogueContainer: {
     padding: Theme.spacing.lg,
+    paddingTop: 20,
+    paddingBottom: 100,
   },
   question: {
     fontSize: 24,
     fontFamily: 'Inter_600SemiBold',
     marginBottom: Theme.spacing.xl,
     color: Theme.colors.text,
+    paddingTop: 10,
   },
   messageContainer: {
     marginVertical: Theme.spacing.md,
     padding: Theme.spacing.lg,
     borderRadius: Theme.borderRadius.lg,
-    maxWidth: '90%',
+    maxWidth: '85%',
   },
   userMessage: {
     backgroundColor: Theme.colors.primary,
