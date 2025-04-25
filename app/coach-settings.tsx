@@ -5,41 +5,44 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { ThemedText } from '@/components/ThemedText';
 import { Theme } from '@/constants/Theme';
 import { useRouter } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const VOICES = [
+  {
+    id: 'coach',
+    title: 'The Coach',
+    description: 'Supportive & goal-oriented',
+    example: '"What\'s one thing you can take action on today?"',
+    icon: '⭐️'
+  },
+  {
+    id: 'mirror',
+    title: 'The Mirror',
+    description: 'Neutral & reflective',
+    example: '"You\'ve mentioned this before—want to go deeper?"',
+    icon: '🍃'
+  },
+  {
+    id: 'poet',
+    title: 'The Poet',
+    description: 'Dreamy & expressive',
+    example: '"You floated through the day like a paper boat..."',
+    icon: '💗'
+  }
+];
 
 export default function CoachSettingsScreen() {
   const router = useRouter();
   const [selectedVoice, setSelectedVoice] = useState('mirror');
 
-  const voices = [
-    {
-      id: 'coach',
-      title: 'The Coach',
-      description: 'Supportive & goal-oriented',
-      example: '"What\'s one thing you can take action on today?"',
-      icon: '⭐️'
-    },
-    {
-      id: 'mirror',
-      title: 'The Mirror',
-      description: 'Neutral & reflective',
-      example: '"You\'ve mentioned this before—want to go deeper?"',
-      icon: '🍃'
-    },
-    {
-      id: 'poet',
-      title: 'The Poet',
-      description: 'Dreamy & expressive',
-      example: '"You floated through the day like a paper boat..."',
-      icon: '💗'
-    },
-    {
-      id: 'inner_child',
-      title: 'The Inner Child',
-      description: 'Playful & emotional',
-      example: '"Hey... what made you smile today?"',
-      icon: '💙'
+  const saveVoiceSelection = async (voiceId: string) => {
+    try {
+      await AsyncStorage.setItem('selected_voice', voiceId);
+      setSelectedVoice(voiceId);
+    } catch (error) {
+      console.error('Error saving voice selection:', error);
     }
-  ];
+  };
 
   return (
     <LinearGradient
@@ -50,29 +53,30 @@ export default function CoachSettingsScreen() {
         style={styles.backButton}
         onPress={() => router.back()}
       >
-        <ThemedText style={styles.backButtonText}>← Back</ThemedText>
+        <ThemedText style={styles.backText}>← Back</ThemedText>
       </TouchableOpacity>
-      <ScrollView style={styles.content}>
+
+      <ScrollView style={styles.content} contentContainerStyle={styles.contentContainer}>
         <View style={styles.header}>
           <ThemedText style={styles.title}>Choose Your{'\n'}Journaling Voice</ThemedText>
-          <ThemedText style={styles.subtitle}>Pick a tone that feels right for you.{'\n'}You can always change it later.</ThemedText>
-          <ThemedText style={styles.description}>Your journal can reflect like a mirror, guide like a coach,{'\n'}or dream like a poet. Who do you want to write with today?</ThemedText>
+          <ThemedText style={styles.subtitle}>Pick a tone that feels right for you.</ThemedText>
+          <ThemedText style={styles.description}>Your journal can reflect like a mirror, guide like a coach, or dream like a poet.</ThemedText>
         </View>
 
-        {voices.map((voice) => (
+        {VOICES.map((voice) => (
           <TouchableOpacity
             key={voice.id}
             style={[
-              styles.voiceOption,
+              styles.voiceCard,
               selectedVoice === voice.id && styles.selectedVoice
             ]}
-            onPress={() => setSelectedVoice(voice.id)}
+            onPress={() => saveVoiceSelection(voice.id)}
           >
             <View style={styles.voiceHeader}>
-              <View style={styles.voiceIconContainer}>
-                <ThemedText style={styles.voiceIcon}>{voice.icon}</ThemedText>
+              <View style={styles.iconContainer}>
+                <ThemedText style={styles.icon}>{voice.icon}</ThemedText>
               </View>
-              <View style={styles.voiceTitleContainer}>
+              <View style={styles.voiceInfo}>
                 <ThemedText style={styles.voiceTitle}>{voice.title}</ThemedText>
                 <ThemedText style={styles.voiceDescription}>{voice.description}</ThemedText>
               </View>
@@ -81,16 +85,9 @@ export default function CoachSettingsScreen() {
                 selectedVoice === voice.id && styles.radioButtonSelected
               ]} />
             </View>
-            <ThemedText style={styles.voiceExample}>{voice.example}</ThemedText>
+            <ThemedText style={styles.example}>{voice.example}</ThemedText>
           </TouchableOpacity>
         ))}
-
-        <TouchableOpacity style={styles.blendOption}>
-          <View style={styles.blendContainer}>
-            <ThemedText style={styles.blendText}>Blend voices based on entry style</ThemedText>
-            <View style={styles.radioButton} />
-          </View>
-        </TouchableOpacity>
       </ScrollView>
     </LinearGradient>
   );
@@ -102,47 +99,52 @@ const styles = StyleSheet.create({
   },
   backButton: {
     padding: 15,
-    paddingTop: 50,
+    paddingTop: 60,
   },
-  backButtonText: {
+  backText: {
     fontSize: 18,
     color: '#2D3142',
   },
   content: {
-    padding: 20,
     flex: 1,
-    paddingBottom: 100,
+  },
+  contentContainer: {
+    padding: 20,
+    paddingBottom: 40,
   },
   header: {
-    marginTop: 20,
-    marginBottom: 40,
+    marginBottom: 30,
     alignItems: 'center',
-    paddingHorizontal: 20,
   },
   title: {
     fontSize: 36,
     fontFamily: 'Poppins_600SemiBold',
     textAlign: 'center',
-    marginBottom: 20,
+    marginBottom: 16,
     color: '#E88D72',
   },
   subtitle: {
     fontSize: 18,
     textAlign: 'center',
-    marginBottom: 15,
+    marginBottom: 8,
     color: '#2D3142',
   },
   description: {
     fontSize: 16,
     textAlign: 'center',
     color: '#666',
-    fontStyle: 'italic',
+    marginBottom: 20,
   },
-  voiceOption: {
+  voiceCard: {
     backgroundColor: '#FFF',
-    borderRadius: 15,
-    padding: 15,
-    marginBottom: 15,
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   selectedVoice: {
     borderColor: '#E88D72',
@@ -151,37 +153,39 @@ const styles = StyleSheet.create({
   voiceHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: 12,
   },
-  voiceIconContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+  iconContainer: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
     backgroundColor: '#FFF5F2',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  voiceIcon: {
+  icon: {
     fontSize: 24,
   },
-  voiceTitleContainer: {
+  voiceInfo: {
     flex: 1,
-    marginLeft: 15,
+    marginLeft: 12,
+    marginRight: 8,
   },
   voiceTitle: {
     fontSize: 18,
     fontFamily: 'Poppins_600SemiBold',
     color: '#2D3142',
+    marginBottom: 2,
   },
   voiceDescription: {
     fontSize: 14,
     color: '#666',
   },
-  voiceExample: {
+  example: {
     fontSize: 14,
     color: '#666',
     fontStyle: 'italic',
-    marginLeft: 55,
+    marginLeft: 56,
   },
   radioButton: {
     width: 24,
@@ -193,20 +197,5 @@ const styles = StyleSheet.create({
   radioButtonSelected: {
     borderColor: '#E88D72',
     backgroundColor: '#E88D72',
-  },
-  blendOption: {
-    backgroundColor: '#FFF',
-    borderRadius: 15,
-    padding: 15,
-    marginTop: 5,
-  },
-  blendContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  blendText: {
-    fontSize: 16,
-    color: '#2D3142',
-  },
+  }
 });
