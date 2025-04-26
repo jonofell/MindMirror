@@ -1,7 +1,6 @@
-
 import React from 'react';
-import { Dimensions } from 'react-native';
-import { VictoryScatter, VictoryChart, VictoryAxis } from 'victory';
+import { View, Dimensions } from 'react-native';
+import Svg, { Circle } from 'react-native-svg';
 import { Theme } from '@/constants/Theme';
 
 const MOCK_DATA = [
@@ -12,49 +11,32 @@ const MOCK_DATA = [
   { wordCount: 400, mood: 0.85, entries: 3 },
 ];
 
-export const BubbleChart = () => {
+export function BubbleChart() {
+  const width = Dimensions.get('window').width - 40;
+  const height = 300;
+  const padding = 40;
+
+  const maxWordCount = Math.max(...MOCK_DATA.map(d => d.wordCount));
+
+  const points = MOCK_DATA.map(d => ({
+    x: (d.wordCount / maxWordCount) * (width - padding * 2) + padding,
+    y: height - (d.mood * (height - padding * 2) + padding),
+    r: d.entries * 8
+  }));
+
   return (
-    <VictoryChart width={Dimensions.get('window').width - 40} height={300}>
-      <VictoryScatter
-        data={MOCK_DATA}
-        x="wordCount"
-        y="mood"
-        size={({ datum }) => datum.entries * 8}
-        style={{
-          data: {
-            fill: ({ datum }) => `rgba(255, 126, 103, ${datum.mood})`,
-          }
-        }}
-      />
-      <VictoryAxis
-        label="Word count"
-        style={{
-          axisLabel: { 
-            padding: 30,
-            fill: Theme.colors.textLight,
-            fontFamily: "Inter_400Regular"
-          },
-          tickLabels: { 
-            fill: Theme.colors.textLight,
-            fontFamily: "Inter_400Regular"
-          }
-        }}
-      />
-      <VictoryAxis
-        dependentAxis
-        label="Mood"
-        style={{
-          axisLabel: { 
-            padding: 40,
-            fill: Theme.colors.textLight,
-            fontFamily: "Inter_400Regular"
-          },
-          tickLabels: { 
-            fill: Theme.colors.textLight,
-            fontFamily: "Inter_400Regular"
-          }
-        }}
-      />
-    </VictoryChart>
+    <View>
+      <Svg width={width} height={height}>
+        {points.map((point, i) => (
+          <Circle
+            key={i}
+            cx={point.x}
+            cy={point.y}
+            r={point.r}
+            fill={`rgba(255, 126, 103, ${MOCK_DATA[i].mood})`}
+          />
+        ))}
+      </Svg>
+    </View>
   );
-};
+}
