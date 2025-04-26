@@ -1,67 +1,63 @@
+
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import React from 'react';
-import { StyleSheet, TouchableOpacity, View, Platform } from 'react-native';
-import { useFonts, Poppins_400Regular, Poppins_600SemiBold } from '@expo-google-fonts/poppins';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { Theme } from '@/constants/Theme';
 
 export default function HomeScreen() {
   const router = useRouter();
 
-  const [fontsLoaded] = useFonts({
-    Poppins_400Regular,
-    Poppins_600SemiBold,
-  });
-
-  if (!fontsLoaded) {
-    return null;
-  }
-
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <View style={styles.titleContainer}>
-          <ThemedText style={styles.greeting}>Good Morning,{'\n'}Jono</ThemedText>
-        </View>
-        <ThemedText style={styles.subtitle}>Let's tune in. What's on your mind?</ThemedText>
-      </View>
-
-      <TouchableOpacity 
-        style={styles.mainButton}
-        onPress={() => router.push('/journal/new')}
+      <LinearGradient
+        colors={[Theme.colors.background, '#FFF']}
+        style={styles.gradient}
       >
-        <LinearGradient
-          colors={['#FFB6A9', '#B5C6E0']}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 0 }}
-          style={styles.gradientButton}>
-          <View style={styles.buttonContent}>
-            <ThemedText style={styles.mainButtonText}>✍️ Start journaling</ThemedText>
-          </View>
-        </LinearGradient>
-      </TouchableOpacity>
-
-      <View style={styles.secondaryButtonsContainer}>
-        <TouchableOpacity style={styles.secondaryButton}>
-          <ThemedText style={styles.secondaryButtonText}>🕯️ Set intention</ThemedText>
-        </TouchableOpacity>
+        <View style={styles.header}>
+          <ThemedText style={styles.greeting}>Good Morning,{'\n'}Jono</ThemedText>
+          <ThemedText style={styles.subtitle}>Let's tune in. What's on your mind?</ThemedText>
+        </View>
 
         <TouchableOpacity 
-          style={styles.secondaryButton}
-          onPress={() => router.push('/coach-settings')}
+          style={styles.mainButton}
+          onPress={() => router.push('/journal/new')}
         >
-          <ThemedText style={styles.secondaryButtonText}>⚙️ Coach Settings</ThemedText>
+          <LinearGradient
+            colors={[Theme.colors.gradientStart, Theme.colors.gradientEnd]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            style={styles.gradientButton}
+          >
+            <ThemedText style={styles.mainButtonText}>✍️ Start journaling</ThemedText>
+          </LinearGradient>
         </TouchableOpacity>
-      </View>
 
-      <TouchableOpacity 
-        style={styles.entryCard}
-        onPress={() => router.push('/journal')}
-      >
-        <ThemedText style={styles.entryTitle}>View All Entries</ThemedText>
-        <ThemedText style={styles.entryText}>Click to see your journal history ✨</ThemedText>
-      </TouchableOpacity>
+        <View style={styles.secondaryButtonsContainer}>
+          <TouchableOpacity style={styles.secondaryButton}>
+            <ThemedText style={styles.secondaryButtonText}>🕯️ Set intention</ThemedText>
+          </TouchableOpacity>
+
+          <TouchableOpacity 
+            style={styles.secondaryButton}
+            onPress={() => router.push('/coach-settings')}
+          >
+            <ThemedText style={styles.secondaryButtonText}>⚙️ Coach Settings</ThemedText>
+          </TouchableOpacity>
+        </View>
+
+        <TouchableOpacity 
+          style={styles.entryCard}
+          onPress={() => router.push('/journal')}
+        >
+          <ThemedText style={styles.entryTitle}>Latest Entry</ThemedText>
+          <ThemedText style={styles.entryText}>
+            Today I felt really productive. Made progress on several projects and had a great meditation session...
+          </ThemedText>
+          <ThemedText style={styles.entryTime}>2 hours ago</ThemedText>
+        </TouchableOpacity>
+      </LinearGradient>
     </View>
   );
 }
@@ -69,42 +65,36 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFF',
+    backgroundColor: Theme.colors.background,
+  },
+  gradient: {
+    flex: 1,
     padding: 20,
   },
   header: {
     marginTop: '15%',
-  },
-  titleContainer: {
-    marginBottom: 10,
+    marginBottom: 30,
   },
   greeting: {
     fontFamily: 'Poppins_600SemiBold',
     fontSize: 40,
-    background: 'linear-gradient(45deg, #FF9190, #B5C6E0)',
-    backgroundClip: 'text',
-    color: '#FF9190',
-    lineHeight: 48,
+    color: Theme.colors.primary,
+    marginBottom: 10,
   },
   subtitle: {
     fontFamily: 'Poppins_400Regular',
     fontSize: 18,
-    color: '#2D3142',
-    marginTop: 10,
+    color: Theme.colors.text,
   },
   mainButton: {
-    marginTop: 30,
     borderRadius: 30,
     overflow: 'hidden',
+    marginBottom: 20,
   },
   gradientButton: {
     padding: 16,
     alignItems: 'center',
     borderRadius: 30,
-  },
-  buttonContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
   },
   mainButtonText: {
     color: '#FFF',
@@ -113,41 +103,46 @@ const styles = StyleSheet.create({
   },
   secondaryButtonsContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 20,
     gap: 10,
+    marginBottom: 20,
   },
   secondaryButton: {
     flex: 1,
-    backgroundColor: '#FFF',
+    backgroundColor: Theme.colors.card,
     padding: 16,
     borderRadius: 20,
     borderWidth: 1,
     borderColor: '#E5E7EB',
   },
   secondaryButtonText: {
-    color: '#2D3142',
+    color: Theme.colors.text,
     fontSize: 16,
     fontFamily: 'Poppins_400Regular',
     textAlign: 'center',
   },
   entryCard: {
-    marginTop: 20,
-    backgroundColor: '#FFF',
+    backgroundColor: Theme.colors.card,
     padding: 20,
     borderRadius: 20,
     borderWidth: 1,
     borderColor: '#E5E7EB',
+    ...Theme.shadows.soft,
   },
   entryTitle: {
     fontSize: 24,
     fontFamily: 'Poppins_600SemiBold',
-    color: '#2D3142',
+    color: Theme.colors.text,
     marginBottom: 8,
   },
   entryText: {
     fontSize: 16,
     fontFamily: 'Poppins_400Regular',
-    color: '#2D3142',
+    color: Theme.colors.text,
+    marginBottom: 12,
+  },
+  entryTime: {
+    fontSize: 14,
+    fontFamily: 'Poppins_400Regular',
+    color: Theme.colors.textLight,
   },
 });
