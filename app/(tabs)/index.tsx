@@ -16,7 +16,7 @@ export default function HomeScreen() {
         style={styles.gradient}
       >
         <View style={styles.header}>
-          <ThemedText style={styles.greeting}>Good Morning,{'\n'}Jono</ThemedText>
+          <ThemedText style={styles.greeting}>Good{'\n'}Morning</ThemedText>
           <ThemedText style={styles.subtitle}>Let's tune in. What's on your mind?</ThemedText>
         </View>
 
