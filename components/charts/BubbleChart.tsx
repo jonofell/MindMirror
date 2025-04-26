@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Dimensions } from 'react-native';
-import { VictoryScatter, VictoryChart, VictoryAxis } from 'victory-native';
+import { VictoryScatter, VictoryChart, VictoryAxis } from 'victory';
 import { Theme } from '@/constants/Theme';
 
 const MOCK_DATA = [
