@@ -13,13 +13,17 @@ const MOCK_DATA = [
   { day: 'Sun', mood: 1, emoji: '☀️' },
 ];
 
-export const MoodLineChart = () => {
+export function MoodLineChart() {
   return (
-    <VictoryChart width={Dimensions.get('window').width - 40} height={200}>
+    <VictoryChart 
+      width={Dimensions.get('window').width - 80} 
+      height={200}
+      padding={{ top: 20, bottom: 40, left: 40, right: 40 }}
+    >
       <VictoryLine
         style={{
           data: {
-            stroke: "url(#gradient)",
+            stroke: Theme.colors.primary,
             strokeWidth: 3
           }
         }}
@@ -34,7 +38,7 @@ export const MoodLineChart = () => {
         size={7}
         style={{
           data: {
-            fill: Theme.colors.card
+            fill: Theme.colors.background
           },
           labels: {
             fontSize: 20
@@ -53,4 +57,4 @@ export const MoodLineChart = () => {
       />
     </VictoryChart>
   );
-};
+}
