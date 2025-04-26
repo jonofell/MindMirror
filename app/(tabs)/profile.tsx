@@ -1,12 +1,39 @@
 
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
+import { LinearGradient } from 'expo-linear-gradient';
+import { Theme } from '@/constants/Theme';
+import { router } from 'expo-router';
 
 export default function ProfileScreen() {
   return (
-    <View style={styles.container}>
-      <ThemedText style={styles.title}>Profile</ThemedText>
-    </View>
+    <LinearGradient
+      colors={['#FFF5F5', '#FFF']}
+      style={styles.container}
+    >
+      <ThemedText style={styles.logo}>MindMirror</ThemedText>
+      
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity style={styles.button}>
+          <ThemedText style={styles.buttonText}>Profile</ThemedText>
+        </TouchableOpacity>
+
+        <TouchableOpacity 
+          style={styles.button}
+          onPress={() => router.push('/coach-settings')}
+        >
+          <ThemedText style={styles.buttonText}>Coach Settings</ThemedText>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.button}>
+          <ThemedText style={styles.buttonText}>Subscription</ThemedText>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.button}>
+          <ThemedText style={styles.buttonText}>Log Out</ThemedText>
+        </TouchableOpacity>
+      </View>
+    </LinearGradient>
   );
 }
 
@@ -15,9 +42,28 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
   },
-  title: {
-    fontSize: 24,
+  logo: {
+    fontSize: 40,
     fontFamily: 'Poppins_600SemiBold',
-    marginTop: 60,
+    color: Theme.colors.primary,
+    textAlign: 'center',
+    marginTop: '20%',
+    marginBottom: 40,
+  },
+  buttonContainer: {
+    gap: 16,
+  },
+  button: {
+    backgroundColor: '#FFF',
+    padding: 20,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+  },
+  buttonText: {
+    fontSize: 18,
+    textAlign: 'center',
+    color: '#2D3142',
+    fontFamily: 'Poppins_400Regular',
   },
 });
