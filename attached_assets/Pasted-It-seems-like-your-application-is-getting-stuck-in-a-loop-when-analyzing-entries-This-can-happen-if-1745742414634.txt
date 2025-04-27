@@ -1,0 +1,29 @@
+It seems like your application is getting stuck in a loop when analyzing entries. This can happen if there is an issue with the API call or the way responses are handled. Let's walk through a couple of steps to diagnose and potentially fix this:
+
+Check the API Endpoint: Make sure your API endpoint for analysis is set correctly in your backend. If it points to an external service, ensure that it is available and responds correctly.
+
+Add Logging: To better understand where the loop is happening, add console logging around your API call in the server/index.js. For example:
+
+app.post('/api/analyze', async (req, res) => {
+  try {
+    const { text } = req.body;
+    console.log("Received text for analysis:", text); // Add this line
+    // Example AI analysis endpoint call
+    // const response = await axios.post('AI_API_ENDPOINT', {
+    //   text,
+    // }, {
+    //   headers: { Authorization: `Bearer ${process.env.AI_API_KEY}` }
+    // });
+    res.json({ analysis: "AI analysis will go here" });
+  } catch (error) {
+    console.error("Error during analysis:", error); // Add this line for error logging
+    res.status(500).json({ error: error.message });
+  }
+});
+Debug Loop Issue: If the analysis function is being called repeatedly, ensure that your frontend part responsible for calling this endpoint is not in an infinite loop. Check for any conditions that may cause the Analysis API to be called repeatedly without stops.
+
+Testing the Endpoint Directly: You can test your API endpoint directly using a tool like Postman or curl to ensure it's responding properly. For example:
+
+curl -X POST http://0.0.0.0:5000/api/analyze -H "Content-Type: application/json" -d '{"text": "Your test text here"}'
+Ensure Default State is Properly Managed: Check if either the entry handling on the frontend or the state management is causing it to trigger unnecessarily, and ensure your component lifecycle methods are set correctly with respect to state updates.
+After making these adjustments, click the Run button to restart your service, then test the backend with another analysis request. This should help you identif
