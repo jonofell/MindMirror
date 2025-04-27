@@ -18,9 +18,6 @@ export default function TabLayout() {
         headerShown: false,
         tabBarButton: HapticTab,
         tabBarBackground: TabBarBackground,
-        contentStyle: {
-          paddingTop: Platform.OS === 'ios' ? 50 : 0,
-        },
         tabBarStyle: Platform.select({
           ios: {
             height: 65,
