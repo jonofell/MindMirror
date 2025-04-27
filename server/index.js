@@ -1,4 +1,3 @@
-
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
@@ -30,13 +29,14 @@ app.get('/api/entries', (req, res) => {
 app.post('/api/entries', async (req, res) => {
   try {
     const { content } = req.body;
-    
+
     const entry = {
       id: Date.now().toString(),
       content,
       timestamp: Date.now(),
+      mood: 0.8, // Default mood for now
     };
-    
+
     entries.unshift(entry);
     res.json(entry);
   } catch (error) {
@@ -48,14 +48,14 @@ app.post('/api/entries', async (req, res) => {
 app.post('/api/analyze', async (req, res) => {
   try {
     const { text } = req.body;
-    
+
     // Example AI analysis endpoint call
     // const response = await axios.post('AI_API_ENDPOINT', {
     //   text,
     // }, {
     //   headers: { Authorization: `Bearer ${process.env.AI_API_KEY}` }
     // });
-    
+
     res.json({ analysis: "AI analysis will go here" });
   } catch (error) {
     res.status(500).json({ error: error.message });

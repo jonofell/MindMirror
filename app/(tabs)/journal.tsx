@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -21,17 +20,17 @@ export default function JournalScreen() {
       // Load local entries
       const storedEntries = await AsyncStorage.getItem('journal_entries');
       const localEntries = storedEntries ? JSON.parse(storedEntries) : [];
-      
+
       // Fetch from backend
-      const response = await fetch('http://0.0.0.0:5000/api/entries');
+      const response = await fetch(`https://${process.env.REPLIT_DEV_DOMAIN}/api/entries`);
       const { entries: backendEntries } = await response.json();
-      
+
       // Combine and deduplicate entries by id
       const allEntries = [...localEntries, ...backendEntries];
       const uniqueEntries = allEntries.filter((entry, index, self) =>
         index === self.findIndex((e) => e.id === entry.id)
       );
-      
+
       setEntries(uniqueEntries);
     } catch (error) {
       console.error('Error loading entries:', error);
