@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
   },
   backButton: {
     paddingHorizontal: 16,
-    paddingTop: 60,
+    paddingTop: Platform.OS === 'ios' ? 50 : 20,
     paddingBottom: 20,
   },
   backButtonText: {
