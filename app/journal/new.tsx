@@ -64,14 +64,26 @@ export default function NewJournalEntry() {
         ]);
       }
 
-      const newEntry = {
-        id: Date.now().toString(),
-        content: [...entries, { text: currentEntry, prompt: PROMPTS[currentPrompt] }]
-          .map((e) => `${e.prompt}\n${e.text}`)
-          .join("\n\n"),
-        timestamp: Date.now(),
-      };
+      const entryContent = [...entries, { text: currentEntry, prompt: PROMPTS[currentPrompt] }]
+        .map((e) => `${e.prompt}\n${e.text}`)
+        .join("\n\n");
 
+      // Send to backend
+      const response = await fetch('http://0.0.0.0:5000/api/entries', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ content: entryContent }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to save entry');
+      }
+
+      const newEntry = await response.json();
+      
+      // Still save locally for offline access
       const existingEntries = await AsyncStorage.getItem("journal_entries");
       const allEntries = existingEntries ? JSON.parse(existingEntries) : [];
       allEntries.unshift(newEntry);
