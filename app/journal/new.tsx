@@ -78,10 +78,12 @@ export default function NewJournalEntry() {
       });
 
       if (!response.ok) {
+        console.error('Server error:', await response.text());
         throw new Error('Failed to save entry');
       }
 
       const newEntry = await response.json();
+      console.log('Entry saved:', newEntry);
       
       // Still save locally for offline access
       const existingEntries = await AsyncStorage.getItem("journal_entries");
