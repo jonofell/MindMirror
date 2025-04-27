@@ -1,7 +1,7 @@
+
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
-const axios = require('axios');
 
 dotenv.config();
 const app = express();
@@ -12,13 +12,8 @@ app.use(cors({
 }));
 app.use(express.json());
 
-// Basic health check
-app.get('/health', (req, res) => {
-  res.json({ status: 'ok' });
-});
-
 // In-memory storage
-const entries = [];
+let entries = [];
 
 // Get all journal entries
 app.get('/api/entries', (req, res) => {
@@ -29,35 +24,39 @@ app.get('/api/entries', (req, res) => {
 app.post('/api/entries', async (req, res) => {
   try {
     const { content } = req.body;
+    console.log('Received entry:', content);
 
     const entry = {
       id: Date.now().toString(),
       content,
-      timestamp: Date.now(),
-      mood: 0.8, // Default mood for now
+      timestamp: Date.now()
     };
 
     entries.unshift(entry);
+    console.log('Saved entry:', entry);
     res.json(entry);
   } catch (error) {
+    console.error('Error saving entry:', error);
     res.status(500).json({ error: error.message });
   }
 });
 
-// Analyze text with AI (placeholder)
+// Simple sentiment analysis
 app.post('/api/analyze', async (req, res) => {
   try {
     const { text } = req.body;
+    console.log('Analyzing text:', text);
+    
+    // Simple mock analysis
+    const analysis = {
+      sentiment: 'positive',
+      score: 0.8
+    };
 
-    // Example AI analysis endpoint call
-    // const response = await axios.post('AI_API_ENDPOINT', {
-    //   text,
-    // }, {
-    //   headers: { Authorization: `Bearer ${process.env.AI_API_KEY}` }
-    // });
-
-    res.json({ analysis: "AI analysis will go here" });
+    console.log('Analysis result:', analysis);
+    res.json(analysis);
   } catch (error) {
+    console.error('Analysis error:', error);
     res.status(500).json({ error: error.message });
   }
 });
