@@ -51,6 +51,15 @@ mode = "sequential"
 task = "shell.exec"
 args = "npx eas build --platform android --profile preview"
 
+[[workflows.workflow]]
+name = "Backend Server"
+author = 41834918
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd server && node index.js"
+
 [deployment]
 deploymentTarget = "cloudrun"
 run = ["sh", "-c", "npx serve dist -p 8081"]
