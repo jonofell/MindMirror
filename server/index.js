@@ -15,10 +15,12 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok' });
 });
 
-// Get all journal entries (placeholder for now)
+// In-memory storage
+const entries = [];
+
+// Get all journal entries
 app.get('/api/entries', (req, res) => {
-  // TODO: Add database integration
-  res.json({ entries: [] });
+  res.json({ entries });
 });
 
 // Create new journal entry
@@ -26,13 +28,14 @@ app.post('/api/entries', async (req, res) => {
   try {
     const { content } = req.body;
     
-    // TODO: Add database integration
-    // For now, just return the entry
-    res.json({
-      id: Date.now(),
+    const entry = {
+      id: Date.now().toString(),
       content,
-      timestamp: new Date(),
-    });
+      timestamp: Date.now(),
+    };
+    
+    entries.unshift(entry);
+    res.json(entry);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

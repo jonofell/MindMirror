@@ -18,10 +18,21 @@ export default function JournalScreen() {
 
   const loadEntries = async () => {
     try {
+      // Load local entries
       const storedEntries = await AsyncStorage.getItem('journal_entries');
-      if (storedEntries) {
-        setEntries(JSON.parse(storedEntries));
-      }
+      const localEntries = storedEntries ? JSON.parse(storedEntries) : [];
+      
+      // Fetch from backend
+      const response = await fetch('http://0.0.0.0:5000/api/entries');
+      const { entries: backendEntries } = await response.json();
+      
+      // Combine and deduplicate entries by id
+      const allEntries = [...localEntries, ...backendEntries];
+      const uniqueEntries = allEntries.filter((entry, index, self) =>
+        index === self.findIndex((e) => e.id === entry.id)
+      );
+      
+      setEntries(uniqueEntries);
     } catch (error) {
       console.error('Error loading entries:', error);
     }
