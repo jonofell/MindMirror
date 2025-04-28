@@ -76,6 +76,15 @@ mode = "sequential"
 task = "shell.exec"
 args = "cd server && node index.js"
 
+[[workflows.workflow]]
+name = "Stop Servers"
+author = 41834918
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "pkill -f \"node\""
+
 [deployment]
 deploymentTarget = "cloudrun"
 run = ["sh", "-c", "npx serve dist -p 8081"]
