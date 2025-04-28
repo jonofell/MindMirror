@@ -73,7 +73,7 @@ export default function NewJournalEntry() {
 
       // Send to backend
       const response = await fetch(
-        `mindmirror-production-b2e2.up.railway.app`,
+        `https://mindmirror-production-b2e2.up.railway.app/api/entries`,
         {
           method: "POST",
           headers: {
