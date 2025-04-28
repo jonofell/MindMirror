@@ -4,22 +4,6 @@ modules = ["nodejs-20"]
 [nix]
 channel = "stable-24_05"
 
-[[ports]]
-localPort = 5000
-externalPort = 5000
-
-[[ports]]
-localPort = 8081
-externalPort = 80
-
-[[ports]]
-localPort = 8082
-externalPort = 3000
-
-[[ports]]
-localPort = 8083
-externalPort = 3001
-
 [workflows]
 runButton = "Frontend Dev"
 
@@ -139,9 +123,8 @@ mode = "sequential"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "EXPO_PUBLIC_ALLOW_ORIGIN=* EXPO_NO_TUNNEL=1 EXPO_PACKAGER_PROXY_URL=https://$REPLIT_DEV_DOMAIN REACT_NATIVE_PACKAGER_HOSTNAME=$REPLIT_DEV_DOMAIN npx expo start --port=8082 --clear"
+args = "EXPO_PUBLIC_ALLOW_ORIGIN=* EXPO_NO_TUNNEL=1 EXPO_PACKAGER_PROXY_URL=https://$REPLIT_DEV_DOMAIN REACT_NATIVE_PACKAGER_HOSTNAME=$REPLIT_DEV_DOMAIN npx expo start --port=8082 --clear --host 0.0.0.0"
 
-[deployment]
-deploymentTarget = "cloudrun"
-run = ["sh", "-c", "npx serve dist -p 8081"]
-build = ["sh", "-c", "npm install && npx expo export --platform web"]
+[[ports]]
+localPort = 5000
+externalPort = 80
