@@ -85,6 +85,15 @@ mode = "sequential"
 task = "shell.exec"
 args = "pkill -f \"node\""
 
+[[workflows.workflow]]
+name = "Force Stop"
+author = 41834918
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "pkill -f \"node\""
+
 [deployment]
 deploymentTarget = "cloudrun"
 run = ["sh", "-c", "npx serve dist -p 8081"]
