@@ -21,9 +21,11 @@ export default function TabLayout() {
           ios: {
             height: 65,
             position: "absolute",
+            boxShadow: "0px 2px 4px rgba(0,0,0,0.1)"
           },
           default: {
             height: 65,
+            boxShadow: "0px 2px 4px rgba(0,0,0,0.1)"
           },
         }),
       }}
