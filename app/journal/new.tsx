@@ -64,27 +64,33 @@ export default function NewJournalEntry() {
         ]);
       }
 
-      const entryContent = [...entries, { text: currentEntry, prompt: PROMPTS[currentPrompt] }]
+      const entryContent = [
+        ...entries,
+        { text: currentEntry, prompt: PROMPTS[currentPrompt] },
+      ]
         .map((e) => `${e.prompt}\n${e.text}`)
         .join("\n\n");
 
       // Send to backend
-      const response = await fetch(`https://your-railway-app.railway.app/api/entries`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `mindmirror-production-b2e2.up.railway.app`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ content: entryContent }),
         },
-        body: JSON.stringify({ content: entryContent }),
-      });
+      );
 
       if (!response.ok) {
-        console.error('Server error:', await response.text());
-        throw new Error('Failed to save entry');
+        console.error("Server error:", await response.text());
+        throw new Error("Failed to save entry");
       }
 
       const newEntry = await response.json();
-      console.log('Entry saved:', newEntry);
-      
+      console.log("Entry saved:", newEntry);
+
       // Still save locally for offline access
       const existingEntries = await AsyncStorage.getItem("journal_entries");
       const allEntries = existingEntries ? JSON.parse(existingEntries) : [];
@@ -103,7 +109,10 @@ export default function NewJournalEntry() {
       style={styles.container}
       keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
     >
-      <TouchableOpacity onPress={() => router.push('/(tabs)')} style={styles.backButton}>
+      <TouchableOpacity
+        onPress={() => router.push("/(tabs)")}
+        style={styles.backButton}
+      >
         <ThemedText style={styles.backButtonText}>← Back</ThemedText>
       </TouchableOpacity>
 

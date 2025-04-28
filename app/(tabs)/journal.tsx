@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ThemedText } from '@/components/ThemedText';
-import { Collapsible } from '@/components/Collapsible';
-import { JournalEntry } from '@/types/journal';
-import { Theme } from '@/constants/Theme';
-import { LinearGradient } from 'expo-linear-gradient';
+import React, { useEffect, useState } from "react";
+import { View, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ThemedText } from "@/components/ThemedText";
+import { Collapsible } from "@/components/Collapsible";
+import { JournalEntry } from "@/types/journal";
+import { Theme } from "@/constants/Theme";
+import { LinearGradient } from "expo-linear-gradient";
 
 export default function JournalScreen() {
   const [entries, setEntries] = useState<JournalEntry[]>([]);
@@ -18,22 +18,23 @@ export default function JournalScreen() {
   const loadEntries = async () => {
     try {
       // Load local entries
-      const storedEntries = await AsyncStorage.getItem('journal_entries');
+      const storedEntries = await AsyncStorage.getItem("journal_entries");
       const localEntries = storedEntries ? JSON.parse(storedEntries) : [];
 
       // Fetch from backend
-      const response = await fetch(`https://your-railway-app.railway.app/api/entries`);
+      const response = await fetch(`mindmirror-production-b2e2.up.railway.app`);
       const { entries: backendEntries } = await response.json();
 
       // Combine and deduplicate entries by id
       const allEntries = [...localEntries, ...backendEntries];
-      const uniqueEntries = allEntries.filter((entry, index, self) =>
-        index === self.findIndex((e) => e.id === entry.id)
+      const uniqueEntries = allEntries.filter(
+        (entry, index, self) =>
+          index === self.findIndex((e) => e.id === entry.id),
       );
 
       setEntries(uniqueEntries);
     } catch (error) {
-      console.error('Error loading entries:', error);
+      console.error("Error loading entries:", error);
     }
   };
 
@@ -47,7 +48,7 @@ export default function JournalScreen() {
           <ThemedText style={styles.title}>Journal Entries</ThemedText>
           <TouchableOpacity onPress={() => setIsCollapsed(!isCollapsed)}>
             <ThemedText style={styles.toggleButton}>
-              {isCollapsed ? 'Show prompts' : 'Hide prompts'}
+              {isCollapsed ? "Show prompts" : "Hide prompts"}
             </ThemedText>
           </TouchableOpacity>
         </View>
@@ -56,16 +57,18 @@ export default function JournalScreen() {
             <ThemedText style={styles.entryDate}>
               {new Date(entry.timestamp).toLocaleDateString()}
             </ThemedText>
-            {entry.content.split('\n\n').map((section, index) => {
-              const parts = section.split('\n');
-              const prompt = parts[0] || '';
-              const response = parts.slice(1).join('\n') || '';
+            {entry.content.split("\n\n").map((section, index) => {
+              const parts = section.split("\n");
+              const prompt = parts[0] || "";
+              const response = parts.slice(1).join("\n") || "";
               return prompt && response ? (
                 <View key={index}>
                   {!isCollapsed && (
                     <ThemedText style={styles.promptText}>{prompt}</ThemedText>
                   )}
-                  <ThemedText style={styles.entryContent}>{response}</ThemedText>
+                  <ThemedText style={styles.entryContent}>
+                    {response}
+                  </ThemedText>
                 </View>
               ) : null;
             })}
@@ -78,19 +81,19 @@ export default function JournalScreen() {
 
 const styles = StyleSheet.create({
   headerContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 20,
   },
   toggleButton: {
     color: Theme.colors.primary,
     fontSize: 16,
-    fontFamily: 'Poppins_600SemiBold',
+    fontFamily: "Poppins_600SemiBold",
   },
   promptText: {
     fontSize: 14,
-    fontFamily: 'Poppins_600SemiBold',
+    fontFamily: "Poppins_600SemiBold",
     color: Theme.colors.textLight,
     marginBottom: 4,
   },
@@ -103,7 +106,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontFamily: 'Poppins_600SemiBold',
+    fontFamily: "Poppins_600SemiBold",
     marginTop: 60,
     marginBottom: 20,
   },
@@ -112,7 +115,7 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 12,
     marginBottom: 16,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -120,13 +123,13 @@ const styles = StyleSheet.create({
   },
   entryDate: {
     fontSize: 14,
-    fontFamily: 'Poppins_400Regular',
+    fontFamily: "Poppins_400Regular",
     color: Theme.colors.textLight,
     marginBottom: 8,
   },
   entryContent: {
     fontSize: 16,
-    fontFamily: 'Poppins_400Regular',
+    fontFamily: "Poppins_400Regular",
     marginTop: 8,
   },
 });
