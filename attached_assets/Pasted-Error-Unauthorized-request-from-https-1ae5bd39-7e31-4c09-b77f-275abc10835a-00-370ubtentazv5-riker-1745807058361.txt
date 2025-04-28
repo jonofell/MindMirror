@@ -1,0 +1,31 @@
+Error: Unauthorized request from https://1ae5bd39-7e31-4c09-b77f-275abc10835a-00-370ubtentazv5.riker.replit.dev:3000. This may happen because of a conflicting browser extension to intercept HTTP requests. Please try again without browser extensions or using incognito mode.
+    at /home/runner/workspace/node_modules/@expo/cli/src/start/server/middleware/CorsMiddleware.ts:27:11
+    at call (/home/runner/workspace/node_modules/connect/index.js:239:7)
+    at next (/home/runner/workspace/node_modules/connect/index.js:183:5)
+    at /home/runner/workspace/node_modules/@expo/cli/src/start/server/middleware/ContextModuleSourceMapsMiddleware.ts:29:7
+    at call (/home/runner/workspace/node_modules/connect/index.js:239:7)
+    at next (/home/runner/workspace/node_modules/connect/index.js:183:5)
+    at middleware (/home/runner/workspace/node_modules/@expo/cli/src/start/server/middleware/ExpoMiddleware.ts:62:16)
+    at call (/home/runner/workspace/node_modules/connect/index.js:239:7)
+    at next (/home/runner/workspace/node_modules/connect/index.js:183:5)
+    at Function.handle (/home/runner/workspace/node_modules/connect/index.js:186:3)
+Error: Unauthorized request from https://1ae5bd39-7e31-4c09-b77f-275abc10835a-00-370ubtentazv5.riker.replit.dev:3000. This may happen because of a conflicting browser extension to intercept HTTP requests. Please try again without browser extensions or using incognito mode.
+    at /home/runner/workspace/node_modules/@expo/cli/src/start/server/middleware/CorsMiddleware.ts:27:11
+    at call (/home/runner/workspace/node_modules/connect/index.js:239:7)
+    at next (/home/runner/workspace/node_modules/connect/index.js:183:5)
+    at /home/runner/workspace/node_modules/@expo/cli/src/start/server/middleware/ContextModuleSourceMapsMiddleware.ts:29:7
+    at call (/home/runner/workspace/node_modules/connect/index.js:239:7)
+    at next (/home/runner/workspace/node_modules/connect/index.js:183:5)
+    at middleware (/home/runner/workspace/node_modules/@expo/cli/src/start/server/middleware/ExpoMiddleware.ts:62:16)
+    at call (/home/runner/workspace/node_modules/connect/index.js:239:7)
+    at next (/home/runner/workspace/node_modules/connect/index.js:183:5)
+    at Function.handle (/home/runner/workspace/node_modules/connect/index.js:186:3)
+Error: Unauthorized request from https://1ae5bd39-7e31-4c09-b77f-275abc10835a-00-370ubtentazv5.riker.replit.dev:3000. This may happen because of a conflicting browser extension to intercept HTTP requests. Please try again without browser extensions or using incognito mode.
+    at /home/runner/workspace/node_modules/@expo/cli/src/start/server/middleware/CorsMiddleware.ts:27:11
+    at call (/home/runner/workspace/node_modules/connect/index.js:239:7)
+    at next (/home/runner/workspace/node_modules/connect/index.js:183:5)
+    at /home/runner/workspace/node_modules/@expo/cli/src/start/server/middleware/ContextModuleSourceMapsMiddleware.ts:29:7
+    at call (/home/runner/workspace/node_modules/connect/index.js:239:7)
+    at next (/home/runner/workspace/node_modules/connect/index.js:183:5)
+    at middleware (/home/runner/workspace/node_modules/@expo/cli/src/start/server/middleware/ExpoMiddleware.ts:62:16)
+    at call (/home/runner/workspace/node_modules/connect/index.js:239:7)
