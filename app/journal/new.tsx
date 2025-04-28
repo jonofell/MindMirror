@@ -69,7 +69,7 @@ export default function NewJournalEntry() {
         .join("\n\n");
 
       // Send to backend
-      const response = await fetch(`https://${process.env.REPLIT_DEV_DOMAIN}/api/entries`, {
+      const response = await fetch(`https://${process.env.REPLIT_DEV_DOMAIN}:5000/api/entries`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
