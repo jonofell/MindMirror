@@ -21,7 +21,7 @@ localPort = 8083
 externalPort = 3001
 
 [workflows]
-runButton = "Dev Server"
+runButton = "Dev Server with CORS"
 
 [[workflows.workflow]]
 name = "Dev Server"
@@ -109,6 +109,19 @@ args = "cd server && node index.js & "
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "EXPO_PACKAGER_PROXY_URL=https://${REPLIT_DEV_DOMAIN} REACT_NATIVE_PACKAGER_HOSTNAME=${REPLIT_DEV_DOMAIN} EXPO_NO_TUNNEL=1 npx expo start --port=8082 --clear"
+
+[[workflows.workflow]]
+name = "Dev Server with CORS"
+author = 41834918
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd server && node index.js &"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "EXPO_PUBLIC_ALLOW_ORIGIN=* EXPO_PACKAGER_PROXY_URL=https://$REPLIT_DEV_DOMAIN REACT_NATIVE_PACKAGER_HOSTNAME=$REPLIT_DEV_DOMAIN npx expo start --port=8082"
 
 [deployment]
 deploymentTarget = "cloudrun"
