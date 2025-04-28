@@ -12,6 +12,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Root route handler
+app.get('/', (req, res) => {
+  res.json({ message: 'API server is running' });
+});
+
 // File-based storage path
 const STORAGE_FILE = path.join(__dirname, 'entries.json');
 
