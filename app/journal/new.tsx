@@ -94,7 +94,7 @@ export default function NewJournalEntry() {
       // Generate reflection
       try {
         const reflectionResponse = await fetch(
-          `http://0.0.0.0:5000/api/reflect`,
+          `https://mindmirror-production-b2e2.up.railway.app/api/reflect`,
           {
             method: "POST",
             headers: {
