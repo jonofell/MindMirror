@@ -73,6 +73,43 @@ app.post('/api/entries', async (req, res) => {
   }
 });
 
+const axios = require('axios');
+const OpenAI = require('openai');
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY
+});
+
+app.post('/api/reflect', async (req, res) => {
+  try {
+    const { content } = req.body;
+
+    if (!content || typeof content !== 'string' || content.trim() === '') {
+      return res.status(400).json({ error: 'Missing or invalid content field' });
+    }
+
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4",
+      messages: [
+        {
+          role: "system",
+          content: "You are a thoughtful journal reflection assistant. Analyze the journal entry and provide a brief, insightful reflection that helps the user gain deeper understanding of their thoughts and feelings."
+        },
+        {
+          role: "user",
+          content: content.trim()
+        }
+      ],
+    });
+
+    const reflection = completion.choices[0].message.content;
+    res.json({ reflection });
+  } catch (error) {
+    console.error('Error generating reflection:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 const port = 5000;
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
