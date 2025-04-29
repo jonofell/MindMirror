@@ -110,6 +110,37 @@ app.post('/api/reflect', async (req, res) => {
   }
 });
 
+// Generate reflection for journal entry
+app.post('/api/reflect', async (req, res) => {
+  try {
+    const { content } = req.body;
+    
+    if (!content || typeof content !== 'string' || content.trim() === '') {
+      return res.status(400).json({ error: 'Missing or invalid content field' });
+    }
+
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4",
+      messages: [
+        {
+          role: "system",
+          content: "You are a thoughtful journal reflection coach. Your role is to encourage deeper understanding and personal growth. Provide calming, non-judgmental insights based on the journal entry provided."
+        },
+        {
+          role: "user",
+          content: `Here is my journal entry: "${content}". Reflect on it gently. Highlight emotional patterns, growth opportunities, or calming advice.`
+        }
+      ],
+    });
+
+    const reflection = completion.choices[0].message.content;
+    res.json({ reflection });
+  } catch (error) {
+    console.error('Error generating reflection:', error);
+    res.status(500).json({ error: 'Failed to generate reflection' });
+  }
+});
+
 const port = 5000;
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);

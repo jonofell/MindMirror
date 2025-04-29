@@ -91,7 +91,35 @@ export default function NewJournalEntry() {
       allEntries.unshift(newEntry);
       await AsyncStorage.setItem("journal_entries", JSON.stringify(allEntries));
 
-      router.replace("/(tabs)");
+      // Generate reflection
+      try {
+        const reflectionResponse = await fetch(
+          `https://mindmirror-production-b2e2.up.railway.app/api/reflect`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ content: entryContent }),
+          }
+        );
+
+        if (!reflectionResponse.ok) {
+          throw new Error('Failed to generate reflection');
+        }
+
+        const { reflection } = await reflectionResponse.json();
+        router.push({
+          pathname: "/journal/reflection",
+          params: { reflection }
+        });
+      } catch (error) {
+        console.error("Error generating reflection:", error);
+        router.push({
+          pathname: "/journal/reflection",
+          params: { error: "Failed to generate reflection" }
+        });
+      }
     } catch (error) {
       console.error("Error saving entry:", error);
     }
