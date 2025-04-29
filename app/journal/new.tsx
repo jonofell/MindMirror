@@ -57,17 +57,11 @@ export default function NewJournalEntry() {
   const saveEntry = async () => {
     try {
       // Include the current entry if it's not empty
-      if (currentEntry.trim()) {
-        setEntries([
-          ...entries,
-          { text: currentEntry, prompt: PROMPTS[currentPrompt] },
-        ]);
-      }
+      const finalEntries = currentEntry.trim() 
+        ? [...entries, { text: currentEntry, prompt: PROMPTS[currentPrompt] }]
+        : entries;
 
-      const entryContent = [
-        ...entries,
-        { text: currentEntry, prompt: PROMPTS[currentPrompt] },
-      ]
+      const entryContent = finalEntries
         .map((e) => `${e.prompt}\n${e.text}`)
         .join("\n\n");
 
