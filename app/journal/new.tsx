@@ -66,8 +66,13 @@ export default function NewJournalEntry() {
         .join("\n\n");
 
       // Send to backend
+      // Use Replit dev URL in development, Railway in production
+      const baseUrl = __DEV__ 
+        ? `https://${process.env.EXPO_PUBLIC_REPLIT_ID}.replit.dev`
+        : 'https://mindmirror-production-b2e2.up.railway.app';
+
       const response = await fetch(
-        `https://mindmirror-production-b2e2.up.railway.app/api/entries`,
+        `${baseUrl}/api/entries`,
         {
           method: "POST",
           headers: {
@@ -93,8 +98,13 @@ export default function NewJournalEntry() {
 
       // Generate reflection
       try {
+        // Use Replit dev URL in development, Railway in production
+        const baseUrl = __DEV__ 
+          ? `https://${process.env.EXPO_PUBLIC_REPLIT_ID}.replit.dev`
+          : 'https://mindmirror-production-b2e2.up.railway.app';
+
         const reflectionResponse = await fetch(
-          `https://mindmirror-production-b2e2.up.railway.app/api/reflect`,
+          `${baseUrl}/api/reflect`,
           {
             method: "POST",
             headers: {
