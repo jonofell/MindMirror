@@ -22,7 +22,7 @@ export default function JournalScreen() {
       const localEntries = storedEntries ? JSON.parse(storedEntries) : [];
 
       // Fetch from backend
-      const response = await fetch(`http://0.0.0.0:5000/api/entries`);
+      const response = await fetch(`https://mindmirror-production-b2e2.up.railway.app/api/entries`);
       const { entries: backendEntries } = await response.json();
 
       // Combine and deduplicate entries by id

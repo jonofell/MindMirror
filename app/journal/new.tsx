@@ -67,7 +67,9 @@ export default function NewJournalEntry() {
 
       // Send to backend
       // Use Replit dev URL in development, Railway in production
-      const baseUrl = 'http://0.0.0.0:5000';
+      const baseUrl = __DEV__ 
+        ? 'https://1ae5bd39-7e31-4c09-b77f-275abc10835a-00-370ubtentazv5.riker.replit.dev'
+        : 'https://mindmirror-production-b2e2.up.railway.app';
 
       const response = await fetch(
         `${baseUrl}/api/entries`,
