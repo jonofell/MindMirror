@@ -1,14 +1,15 @@
+
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { StyleSheet, TouchableOpacity, View, Text } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import ThemedText from "@/components/ThemedText";
-import Theme from "@/constants/Theme";
+import { ThemedText } from "@/components/ThemedText";
+import { Theme } from "@/constants/Theme";
 
 export default function HomeScreen() {
   const router = useRouter();
-  const [latestEntry, setLatestEntry] = useState(""); // Latest journal content
+  const [latestEntry, setLatestEntry] = useState(""); 
 
   useEffect(() => {
     const loadLatestEntry = async () => {
@@ -17,7 +18,9 @@ export default function HomeScreen() {
         if (storedEntries) {
           const entries = JSON.parse(storedEntries);
           if (entries.length > 0) {
-            setLatestEntry(entries[0].content); // Show latest
+            // Get first paragraph of content
+            const content = entries[0].content.split('\n\n')[1] || entries[0].content;
+            setLatestEntry(content);
           }
         }
       } catch (error) {
@@ -30,33 +33,69 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      <ThemedText style={styles.title}>Latest Journal Entry</ThemedText>
-      <Text style={styles.entry}>{latestEntry || "No entries yet 😶"}</Text>
+      <LinearGradient
+        colors={[Theme.colors.background, '#FFF']}
+        style={styles.gradient}
+      >
+        <View style={styles.header}>
+          <ThemedText style={styles.greeting}>Good{'\n'}Morning</ThemedText>
+          <ThemedText style={styles.subtitle}>Let's tune in. What's on your mind?</ThemedText>
+        </View>
 
-      <TouchableOpacity onPress={() => router.push("/journal/new")}>
-        <Text style={styles.link}>Write a new entry →</Text>
-      </TouchableOpacity>
+        <TouchableOpacity 
+          style={styles.entryCard}
+          onPress={() => router.push('/journal')}
+        >
+          <ThemedText style={styles.entryTitle}>Latest Entry</ThemedText>
+          <ThemedText style={styles.entryText}>
+            {latestEntry || "No entries yet. Start journaling!"}
+          </ThemedText>
+          <ThemedText style={styles.entryTime}>Today</ThemedText>
+        </TouchableOpacity>
+      </LinearGradient>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+  },
+  gradient: {
+    flex: 1,
     padding: 20,
-    marginTop: 50,
   },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 10,
+  header: {
+    marginTop: 60,
+    marginBottom: 30,
   },
-  entry: {
+  greeting: {
+    fontSize: 32,
+    fontFamily: "Poppins_600SemiBold",
+    marginBottom: 8,
+  },
+  subtitle: {
     fontSize: 16,
-    color: "#444",
-    marginBottom: 20,
+    color: Theme.colors.textLight,
   },
-  link: {
-    color: Theme.colors.primary,
-    fontWeight: "600",
+  entryCard: {
+    backgroundColor: Theme.colors.card,
+    padding: 16,
+    borderRadius: 12,
+    marginTop: 20,
+  },
+  entryTitle: {
+    fontSize: 18,
+    fontFamily: "Poppins_600SemiBold",
+    marginBottom: 8,
+  },
+  entryText: {
+    fontSize: 16,
+    color: Theme.colors.text,
+    marginBottom: 12,
+  },
+  entryTime: {
+    fontSize: 14,
+    color: Theme.colors.textLight,
   },
 });
