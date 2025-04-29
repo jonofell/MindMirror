@@ -1,20 +1,52 @@
-
 const express = require('express');
 const cors = require('cors');
-const dotenv = require('dotenv');
-const { v4: uuidv4 } = require('uuid');
-const fs = require('fs/promises');
-const path = require('path');
+const OpenAI = require('openai');
+require('dotenv').config();
 
-dotenv.config();
 const app = express();
-
 app.use(cors());
 app.use(express.json());
 
-// Root route handler
-app.get('/', (req, res) => {
-  res.json({ message: 'API server is running' });
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY
+});
+
+app.post('/api/reflect', async (req, res) => {
+  try {
+    const { content } = req.body;
+
+    if (!content || typeof content !== 'string' || content.trim() === '') {
+      return res.status(400).json({ error: 'Missing or invalid content field' });
+    }
+
+    if (!process.env.OPENAI_API_KEY) {
+      console.error('OpenAI API key not found');
+      return res.status(500).json({ error: 'OpenAI API key not configured' });
+    }
+
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4",
+      messages: [
+        {
+          role: "system",
+          content: "You are a thoughtful journal reflection assistant. Analyze the journal entry and provide a brief, insightful reflection that helps the user gain deeper understanding of their thoughts and feelings."
+        },
+        {
+          role: "user",
+          content: content.trim()
+        }
+      ],
+    });
+
+    const reflection = completion.choices[0].message.content;
+    res.json({ reflection });
+  } catch (error) {
+    console.error('Error generating reflection:', error);
+    res.status(500).json({ 
+      error: 'Failed to generate reflection',
+      details: error.message 
+    });
+  }
 });
 
 // File-based storage path
@@ -34,6 +66,11 @@ async function loadEntries() {
 async function saveEntries(entries) {
   await fs.writeFile(STORAGE_FILE, JSON.stringify(entries, null, 2));
 }
+
+// Root route handler
+app.get('/', (req, res) => {
+  res.json({ message: 'API server is running' });
+});
 
 // Get all journal entries
 app.get('/api/entries', async (req, res) => {
@@ -73,75 +110,13 @@ app.post('/api/entries', async (req, res) => {
   }
 });
 
-const axios = require('axios');
-const OpenAI = require('openai');
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
-});
+const fs = require('fs/promises');
+const path = require('path');
+const { v4: uuidv4 } = require('uuid');
 
-app.post('/api/reflect', async (req, res) => {
-  try {
-    const { content } = req.body;
 
-    if (!content || typeof content !== 'string' || content.trim() === '') {
-      return res.status(400).json({ error: 'Missing or invalid content field' });
-    }
-
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4",
-      messages: [
-        {
-          role: "system",
-          content: "You are a thoughtful journal reflection assistant. Analyze the journal entry and provide a brief, insightful reflection that helps the user gain deeper understanding of their thoughts and feelings."
-        },
-        {
-          role: "user",
-          content: content.trim()
-        }
-      ],
-    });
-
-    const reflection = completion.choices[0].message.content;
-    res.json({ reflection });
-  } catch (error) {
-    console.error('Error generating reflection:', error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
-
-// Generate reflection for journal entry
-app.post('/api/reflect', async (req, res) => {
-  try {
-    const { content } = req.body;
-    
-    if (!content || typeof content !== 'string' || content.trim() === '') {
-      return res.status(400).json({ error: 'Missing or invalid content field' });
-    }
-
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4",
-      messages: [
-        {
-          role: "system",
-          content: "You are a thoughtful journal reflection coach. Your role is to encourage deeper understanding and personal growth. Provide calming, non-judgmental insights based on the journal entry provided."
-        },
-        {
-          role: "user",
-          content: `Here is my journal entry: "${content}". Reflect on it gently. Highlight emotional patterns, growth opportunities, or calming advice.`
-        }
-      ],
-    });
-
-    const reflection = completion.choices[0].message.content;
-    res.json({ reflection });
-  } catch (error) {
-    console.error('Error generating reflection:', error);
-    res.status(500).json({ error: 'Failed to generate reflection' });
-  }
-});
-
-const port = 5000;
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server running on port ${PORT}`);
 });
