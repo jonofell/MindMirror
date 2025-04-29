@@ -1,6 +1,9 @@
 const express = require('express');
 const cors = require('cors');
 const OpenAI = require('openai');
+const fs = require('fs/promises');
+const path = require('path');
+const { v4: uuidv4 } = require('uuid');
 require('dotenv').config();
 
 const app = express();
@@ -11,6 +14,27 @@ app.use(cors({
 }));
 app.use(express.json());
 
+// File-based storage path
+const STORAGE_FILE = path.join(__dirname, 'entries.json');
+
+// Load entries from file or initialize empty array
+async function loadEntries() {
+  try {
+    await fs.access(STORAGE_FILE);
+    const data = await fs.readFile(STORAGE_FILE, 'utf8');
+    return JSON.parse(data);
+  } catch (error) {
+    // If file doesn't exist, create it with empty array
+    await fs.writeFile(STORAGE_FILE, '[]');
+    return [];
+  }
+}
+
+// Save entries to file
+async function saveEntries(entries) {
+  await fs.writeFile(STORAGE_FILE, JSON.stringify(entries, null, 2));
+}
+
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
 });
@@ -18,14 +42,8 @@ const openai = new OpenAI({
 app.post('/api/reflect', async (req, res) => {
   try {
     const { content } = req.body;
-
-    if (!content || typeof content !== 'string' || content.trim() === '') {
-      return res.status(400).json({ error: 'Missing or invalid content field' });
-    }
-
-    if (!process.env.OPENAI_API_KEY) {
-      console.error('OpenAI API key not found');
-      return res.status(500).json({ error: 'OpenAI API key not configured' });
+    if (!content) {
+      return res.status(400).json({ error: 'Missing content' });
     }
 
     const completion = await openai.chat.completions.create({
@@ -37,7 +55,7 @@ app.post('/api/reflect', async (req, res) => {
         },
         {
           role: "user",
-          content: content.trim()
+          content: content
         }
       ],
     });
@@ -46,60 +64,30 @@ app.post('/api/reflect', async (req, res) => {
     res.json({ reflection });
   } catch (error) {
     console.error('Error generating reflection:', error);
-    res.status(500).json({ 
-      error: 'Failed to generate reflection',
-      details: error.message 
-    });
+    res.status(500).json({ error: 'Failed to generate reflection' });
   }
 });
 
-// File-based storage path
-const STORAGE_FILE = path.join(__dirname, 'entries.json');
-
-// Load entries from file or initialize empty array
-async function loadEntries() {
-  try {
-    const data = await fs.readFile(STORAGE_FILE, 'utf8');
-    return JSON.parse(data);
-  } catch (error) {
-    return [];
-  }
-}
-
-// Save entries to file
-async function saveEntries(entries) {
-  await fs.writeFile(STORAGE_FILE, JSON.stringify(entries, null, 2));
-}
-
-// Root route handler
-app.get('/', (req, res) => {
-  res.json({ message: 'API server is running' });
-});
-
-// Get all journal entries
 app.get('/api/entries', async (req, res) => {
   try {
     const entries = await loadEntries();
     res.json({ entries });
   } catch (error) {
     console.error('Error loading entries:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: 'Failed to load entries' });
   }
 });
 
-// Create new journal entry
 app.post('/api/entries', async (req, res) => {
   try {
     const { content } = req.body;
-
-    // Input validation
-    if (!content || typeof content !== 'string' || content.trim() === '') {
-      return res.status(400).json({ error: 'Missing or invalid content field' });
+    if (!content) {
+      return res.status(400).json({ error: 'Missing content' });
     }
 
     const entry = {
       id: uuidv4(),
-      content: content.trim(),
+      content: content,
       timestamp: Date.now()
     };
 
@@ -109,16 +97,10 @@ app.post('/api/entries', async (req, res) => {
 
     res.status(201).json(entry);
   } catch (error) {
-    console.error('Error creating entry:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error('Error saving entry:', error);
+    res.status(500).json({ error: 'Failed to save entry' });
   }
 });
-
-
-const fs = require('fs/promises');
-const path = require('path');
-const { v4: uuidv4 } = require('uuid');
-
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, '0.0.0.0', () => {
