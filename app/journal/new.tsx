@@ -66,9 +66,9 @@ export default function NewJournalEntry() {
         .join("\n\n");
 
       // Send to backend
-      // Use Replit dev URL in development, Railway in production
+      // Use local dev URL in development, Railway in production
       const baseUrl = __DEV__ 
-        ? `https://${process.env.EXPO_PUBLIC_REPLIT_ID}.replit.dev`
+        ? 'http://0.0.0.0:5000'
         : 'https://mindmirror-production-b2e2.up.railway.app';
 
       const response = await fetch(
@@ -98,9 +98,9 @@ export default function NewJournalEntry() {
 
       // Generate reflection
       try {
-        // Use Replit dev URL in development, Railway in production
+        // Use local dev URL in development, Railway in production
         const baseUrl = __DEV__ 
-          ? `https://${process.env.EXPO_PUBLIC_REPLIT_ID}.replit.dev`
+          ? 'http://0.0.0.0:5000'
           : 'https://mindmirror-production-b2e2.up.railway.app';
 
         const reflectionResponse = await fetch(
