@@ -21,20 +21,31 @@ export default function JournalScreen() {
       const storedEntries = await AsyncStorage.getItem("journal_entries");
       const localEntries = storedEntries ? JSON.parse(storedEntries) : [];
 
-      // Fetch from backend
-      const response = await fetch(`https://mindmirror-production-b2e2.up.railway.app/api/entries`);
-      const { entries: backendEntries } = await response.json();
+      try {
+        // Fetch from backend
+        const response = await fetch(`${baseUrl}/api/entries`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        const backendEntries = data.entries || [];
 
-      // Combine and deduplicate entries by id
-      const allEntries = [...localEntries, ...backendEntries];
-      const uniqueEntries = allEntries.filter(
-        (entry, index, self) =>
-          index === self.findIndex((e) => e.id === entry.id),
-      );
+        // Combine and deduplicate entries by id
+        const allEntries = [...localEntries, ...backendEntries];
+        const uniqueEntries = allEntries.filter(
+          (entry, index, self) =>
+            index === self.findIndex((e) => e.id === entry.id),
+        );
 
-      setEntries(uniqueEntries);
+        setEntries(uniqueEntries);
+      } catch (fetchError) {
+        console.error("Backend fetch error:", fetchError);
+        // Still show local entries if backend fails
+        setEntries(localEntries);
+      }
     } catch (error) {
       console.error("Error loading entries:", error);
+      setEntries([]);
     }
   };
 

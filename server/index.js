@@ -104,15 +104,28 @@ app.post('/api/entries', async (req, res) => {
 
     console.log('Created entry:', entry);
 
-    const entries = await loadEntries();
+    let entries;
+    try {
+      entries = await loadEntries();
+    } catch (loadError) {
+      console.error('Error loading entries:', loadError);
+      return res.status(500).json({ error: 'Failed to load entries' });
+    }
+
     entries.unshift(entry);
-    await saveEntries(entries);
+    
+    try {
+      await saveEntries(entries);
+    } catch (saveError) {
+      console.error('Error saving entries:', saveError);
+      return res.status(500).json({ error: 'Failed to save entries' });
+    }
 
     console.log('Entry saved successfully');
     res.status(201).json(entry);
   } catch (error) {
-    console.error('Error saving entry:', error);
-    res.status(500).json({ error: 'Failed to save entry', details: error.message });
+    console.error('Error processing entry:', error);
+    res.status(500).json({ error: 'Internal server error', details: error.message });
   }
 });
 
