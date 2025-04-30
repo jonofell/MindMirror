@@ -8,9 +8,10 @@ require('dotenv').config();
 
 const app = express();
 app.use(cors({
-  origin: '*',
+  origin: ['https://mindmirror-production-b2e2.up.railway.app', 'http://0.0.0.0:5000'],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type']
+  allowedHeaders: ['Content-Type', 'Accept'],
+  credentials: true
 }));
 app.use(express.json());
 
