@@ -1,0 +1,137 @@
+Starting Container
+
+/app/node_modules/openai/index.js:72
+
+            throw new Errors.OpenAIError("The OPENAI_API_KEY environment variable is missing or empty; either provide it, or instantiate the OpenAI client with an apiKey option, like new OpenAI({ apiKey: 'My API Key' }).");
+
+            ^
+
+ 
+
+OpenAIError: The OPENAI_API_KEY environment variable is missing or empty; either provide it, or instantiate the OpenAI client with an apiKey option, like new OpenAI({ apiKey: 'My API Key' }).
+
+    at new OpenAI (/app/node_modules/openai/index.js:72:19)
+
+    at Object.<anonymous> (/app/server/index.js:45:16)
+
+    at Module._compile (node:internal/modules/cjs/loader:1364:14)
+
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+
+    at Module._load (node:internal/modules/cjs/loader:1019:12)
+
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:128:12)
+
+    at node:internal/main/run_main_module:28:49
+
+ 
+
+Node.js v18.20.5
+
+/app/node_modules/openai/index.js:72
+
+            throw new Errors.OpenAIError("The OPENAI_API_KEY environment variable is missing or empty; either provide it, or instantiate the OpenAI client with an apiKey option, like new OpenAI({ apiKey: 'My API Key' }).");
+
+            ^
+
+ 
+
+OpenAIError: The OPENAI_API_KEY environment variable is missing or empty; either provide it, or instantiate the OpenAI client with an apiKey option, like new OpenAI({ apiKey: 'My API Key' }).
+
+    at new OpenAI (/app/node_modules/openai/index.js:72:19)
+
+    at Object.<anonymous> (/app/server/index.js:45:16)
+
+    at Module._compile (node:internal/modules/cjs/loader:1364:14)
+
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+
+    at Module._load (node:internal/modules/cjs/loader:1019:12)
+
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:128:12)
+
+    at node:internal/main/run_main_module:28:49
+
+ 
+
+Node.js v18.20.5
+
+/app/node_modules/openai/index.js:72
+
+            throw new Errors.OpenAIError("The OPENAI_API_KEY environment variable is missing or empty; either provide it, or instantiate the OpenAI client with an apiKey option, like new OpenAI({ apiKey: 'My API Key' }).");
+
+            ^
+
+ 
+
+OpenAIError: The OPENAI_API_KEY environment variable is missing or empty; either provide it, or instantiate the OpenAI client with an apiKey option, like new OpenAI({ apiKey: 'My API Key' }).
+
+    at new OpenAI (/app/node_modules/openai/index.js:72:19)
+
+    at Object.<anonymous> (/app/server/index.js:45:16)
+
+    at Module._compile (node:internal/modules/cjs/loader:1364:14)
+
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+
+    at Module._load (node:internal/modules/cjs/loader:1019:12)
+
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:128:12)
+
+    at node:internal/main/run_main_module:28:49
+
+ 
+
+Node.js v18.20.5
+
+/app/node_modules/openai/index.js:72
+
+            throw new Errors.OpenAIError("The OPENAI_API_KEY environment variable is missing or empty; either provide it, or instantiate the OpenAI client with an apiKey option, like new OpenAI({ apiKey: 'My API Key' }).");
+
+            ^
+
+ 
+
+OpenAIError: The OPENAI_API_KEY environment variable is missing or empty; either provide it, or instantiate the OpenAI client with an apiKey option, like new OpenAI({ apiKey: 'My API Key' }).
+
+    at new OpenAI (/app/node_modules/openai/index.js:72:19)
+
+    at Object.<anonymous> (/app/server/index.js:45:16)
+
+    at Module._compile (node:internal/modules/cjs/loader:1364:14)
+
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+
+    at Module._load (node:internal/modules/cjs/loader:1019:12)
+
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:128:12)
+
+    at node:internal/main/run_main_module:28:49
+
+ 
+
+Node.js v18.20.5
+
+/app/node_modules/openai/index.js:72
+
+            throw new Errors.OpenAIError("The OPENAI_API_KEY environment variable is missing or empty; either provide it, or instantiate the OpenAI client with an apiKey option, like new OpenAI({ apiKey: 'My API Key' }).");
+
+            ^
+
+ 
+
+OpenAIError: The OPENAI_API_KEY environment variable is missing or empty; either provide it, or instantiate the OpenAI client with an apiKey option, like new OpenAI({ apiKey: 'My API Key' }).
+
+    at new OpenAI (/app/node_modules/openai/index.js:72:19)
+
+    at Object.<anonymous> (/app/server/index.js:45:16)
+
+    at Module._compile (node:internal/modules/cjs/loader:1364:14)
