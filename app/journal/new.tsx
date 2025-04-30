@@ -70,29 +70,38 @@ export default function NewJournalEntry() {
         .join("\n\n");
 
       // Send to backend
+      console.log('Sending entry to:', `${baseUrl}/api/entries`);
+      console.log('Entry content:', entryContent);
+
       const response = await fetch(
         `${baseUrl}/api/entries`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            "Accept": "application/json"
           },
-          body: JSON.stringify({ content: entryContent }),
-        },
-      );
+          body: JSON.stringify({
+            content: entryContent
+          })
+        });
+
+      const responseText = await response.text();
+      console.log('Server response:', response.status, responseText);
 
       if (!response.ok) {
-        console.error("Server error:", await response.text());
-        throw new Error("Failed to save entry");
+        console.error("Server error status:", response.status);
+        console.error("Server error response:", responseText);
+        throw new Error(`Failed to save entry: ${responseText}`);
       }
 
-      const newEntry = await response.json();
-      console.log("Entry saved:", newEntry);
+      const data = responseText ? JSON.parse(responseText) : {};
+      console.log('Parsed response:', data);
 
       // Still save locally for offline access
       const existingEntries = await AsyncStorage.getItem("journal_entries");
       const allEntries = existingEntries ? JSON.parse(existingEntries) : [];
-      allEntries.unshift(newEntry);
+      allEntries.unshift(data); // Use parsed data from server response
       await AsyncStorage.setItem("journal_entries", JSON.stringify(allEntries));
 
       // Generate reflection

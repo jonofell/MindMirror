@@ -86,8 +86,11 @@ app.get('/api/entries', async (req, res) => {
 
 app.post('/api/entries', async (req, res) => {
   try {
+    console.log('Received entry request:', req.body);
+    
     const { content } = req.body;
     if (!content) {
+      console.log('Missing content in request');
       return res.status(400).json({ error: 'Missing content' });
     }
 
@@ -97,14 +100,17 @@ app.post('/api/entries', async (req, res) => {
       timestamp: Date.now()
     };
 
+    console.log('Created entry:', entry);
+
     const entries = await loadEntries();
     entries.unshift(entry);
     await saveEntries(entries);
 
+    console.log('Entry saved successfully');
     res.status(201).json(entry);
   } catch (error) {
     console.error('Error saving entry:', error);
-    res.status(500).json({ error: 'Failed to save entry' });
+    res.status(500).json({ error: 'Failed to save entry', details: error.message });
   }
 });
 
