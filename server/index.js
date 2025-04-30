@@ -43,7 +43,8 @@ async function saveEntries(entries) {
 }
 
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
+  apiKey: process.env.OPENAI_API_KEY,
+  dangerouslyAllowBrowser: true
 });
 
 app.post('/api/reflect', async (req, res) => {
