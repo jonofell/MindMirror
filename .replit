@@ -23,3 +23,7 @@ externalPort = 5000
 [[ports]]
 localPort = 8082
 externalPort = 80
+
+[deployment]
+run = ["sh", "-c", "npx serve web-build --listen 0.0.0.0:8082"]
+build = ["sh", "-c", "npx expo export:web"]

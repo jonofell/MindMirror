@@ -52,6 +52,7 @@
     "react-native-svg": "^15.8.0",
     "react-native-web": "~0.19.13",
     "react-native-webview": "13.12.5",
+    "serve": "^14.2.4",
     "uuid": "^11.1.0",
     "victory": "^37.3.6",
     "victory-native": "^36.9.1"
