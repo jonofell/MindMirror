@@ -1,0 +1,67 @@
+
+# Railway Backend Setup for MindMirror
+
+This guide will help you set up your MindMirror backend on Railway.
+
+## Prerequisites
+
+1. A Railway account
+2. Your OpenAI API key
+
+## Setup Steps
+
+1. **Create a new Railway project:**
+   - Go to [Railway](https://railway.app)
+   - Create a new project and select "Deploy from GitHub"
+   - Connect your GitHub repository
+
+2. **Configure environment variables:**
+   - In your Railway project, go to "Variables"
+   - Add the following variables:
+     - `OPENAI_API_KEY`: Your OpenAI API key
+     - `PORT`: 3000 (or your preferred port)
+     - `NODE_ENV`: production
+
+3. **Set up your backend:**
+   - Make sure your Express server is in your repository
+   - The server should handle these endpoints:
+     - `GET /api/entries`: Return all journal entries
+     - `POST /api/entries`: Create a new entry
+     - `POST /api/reflect`: Generate AI reflection on entry content
+
+4. **Update API URL:**
+   - Once deployed, update the `API_URL` in `src/services/api.ts` with your Railway domain:
+   ```typescript
+   const API_URL = process.env.NODE_ENV === 'production' 
+     ? 'https://your-railway-app-name.railway.app/api' 
+     : 'http://localhost:3000/api';
+   ```
+
+## Handling entries.json in Railway
+
+Railway's filesystem is ephemeral, meaning files you write during runtime won't persist across deployments or restarts. Here are some alternatives:
+
+1. **Use a database (recommended):**
+   - Add a PostgreSQL database in Railway
+   - Update your backend to store entries in the database instead of a file
+
+2. **Or use Railway Volumes (for simple use cases):**
+   - Go to Railway dashboard
+   - Add a Volume to your service
+   - Mount it to a directory in your container
+   - Update your backend to store entries.json in this mounted volume
+
+## Troubleshooting
+
+1. **404 errors:**
+   - Check your API routes match exactly what the frontend expects
+   - Verify your Railway domain is correct in the frontend
+
+2. **Server crashes:**
+   - Check Railway logs for error details
+   - Make sure OPENAI_API_KEY is correctly set
+   - Verify file paths use relative paths from the project root
+
+3. **Deployment issues:**
+   - Ensure your package.json has proper start scripts
+   - Check that all dependencies are specified in package.json
