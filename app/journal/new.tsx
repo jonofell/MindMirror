@@ -71,8 +71,12 @@ export default function NewJournalEntry() {
       console.log("Entry content:", entryContent);
 
       const { data, error } = await supabase
-        .from('journal_entries')
-        .insert([{ content: entryContent }]);
+        .from('entries')
+        .insert([{ 
+          content: entryContent,
+          timestamp: new Date().toISOString()
+        }])
+        .select();
 
       if (error) {
         console.error("Supabase error:", error);
