@@ -74,7 +74,7 @@ export default function NewJournalEntry() {
         .from('entries')
         .insert([{ 
           content: entryContent,
-          timestamp: new Date().toISOString()
+          timestamp: Math.floor(Date.now() / 1000)
         }])
         .select();
 
