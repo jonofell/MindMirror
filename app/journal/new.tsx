@@ -70,11 +70,39 @@ export default function NewJournalEntry() {
       console.log("Sending entry to Supabase");
       console.log("Entry content:", entryContent);
 
+      // First analyze with OpenAI
+      const aiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${process.env.EXPO_PUBLIC_OPENAI_API_KEY}`
+        },
+        body: JSON.stringify({
+          model: "gpt-3.5-turbo",
+          messages: [{
+            role: "system",
+            content: "You are a thoughtful journaling assistant. Analyze the following journal entry and provide a brief, empathetic reflection that helps the user gain insight into their thoughts and feelings."
+          }, {
+            role: "user",
+            content: entryContent
+          }]
+        })
+      });
+
+      if (!aiResponse.ok) {
+        throw new Error('OpenAI API request failed');
+      }
+
+      const aiData = await aiResponse.json();
+      const reflection = aiData.choices[0].message.content;
+
+      // Save to Supabase with reflection
       const { data, error } = await supabase
         .from('entries')
         .insert([{ 
           id: crypto.randomUUID(),
           content: entryContent,
+          reflection: reflection,
           timestamp: Math.floor(Date.now() / 1000)
         }])
         .select();
@@ -92,14 +120,10 @@ export default function NewJournalEntry() {
       allEntries.unshift(data[0]); // Use parsed data from Supabase response
       await AsyncStorage.setItem("journal_entries", JSON.stringify(allEntries));
 
-      // Generate reflection -  This part needs a Supabase equivalent function
-      try {
-        // Replace with Supabase equivalent if available.  Placeholder for now.
-        const reflection = "Supabase reflection not yet implemented";
-        router.push({
-          pathname: "/journal/reflection",
-          params: { reflection },
-        });
+      router.push({
+        pathname: "/journal/reflection",
+        params: { reflection },
+      });
       } catch (error) {
         console.error("Error generating reflection:", error);
         router.push({
