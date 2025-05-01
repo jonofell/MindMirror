@@ -13,7 +13,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ThemedText } from "@/components/ThemedText";
 import { Theme } from "@/constants/Theme";
 import { supabase } from "@/lib/supabase";
-import crypto from 'crypto';
+import 'react-native-get-random-values';
+import { v4 as uuidv4 } from 'uuid';
 
 const PROMPTS = [
   "What's on your mind?",
@@ -73,32 +74,13 @@ export default function NewJournalEntry() {
 
       let reflection;
       try {
-        if (!process.env.EXPO_PUBLIC_OPENAI_API_KEY) {
-          throw new Error('OpenAI API key is not configured');
-        }
-
-        const aiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${process.env.EXPO_PUBLIC_OPENAI_API_KEY}`,
-            'Accept': 'application/json'
-          },
-          body: JSON.stringify({
-            model: "gpt-3.5-turbo",
-            messages: [{
-              role: "system",
-              content: "You are a thoughtful journaling assistant. Analyze the following journal entry and provide a brief, empathetic reflection that highlights key themes and emotions."
-            }, {
-              role: "user",
-              content: entryContent
-            }],
-            temperature: 0.7,
-            max_tokens: 150,
-            presence_penalty: 0.6,
-            frequency_penalty: 0.5
-          })
+        // Call Supabase Edge Function for OpenAI analysis
+        const { data: aiResponse, error: aiError } = await supabase.functions.invoke('analyze-journal', {
+          body: { content: entryContent }
         });
+
+        if (aiError) throw aiError;
+        reflection = aiResponse.reflection;
 
         if (aiResponse.status === 429) {
           throw new Error('Rate limit exceeded. Please try again later.');
@@ -126,7 +108,7 @@ export default function NewJournalEntry() {
         .from("entries")
         .insert([
           {
-            id: crypto.randomUUID(),
+            id: uuidv4(),
             content: entryContent,
             reflection: reflection,
             timestamp: Math.floor(Date.now() / 1000),
