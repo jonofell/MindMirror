@@ -73,6 +73,7 @@ export default function NewJournalEntry() {
       const { data, error } = await supabase
         .from('entries')
         .insert([{ 
+          id: crypto.randomUUID(),
           content: entryContent,
           timestamp: Math.floor(Date.now() / 1000)
         }])
