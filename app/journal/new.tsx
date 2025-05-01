@@ -74,16 +74,33 @@ export default function NewJournalEntry() {
 
       let reflection;
       try {
-        // Call Supabase Edge Function for OpenAI analysis
-        const { data: aiResponse, error: aiError } = await supabase.functions.invoke('analyze-journal', {
-          body: { content: entryContent }
+        // Make direct OpenAI API call
+        const response = await fetch('https://api.openai.com/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${process.env.EXPO_PUBLIC_OPENAI_API_KEY}`,
+          },
+          body: JSON.stringify({
+            model: "gpt-3.5-turbo",
+            messages: [{
+              role: "system",
+              content: "You are a thoughtful journaling assistant. Analyze the following journal entry and provide a brief, empathetic reflection that highlights key themes and emotions."
+            }, {
+              role: "user",
+              content: entryContent
+            }],
+            temperature: 0.7,
+            max_tokens: 150
+          })
         });
 
-        if (aiError) throw aiError;
-        reflection = aiResponse.reflection;
-
-        if (aiResponse.status === 429) {
+        if (response.status === 429) {
           throw new Error('Rate limit exceeded. Please try again later.');
+        }
+
+        const data = await response.json();
+        reflection = data.choices[0].message.content;
         }
 
         if (!aiResponse.ok) {
