@@ -54,7 +54,7 @@ app.post('/api/reflect', async (req, res) => {
   }
 });
 
-app.get('/api/entries', async (req, res) => {
+app.get('/entries', async (req, res) => {
   try {
     const { data, error } = await supabase
       .from('entries')
@@ -69,7 +69,7 @@ app.get('/api/entries', async (req, res) => {
   }
 });
 
-app.post('/api/entries', async (req, res) => {
+app.post('/entries', async (req, res) => {
   try {
     const { content } = req.body;
     if (!content) {

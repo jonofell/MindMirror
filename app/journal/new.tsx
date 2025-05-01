@@ -13,7 +13,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ThemedText } from "@/components/ThemedText";
 import { Theme } from "@/constants/Theme";
 
-const baseUrl = 'http://0.0.0.0:5000/api';
+const baseUrl = 'https://1ae5bd39-7e31-4c09-b77f-275abc10835a-00-370ubtentazv5.riker.replit.dev/api';
 
 const PROMPTS = [
   "What's on your mind?",
