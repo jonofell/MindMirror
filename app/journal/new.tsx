@@ -12,7 +12,7 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ThemedText } from "@/components/ThemedText";
 import { Theme } from "@/constants/Theme";
-import { supabase } from '@/lib/supabase';
+import { supabase } from "@/lib/supabase";
 
 const PROMPTS = [
   "What's on your mind?",
@@ -72,48 +72,57 @@ export default function NewJournalEntry() {
 
       let reflection;
       try {
-        const aiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${process.env.EXPO_PUBLIC_OPENAI_API_KEY}`
+        const aiResponse = await fetch(
+          "https://api.openai.com/v1/chat/completions",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${process.env.EXPO_PUBLIC_OPENAI_API_KEY}`,
+            },
+            body: JSON.stringify({
+              model: "gpt-3.5-turbo",
+              messages: [
+                {
+                  role: "system",
+                  content:
+                    "You are a thoughtful journaling assistant. Analyze the following journal entry and provide a brief, empathetic reflection.",
+                },
+                {
+                  role: "user",
+                  content: entryContent,
+                },
+              ],
+              temperature: 0.7,
+              max_tokens: 150,
+            }),
           },
-          body: JSON.stringify({
-            model: "gpt-3.5-turbo",
-            messages: [{
-              role: "system",
-              content: "You are a thoughtful journaling assistant. Analyze the following journal entry and provide a brief, empathetic reflection."
-            }, {
-              role: "user",
-              content: entryContent
-            }],
-            temperature: 0.7,
-            max_tokens: 150
-          })
-        });
+        );
 
         if (!aiResponse.ok) {
           const errorText = await aiResponse.text();
-          console.error('OpenAI Error:', errorText);
+          console.error("OpenAI Error:", errorText);
           throw new Error(`OpenAI API failed: ${aiResponse.status}`);
         }
 
         const aiData = await aiResponse.json();
         reflection = aiData.choices[0].message.content;
       } catch (error) {
-        console.error('AI Analysis error:', error);
+        console.error("AI Analysis error:", error);
         reflection = "Unable to generate reflection at this time.";
       }
 
       // Save to Supabase with reflection
       const { data, error } = await supabase
-        .from('entries')
-        .insert([{ 
-          id: crypto.randomUUID(),
-          content: entryContent,
-          reflection: reflection,
-          timestamp: Math.floor(Date.now() / 1000)
-        }])
+        .from("entries")
+        .insert([
+          {
+            id: crypto.randomUUID(),
+            content: entryContent,
+            reflection: reflection,
+            timestamp: Math.floor(Date.now() / 1000),
+          },
+        ])
         .select();
 
       if (error) {
