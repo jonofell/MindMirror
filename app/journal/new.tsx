@@ -100,18 +100,20 @@ export default function NewJournalEntry() {
         }
 
         if (!response.ok) {
+          const errorData = await response.json().catch(() => null);
+          console.error('OpenAI Error:', errorData || await response.text());
           throw new Error(`OpenAI API failed: ${response.status}`);
         }
 
         const data = await response.json();
+        if (!data?.choices?.[0]?.message?.content) {
+          throw new Error('Invalid response format from OpenAI');
+        }
         reflection = data.choices[0].message.content;
       } catch (error) {
         console.error('AI Analysis error:', error);
         reflection = "Unable to generate reflection at this time. Please try again later.";
       }
-          const errorData = await aiResponse.json().catch(() => null);
-          console.error('OpenAI Error:', errorData || await aiResponse.text());
-          throw new Error(`OpenAI API failed: ${aiResponse.status}`);
         }
 
         const aiData = await aiResponse.json();
