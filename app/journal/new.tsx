@@ -114,18 +114,6 @@ export default function NewJournalEntry() {
         console.error('AI Analysis error:', error);
         reflection = "Unable to generate reflection at this time. Please try again later.";
       }
-        }
-
-        const aiData = await aiResponse.json();
-        if (!aiData?.choices?.[0]?.message?.content) {
-          throw new Error('Invalid response format from OpenAI');
-        }
-
-        reflection = aiData.choices[0].message.content;
-      } catch (error) {
-        console.error('AI Analysis error:', error);
-        reflection = "Unable to generate reflection at this time. Please try again later.";
-      }
 
       // Save to Supabase with reflection
       const { data, error } = await supabase
