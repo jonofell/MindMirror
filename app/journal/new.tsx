@@ -87,7 +87,7 @@ export default function NewJournalEntry() {
         }
 
         const data = await response.json();
-        reflection = data.reflection;
+        reflection = data.choices?.[0]?.message?.content;
         
         if (!reflection) {
           throw new Error('No reflection received from Edge Function');
