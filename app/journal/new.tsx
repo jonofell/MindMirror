@@ -74,25 +74,13 @@ export default function NewJournalEntry() {
 
       let reflection;
       try {
-        // Make direct OpenAI API call
-        const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        // Make call to Supabase Edge Function
+        const response = await fetch('https://odnbielvcdfieymckzbt.supabase.co/functions/v1/clever-processor', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${process.env.EXPO_PUBLIC_OPENAI_API_KEY}`,
           },
-          body: JSON.stringify({
-            model: "gpt-3.5-turbo",
-            messages: [{
-              role: "system",
-              content: "You are a thoughtful journaling assistant. Analyze the following journal entry and provide a brief, empathetic reflection that highlights key themes and emotions."
-            }, {
-              role: "user",
-              content: entryContent
-            }],
-            temperature: 0.7,
-            max_tokens: 150
-          })
+          body: JSON.stringify({ content: entryContent }),
         });
 
         if (response.status === 429) {
