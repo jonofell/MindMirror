@@ -68,38 +68,32 @@ export default function NewJournalEntry() {
         .map((e) => `${e.prompt}\n${e.text}`)
         .join("\n\n");
 
-      // Send to Supabase
-      console.log("Sending entry to Supabase");
-      console.log("Entry content:", entryContent);
-
+      // Send to Supabase Edge Function
+      console.log("Sending entry to Edge Function");
+      
       let reflection;
       try {
-        // Make call to Supabase Edge Function
         const response = await fetch('https://odnbielvcdfieymckzbt.supabase.co/functions/v1/clever-processor', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY}`,
           },
           body: JSON.stringify({ content: entryContent }),
         });
 
-        if (response.status === 429) {
-          throw new Error('Rate limit exceeded. Please try again later.');
-        }
-
         if (!response.ok) {
-          const errorData = await response.json().catch(() => null);
-          console.error('OpenAI Error:', errorData || await response.text());
-          throw new Error(`OpenAI API failed: ${response.status}`);
+          throw new Error(`Edge Function failed: ${response.status}`);
         }
 
         const data = await response.json();
-        if (!data?.choices?.[0]?.message?.content) {
-          throw new Error('Invalid response format from OpenAI');
+        reflection = data.reflection;
+        
+        if (!reflection) {
+          throw new Error('No reflection received from Edge Function');
         }
-        reflection = data.choices[0].message.content;
       } catch (error) {
-        console.error('AI Analysis error:', error);
+        console.error('Edge Function error:', error);
         reflection = "Unable to generate reflection at this time. Please try again later.";
       }
 
