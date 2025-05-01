@@ -124,15 +124,12 @@ export default function NewJournalEntry() {
         pathname: "/journal/reflection",
         params: { reflection },
       });
-      } catch (error) {
-        console.error("Error generating reflection:", error);
-        router.push({
-          pathname: "/journal/reflection",
-          params: { error: "Failed to generate reflection" },
-        });
-      }
     } catch (error) {
       console.error("Error saving entry:", error);
+      router.push({
+        pathname: "/journal/reflection",
+        params: { error: "Failed to save or analyze entry" },
+      });
     }
   };
 
