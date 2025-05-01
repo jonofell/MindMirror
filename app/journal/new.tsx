@@ -12,9 +12,7 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ThemedText } from "@/components/ThemedText";
 import { Theme } from "@/constants/Theme";
-
-const baseUrl =
-  "https://1ae5bd39-7e31-4c09-b77f-275abc10835a-00-370ubtentazv5.riker.replit.dev";
+import { supabase } from '@/lib/supabase';
 
 const PROMPTS = [
   "What's on your mind?",
@@ -68,54 +66,31 @@ export default function NewJournalEntry() {
         .map((e) => `${e.prompt}\n${e.text}`)
         .join("\n\n");
 
-      // Send to backend
-      console.log("Sending entry to:", `${baseUrl}/api/entries`);
+      // Send to Supabase
+      console.log("Sending entry to Supabase");
       console.log("Entry content:", entryContent);
 
-      const response = await fetch(`${baseUrl}/api/entries`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({
-          content: entryContent,
-        }),
-      });
+      const { data, error } = await supabase
+        .from('journal_entries')
+        .insert([{ content: entryContent }]);
 
-      const responseText = await response.text();
-      console.log("Server response:", response.status, responseText);
-
-      if (!response.ok) {
-        console.error("Server error status:", response.status);
-        console.error("Server error response:", responseText);
-        throw new Error(`Failed to save entry: ${responseText}`);
+      if (error) {
+        console.error("Supabase error:", error);
+        throw new Error(`Failed to save entry: ${error.message}`);
       }
 
-      const data = responseText ? JSON.parse(responseText) : {};
-      console.log("Parsed response:", data);
+      console.log("Supabase response:", data);
 
       // Still save locally for offline access
       const existingEntries = await AsyncStorage.getItem("journal_entries");
       const allEntries = existingEntries ? JSON.parse(existingEntries) : [];
-      allEntries.unshift(data); // Use parsed data from server response
+      allEntries.unshift(data[0]); // Use parsed data from Supabase response
       await AsyncStorage.setItem("journal_entries", JSON.stringify(allEntries));
 
-      // Generate reflection
+      // Generate reflection -  This part needs a Supabase equivalent function
       try {
-        const reflectionResponse = await fetch(`${baseUrl}/api/reflect`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ content: entryContent }),
-        });
-
-        if (!reflectionResponse.ok) {
-          throw new Error("Failed to generate reflection");
-        }
-
-        const { reflection } = await reflectionResponse.json();
+        // Replace with Supabase equivalent if available.  Placeholder for now.
+        const reflection = "Supabase reflection not yet implemented";
         router.push({
           pathname: "/journal/reflection",
           params: { reflection },
