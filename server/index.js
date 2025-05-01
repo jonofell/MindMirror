@@ -1,18 +1,12 @@
 const express = require('express');
 const cors = require('cors');
 const OpenAI = require('openai');
-const fs = require('fs/promises');
-const path = require('path');
 const { v4: uuidv4 } = require('uuid');
+const { createClient } = require('@supabase/supabase-js');
 require('dotenv').config();
 
 const app = express();
-app.use(cors({
-  origin: ['https://mindmirror-production-b2e2.up.railway.app', 'http://0.0.0.0:5000'],
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Accept'],
-  credentials: true
-}));
+app.use(cors());
 app.use(express.json());
 
 // Basic error handling middleware
@@ -21,26 +15,10 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Something went wrong!' });
 });
 
-// File-based storage path
-const STORAGE_FILE = path.join(__dirname, 'entries.json');
-
-// Load entries from file or initialize empty array
-async function loadEntries() {
-  try {
-    await fs.access(STORAGE_FILE);
-    const data = await fs.readFile(STORAGE_FILE, 'utf8');
-    return JSON.parse(data);
-  } catch (error) {
-    // If file doesn't exist, create it with empty array
-    await fs.writeFile(STORAGE_FILE, '[]');
-    return [];
-  }
-}
-
-// Save entries to file
-async function saveEntries(entries) {
-  await fs.writeFile(STORAGE_FILE, JSON.stringify(entries, null, 2));
-}
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_ANON_KEY
+);
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -78,8 +56,13 @@ app.post('/api/reflect', async (req, res) => {
 
 app.get('/api/entries', async (req, res) => {
   try {
-    const entries = await loadEntries();
-    res.json({ entries });
+    const { data, error } = await supabase
+      .from('entries')
+      .select('*')
+      .order('timestamp', { ascending: false });
+      
+    if (error) throw error;
+    res.json({ entries: data });
   } catch (error) {
     console.error('Error loading entries:', error);
     res.status(500).json({ error: 'Failed to load entries' });
@@ -88,11 +71,8 @@ app.get('/api/entries', async (req, res) => {
 
 app.post('/api/entries', async (req, res) => {
   try {
-    console.log('Received entry request:', req.body);
-    
     const { content } = req.body;
     if (!content) {
-      console.log('Missing content in request');
       return res.status(400).json({ error: 'Missing content' });
     }
 
@@ -102,27 +82,14 @@ app.post('/api/entries', async (req, res) => {
       timestamp: Date.now()
     };
 
-    console.log('Created entry:', entry);
+    const { data, error } = await supabase
+      .from('entries')
+      .insert([entry])
+      .select()
+      .single();
 
-    let entries;
-    try {
-      entries = await loadEntries();
-    } catch (loadError) {
-      console.error('Error loading entries:', loadError);
-      return res.status(500).json({ error: 'Failed to load entries' });
-    }
-
-    entries.unshift(entry);
-    
-    try {
-      await saveEntries(entries);
-    } catch (saveError) {
-      console.error('Error saving entries:', saveError);
-      return res.status(500).json({ error: 'Failed to save entries' });
-    }
-
-    console.log('Entry saved successfully');
-    res.status(201).json(entry);
+    if (error) throw error;
+    res.status(201).json(data);
   } catch (error) {
     console.error('Error processing entry:', error);
     res.status(500).json({ error: 'Internal server error', details: error.message });
