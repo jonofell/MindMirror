@@ -70,31 +70,40 @@ export default function NewJournalEntry() {
       console.log("Sending entry to Supabase");
       console.log("Entry content:", entryContent);
 
-      // First analyze with OpenAI
-      const aiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${process.env.EXPO_PUBLIC_OPENAI_API_KEY}`
-        },
-        body: JSON.stringify({
-          model: "gpt-3.5-turbo",
-          messages: [{
-            role: "system",
-            content: "You are a thoughtful journaling assistant. Analyze the following journal entry and provide a brief, empathetic reflection that helps the user gain insight into their thoughts and feelings."
-          }, {
-            role: "user",
-            content: entryContent
-          }]
-        })
-      });
+      let reflection;
+      try {
+        const aiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${process.env.EXPO_PUBLIC_OPENAI_API_KEY}`
+          },
+          body: JSON.stringify({
+            model: "gpt-3.5-turbo",
+            messages: [{
+              role: "system",
+              content: "You are a thoughtful journaling assistant. Analyze the following journal entry and provide a brief, empathetic reflection."
+            }, {
+              role: "user",
+              content: entryContent
+            }],
+            temperature: 0.7,
+            max_tokens: 150
+          })
+        });
 
-      if (!aiResponse.ok) {
-        throw new Error('OpenAI API request failed');
+        if (!aiResponse.ok) {
+          const errorText = await aiResponse.text();
+          console.error('OpenAI Error:', errorText);
+          throw new Error(`OpenAI API failed: ${aiResponse.status}`);
+        }
+
+        const aiData = await aiResponse.json();
+        reflection = aiData.choices[0].message.content;
+      } catch (error) {
+        console.error('AI Analysis error:', error);
+        reflection = "Unable to generate reflection at this time.";
       }
-
-      const aiData = await aiResponse.json();
-      const reflection = aiData.choices[0].message.content;
 
       // Save to Supabase with reflection
       const { data, error } = await supabase
