@@ -13,6 +13,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ThemedText } from "@/components/ThemedText";
 import { Theme } from "@/constants/Theme";
 import { supabase } from "@/lib/supabase";
+import crypto from 'crypto';
 
 const PROMPTS = [
   "What's on your mind?",
@@ -72,44 +73,52 @@ export default function NewJournalEntry() {
 
       let reflection;
       try {
-        const aiResponse = await fetch(
-          "https://api.openai.com/v1/chat/completions",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${process.env.EXPO_PUBLIC_OPENAI_API_KEY}`,
-            },
-            body: JSON.stringify({
-              model: "gpt-3.5-turbo",
-              messages: [
-                {
-                  role: "system",
-                  content:
-                    "You are a thoughtful journaling assistant. Analyze the following journal entry and provide a brief, empathetic reflection.",
-                },
-                {
-                  role: "user",
-                  content: entryContent,
-                },
-              ],
-              temperature: 0.7,
-              max_tokens: 150,
-            }),
+        if (!process.env.EXPO_PUBLIC_OPENAI_API_KEY) {
+          throw new Error('OpenAI API key is not configured');
+        }
+
+        const aiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${process.env.EXPO_PUBLIC_OPENAI_API_KEY}`,
+            'Accept': 'application/json'
           },
-        );
+          body: JSON.stringify({
+            model: "gpt-3.5-turbo",
+            messages: [{
+              role: "system",
+              content: "You are a thoughtful journaling assistant. Analyze the following journal entry and provide a brief, empathetic reflection that highlights key themes and emotions."
+            }, {
+              role: "user",
+              content: entryContent
+            }],
+            temperature: 0.7,
+            max_tokens: 150,
+            presence_penalty: 0.6,
+            frequency_penalty: 0.5
+          })
+        });
+
+        if (aiResponse.status === 429) {
+          throw new Error('Rate limit exceeded. Please try again later.');
+        }
 
         if (!aiResponse.ok) {
-          const errorText = await aiResponse.text();
-          console.error("OpenAI Error:", errorText);
+          const errorData = await aiResponse.json().catch(() => null);
+          console.error('OpenAI Error:', errorData || await aiResponse.text());
           throw new Error(`OpenAI API failed: ${aiResponse.status}`);
         }
 
         const aiData = await aiResponse.json();
+        if (!aiData?.choices?.[0]?.message?.content) {
+          throw new Error('Invalid response format from OpenAI');
+        }
+
         reflection = aiData.choices[0].message.content;
       } catch (error) {
-        console.error("AI Analysis error:", error);
-        reflection = "Unable to generate reflection at this time.";
+        console.error('AI Analysis error:', error);
+        reflection = "Unable to generate reflection at this time. Please try again later.";
       }
 
       // Save to Supabase with reflection
