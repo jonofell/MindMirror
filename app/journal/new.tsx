@@ -13,7 +13,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ThemedText } from "@/components/ThemedText";
 import { Theme } from "@/constants/Theme";
 
-const baseUrl = 'https://1ae5bd39-7e31-4c09-b77f-275abc10835a-00-370ubtentazv5.riker.replit.dev/api';
+const baseUrl =
+  "https://1ae5bd39-7e31-4c09-b77f-275abc10835a-00-370ubtentazv5.riker.replit.dev";
 
 const PROMPTS = [
   "What's on your mind?",
@@ -59,7 +60,7 @@ export default function NewJournalEntry() {
   const saveEntry = async () => {
     try {
       // Include the current entry if it's not empty
-      const finalEntries = currentEntry.trim() 
+      const finalEntries = currentEntry.trim()
         ? [...entries, { text: currentEntry, prompt: PROMPTS[currentPrompt] }]
         : entries;
 
@@ -68,24 +69,22 @@ export default function NewJournalEntry() {
         .join("\n\n");
 
       // Send to backend
-      console.log('Sending entry to:', `${baseUrl}/api/entries`);
-      console.log('Entry content:', entryContent);
+      console.log("Sending entry to:", `${baseUrl}/api/entries`);
+      console.log("Entry content:", entryContent);
 
-      const response = await fetch(
-        `${baseUrl}/api/entries`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json"
-          },
-          body: JSON.stringify({
-            content: entryContent
-          })
-        });
+      const response = await fetch(`${baseUrl}/api/entries`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          content: entryContent,
+        }),
+      });
 
       const responseText = await response.text();
-      console.log('Server response:', response.status, responseText);
+      console.log("Server response:", response.status, responseText);
 
       if (!response.ok) {
         console.error("Server error status:", response.status);
@@ -94,7 +93,7 @@ export default function NewJournalEntry() {
       }
 
       const data = responseText ? JSON.parse(responseText) : {};
-      console.log('Parsed response:', data);
+      console.log("Parsed response:", data);
 
       // Still save locally for offline access
       const existingEntries = await AsyncStorage.getItem("journal_entries");
@@ -104,31 +103,28 @@ export default function NewJournalEntry() {
 
       // Generate reflection
       try {
-        const reflectionResponse = await fetch(
-          `${baseUrl}/api/reflect`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ content: entryContent }),
-          }
-        );
+        const reflectionResponse = await fetch(`${baseUrl}/api/reflect`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ content: entryContent }),
+        });
 
         if (!reflectionResponse.ok) {
-          throw new Error('Failed to generate reflection');
+          throw new Error("Failed to generate reflection");
         }
 
         const { reflection } = await reflectionResponse.json();
         router.push({
           pathname: "/journal/reflection",
-          params: { reflection }
+          params: { reflection },
         });
       } catch (error) {
         console.error("Error generating reflection:", error);
         router.push({
           pathname: "/journal/reflection",
-          params: { error: "Failed to generate reflection" }
+          params: { error: "Failed to generate reflection" },
         });
       }
     } catch (error) {
