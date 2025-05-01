@@ -87,11 +87,12 @@ export default function NewJournalEntry() {
         }
 
         const data = await response.json();
-        reflection = data.choices?.[0]?.message?.content;
+        reflection = data.reflection || data.choices?.[0]?.message?.content;
         
         if (!reflection) {
           throw new Error('No reflection received from Edge Function');
         }
+        console.log("Received reflection:", reflection);
       } catch (error) {
         console.error('Edge Function error:', error);
         reflection = "Unable to generate reflection at this time. Please try again later.";
