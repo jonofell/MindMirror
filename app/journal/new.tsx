@@ -99,11 +99,16 @@ export default function NewJournalEntry() {
           throw new Error('Rate limit exceeded. Please try again later.');
         }
 
-        const data = await response.json();
-        reflection = data.choices[0].message.content;
+        if (!response.ok) {
+          throw new Error(`OpenAI API failed: ${response.status}`);
         }
 
-        if (!aiResponse.ok) {
+        const data = await response.json();
+        reflection = data.choices[0].message.content;
+      } catch (error) {
+        console.error('AI Analysis error:', error);
+        reflection = "Unable to generate reflection at this time. Please try again later.";
+      }
           const errorData = await aiResponse.json().catch(() => null);
           console.error('OpenAI Error:', errorData || await aiResponse.text());
           throw new Error(`OpenAI API failed: ${aiResponse.status}`);
