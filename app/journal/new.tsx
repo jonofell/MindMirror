@@ -68,55 +68,64 @@ export default function NewJournalEntry() {
         .map((e) => `${e.prompt}\n${e.text}`)
         .join("\n\n");
 
-      // Send to Supabase Edge Function
       console.log("Sending entry to Edge Function");
-      
+
       // Get reflection from Edge Function
       let reflection = "Unable to generate reflection.";
       try {
         const { data, error } = await supabase.functions.invoke("clever-processor", {
           body: { content: entryContent },
         });
-        if (data?.reflection) reflection = data.reflection;
+
+        if (error) {
+          console.error("AI function error:", error.message);
+          throw new Error("AI processing failed");
+        } else if (data?.reflection) {
+          reflection = data.reflection;
+        }
       } catch (err) {
-        console.error("AI error:", err);
+        console.error("AI fetch failed:", err);
       }
 
-      // Save to Supabase with reflection
+      // Save to Supabase
       const { data, error } = await supabase
         .from("entries")
         .insert([
           {
             id: uuidv4(),
             content: entryContent,
-            reflection: reflection,
+            reflection,
             timestamp: Math.floor(Date.now() / 1000),
           },
         ])
         .select();
 
       if (error) {
-        console.error("Supabase error:", error);
+        console.error("Supabase save error:", error);
         throw new Error(`Failed to save entry: ${error.message}`);
       }
 
-      console.log("Supabase response:", data);
-
-      // Still save locally for offline access
+      // Save locally (optional)
       const existingEntries = await AsyncStorage.getItem("journal_entries");
       const allEntries = existingEntries ? JSON.parse(existingEntries) : [];
-      allEntries.unshift(data[0]); // Use parsed data from Supabase response
+      allEntries.unshift(data[0]);
       await AsyncStorage.setItem("journal_entries", JSON.stringify(allEntries));
 
+      // Navigate to reflection screen
       router.push({
         pathname: "/journal/reflection",
         params: { reflection },
       });
-    } catch (error) {
-      console.error("Error saving entry:", error);
+
+    } catch (err) {
+      console.error("Error saving entry:", err);
       router.push({
         pathname: "/journal/reflection",
-        params: { error: "Failed to save or analyze entry" },
+        params: { 
+          error: err.message === "AI processing failed" 
+            ? "Failed to generate reflection"
+            : "Failed to save entry"
+        },
       });
     }
   };
