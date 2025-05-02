@@ -73,7 +73,7 @@ export default function NewJournalEntry() {
       
       let reflection;
       try {
-        const response = await fetch('https://odnbielvcdfieymckzbt.supabase.co/functions/v1/clever-processor', {
+        const response = await fetch(`${process.env.EXPO_PUBLIC_SUPABASE_URL}/functions/v1/clever-processor`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
