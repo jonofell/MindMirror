@@ -71,31 +71,15 @@ export default function NewJournalEntry() {
       // Send to Supabase Edge Function
       console.log("Sending entry to Edge Function");
       
-      let reflection;
+      // Get reflection from Edge Function
+      let reflection = "Unable to generate reflection.";
       try {
-        const response = await fetch(`${process.env.EXPO_PUBLIC_SUPABASE_URL}/functions/v1/clever-processor`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY}`,
-          },
-          body: JSON.stringify({ content: entryContent }),
+        const { data, error } = await supabase.functions.invoke("clever-processor", {
+          body: { content: entryContent },
         });
-
-        if (!response.ok) {
-          throw new Error(`Edge Function failed: ${response.status}`);
-        }
-
-        const data = await response.json();
-        reflection = data.reflection || data.choices?.[0]?.message?.content;
-        
-        if (!reflection) {
-          throw new Error('No reflection received from Edge Function');
-        }
-        console.log("Received reflection:", reflection);
-      } catch (error) {
-        console.error('Edge Function error:', error);
-        reflection = "Unable to generate reflection at this time. Please try again later.";
+        if (data?.reflection) reflection = data.reflection;
+      } catch (err) {
+        console.error("AI error:", err);
       }
 
       // Save to Supabase with reflection
