@@ -29,5 +29,5 @@ localPort = 8082
 externalPort = 80
 
 [deployment]
-run = ["sh", "-c", "npx serve web-build --listen 0.0.0.0:8082"]
+run = ["sh", "-c", "npx serve web-build -l 0.0.0.0:5000"]
 build = ["sh", "-c", "npx expo export:web"]
