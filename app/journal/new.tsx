@@ -71,14 +71,19 @@ export default function NewJournalEntry() {
       console.log("Sending entry to Edge Function");
 
       // Get reflection from Edge Function
-      const { data, error } = await supabase.functions.invoke("clever-processor", {
+      const { data: reflectionData, error: reflectionError } = await supabase.functions.invoke("clever-processor", {
         body: { content: entryContent }
       });
 
-      const reflection = data?.reflection || "No reflection returned.";
+      if (reflectionError) {
+        console.error("Edge function error:", reflectionError);
+        throw new Error("Failed to generate reflection");
+      }
+
+      const reflection = reflectionData?.reflection || "No reflection returned.";
 
       // Save to Supabase
-      const { data, error } = await supabase
+      const { data: entryData, error: entryError } = await supabase
         .from("entries")
         .insert([
           {
