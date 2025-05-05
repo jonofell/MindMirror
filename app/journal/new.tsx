@@ -26,12 +26,9 @@ export default function NewJournalEntry() {
   const router = useRouter();
   const [currentPrompt, setCurrentPrompt] = useState(0);
   const [currentEntry, setCurrentEntry] = useState("");
-  const [selectedMood, setSelectedMood] = useState("");
   const [entries, setEntries] = useState<{ text: string; prompt: string }[]>(
     [],
   );
-
-  const moods = ["Happy", "Calm", "Anxious", "Sad", "Angry"];
 
   useLayoutEffect(() => {
     router.setParams({
@@ -40,6 +37,8 @@ export default function NewJournalEntry() {
   }, [router]);
 
   const scrollViewRef = useRef(null);
+const [selectedMood, setSelectedMood] = useState<string>("");
+const moods = ["Happy", "Calm", "Anxious", "Sad", "Angry"];
 
   const handleSubmitEntry = () => {
     if (!currentEntry.trim()) return;
@@ -62,11 +61,6 @@ export default function NewJournalEntry() {
 
   const saveEntry = async () => {
     try {
-      if (!selectedMood) {
-        alert("Please select your mood before finishing the entry");
-        return;
-      }
-
       // Include the current entry if it's not empty
       const finalEntries = currentEntry.trim()
         ? [...entries, { text: currentEntry, prompt: PROMPTS[currentPrompt] }]
@@ -89,6 +83,11 @@ export default function NewJournalEntry() {
       }
 
       const reflection = reflectionData?.reflection || "No reflection returned.";
+
+      if (!selectedMood) {
+        alert("Please select a mood before finishing your entry");
+        return;
+      }
 
       // Save to Supabase
       const { data: entryData, error: entryError } = await supabase
@@ -174,33 +173,31 @@ export default function NewJournalEntry() {
             placeholder="Write..."
             placeholderTextColor="#999"
           />
+          <View style={styles.moodContainer}>
+            <ThemedText style={styles.moodLabel}>How are you feeling?</ThemedText>
+            <View style={styles.moodPicker}>
+              {moods.map((mood) => (
+                <TouchableOpacity
+                  key={mood}
+                  style={[
+                    styles.moodButton,
+                    selectedMood === mood && styles.selectedMoodButton,
+                  ]}
+                  onPress={() => setSelectedMood(mood)}
+                >
+                  <ThemedText style={[
+                    styles.moodButtonText,
+                    selectedMood === mood && styles.selectedMoodButtonText,
+                  ]}>
+                    {mood}
+                  </ThemedText>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
         </View>
       </ScrollView>
 
-      <View style={styles.moodContainer}>
-        <ThemedText style={styles.moodLabel}>How are you feeling?</ThemedText>
-        <View style={styles.moodSelector}>
-          {moods.map((mood) => (
-            <TouchableOpacity
-              key={mood}
-              style={[
-                styles.moodButton,
-                selectedMood === mood && styles.selectedMoodButton,
-              ]}
-              onPress={() => setSelectedMood(mood)}
-            >
-              <ThemedText
-                style={[
-                  styles.moodButtonText,
-                  selectedMood === mood && styles.selectedMoodButtonText,
-                ]}
-              >
-                {mood}
-              </ThemedText>
-            </TouchableOpacity>
-          ))}
-        </View>
-      </View>
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={styles.button} onPress={handleSubmitEntry}>
           <ThemedText style={styles.buttonText}>Suggest</ThemedText>
@@ -220,15 +217,14 @@ export default function NewJournalEntry() {
 
 const styles = StyleSheet.create({
   moodContainer: {
-    marginBottom: 16,
-    paddingHorizontal: 16,
+    marginTop: 16,
   },
   moodLabel: {
     fontSize: 16,
     marginBottom: 8,
     fontFamily: "Poppins_600SemiBold",
   },
-  moodSelector: {
+  moodPicker: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 8,
@@ -245,8 +241,7 @@ const styles = StyleSheet.create({
   },
   moodButtonText: {
     color: Theme.colors.primary,
-    fontSize: 14,
-    fontFamily: "Poppins_400Regular",
+    fontFamily: "Poppins_600SemiBold",
   },
   selectedMoodButtonText: {
     color: '#fff',
