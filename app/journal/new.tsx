@@ -26,9 +26,12 @@ export default function NewJournalEntry() {
   const router = useRouter();
   const [currentPrompt, setCurrentPrompt] = useState(0);
   const [currentEntry, setCurrentEntry] = useState("");
+  const [selectedMood, setSelectedMood] = useState("");
   const [entries, setEntries] = useState<{ text: string; prompt: string }[]>(
     [],
   );
+
+  const moods = ["Happy", "Calm", "Anxious", "Sad", "Angry"];
 
   useLayoutEffect(() => {
     router.setParams({
@@ -59,6 +62,11 @@ export default function NewJournalEntry() {
 
   const saveEntry = async () => {
     try {
+      if (!selectedMood) {
+        alert("Please select your mood before finishing the entry");
+        return;
+      }
+
       // Include the current entry if it's not empty
       const finalEntries = currentEntry.trim()
         ? [...entries, { text: currentEntry, prompt: PROMPTS[currentPrompt] }]
@@ -90,6 +98,7 @@ export default function NewJournalEntry() {
             id: uuidv4(),
             content: entryContent,
             reflection,
+            mood: selectedMood,
             timestamp: Math.floor(Date.now() / 1000),
           },
         ])
@@ -168,6 +177,30 @@ export default function NewJournalEntry() {
         </View>
       </ScrollView>
 
+      <View style={styles.moodContainer}>
+        <ThemedText style={styles.moodLabel}>How are you feeling?</ThemedText>
+        <View style={styles.moodSelector}>
+          {moods.map((mood) => (
+            <TouchableOpacity
+              key={mood}
+              style={[
+                styles.moodButton,
+                selectedMood === mood && styles.selectedMoodButton,
+              ]}
+              onPress={() => setSelectedMood(mood)}
+            >
+              <ThemedText
+                style={[
+                  styles.moodButtonText,
+                  selectedMood === mood && styles.selectedMoodButtonText,
+                ]}
+              >
+                {mood}
+              </ThemedText>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </View>
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={styles.button} onPress={handleSubmitEntry}>
           <ThemedText style={styles.buttonText}>Suggest</ThemedText>
@@ -186,6 +219,38 @@ export default function NewJournalEntry() {
 }
 
 const styles = StyleSheet.create({
+  moodContainer: {
+    marginBottom: 16,
+    paddingHorizontal: 16,
+  },
+  moodLabel: {
+    fontSize: 16,
+    marginBottom: 8,
+    fontFamily: "Poppins_600SemiBold",
+  },
+  moodSelector: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  moodButton: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: Theme.colors.primary,
+  },
+  selectedMoodButton: {
+    backgroundColor: Theme.colors.primary,
+  },
+  moodButtonText: {
+    color: Theme.colors.primary,
+    fontSize: 14,
+    fontFamily: "Poppins_400Regular",
+  },
+  selectedMoodButtonText: {
+    color: '#fff',
+  },
   container: {
     flex: 1,
     backgroundColor: "#fff",
