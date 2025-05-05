@@ -20,3 +20,6 @@ build = ["sh", "-c", "npm install && npx expo export --platform web"]
 [[ports]]
 localPort = 8081
 externalPort = 80
+
+[nix]
+channel = "stable-24_05"
