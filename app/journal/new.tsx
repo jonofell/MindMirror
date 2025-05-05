@@ -16,11 +16,36 @@ import { supabase } from "@/lib/supabase";
 import 'react-native-get-random-values';
 import { v4 as uuidv4 } from 'uuid';
 
-const PROMPTS = [
+import { generateSuggestions } from '@/lib/openai';
+
+const [prompts, setPrompts] = useState([
   "What's on your mind?",
-  "It sounds like you might be feeling a bit frustrated or overwhelmed. What's been going on that's led you to feel this way?",
-  "It seems like there's a lot you might want to express. What's been the most challenging part of your day or week so far?",
-];
+  "How are you feeling today?",
+  "What would you like to explore?"
+]);
+
+useEffect(() => {
+  const loadSuggestions = async () => {
+    try {
+      const { data: recentEntries } = await supabase
+        .from('entries')
+        .select('content, mood')
+        .order('timestamp', { ascending: false })
+        .limit(3);
+      
+      if (recentEntries && recentEntries.length > 0) {
+        const entryContents = recentEntries.map(entry => entry.content);
+        const currentMood = selectedMood || recentEntries[0].mood;
+        const suggestions = await generateSuggestions(entryContents, currentMood);
+        setPrompts(suggestions);
+      }
+    } catch (error) {
+      console.error('Error loading suggestions:', error);
+    }
+  };
+
+  loadSuggestions();
+}, [selectedMood]);
 
 export default function NewJournalEntry() {
   const router = useRouter();
