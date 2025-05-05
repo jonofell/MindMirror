@@ -42,7 +42,9 @@ export default function NewJournalEntry() {
           .limit(3);
 
         if (recentEntries && recentEntries.length > 0) {
-          const entryContents = recentEntries.map(entry => entry.content);
+          const entryContents = recentEntries.map(entry => entry.content.split('\n\n')
+            .map(section => section.split('\n').slice(1).join('\n'))
+            .join(' '));
           const currentMood = selectedMood || recentEntries[0].mood;
           const suggestions = await generateSuggestions(entryContents, currentMood);
           setPrompts(suggestions);
