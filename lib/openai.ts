@@ -1,15 +1,15 @@
 
-import OpenAI from 'openai';
-
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
-});
+import { supabase } from './supabase';
 
 export async function generateSuggestions(entries: string[], mood: string): Promise<string[]> {
   try {
-    const response = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
-      messages: [
+    const { data, error } = await supabase.functions.invoke('clever-processor', {
+      body: { entries, mood, timestamp: Date.now() }
+    });
+
+    if (error) throw error;
+    
+    const suggestions = data.suggestions || [
         {
           role: "system",
           content: "You are a compassionate journal assistant. Based on the user's entries and current mood, provide 3 thoughtful, relevant prompts for further reflection. Keep responses concise and focused on emotional growth."
