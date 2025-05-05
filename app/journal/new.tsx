@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router";
-import React, { useState, useLayoutEffect, useRef } from "react";
+import React, { useState, useEffect, useLayoutEffect, useRef } from "react";
 import {
   StyleSheet,
   TextInput,
