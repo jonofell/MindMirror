@@ -48,9 +48,14 @@ export default function JournalScreen() {
         </View>
         {entries.map((entry) => (
           <View key={entry.id} style={styles.entryCard}>
-            <ThemedText style={styles.entryDate}>
-              {new Date(entry.timestamp).toLocaleDateString()}
-            </ThemedText>
+            <View style={styles.entryHeader}>
+              <ThemedText style={styles.entryDate}>
+                {new Date(entry.timestamp).toLocaleDateString()}
+              </ThemedText>
+              {entry.mood && (
+                <ThemedText style={styles.entryMood}>{entry.mood}</ThemedText>
+              )}
+            </View>
             {entry.content.split("\n\n").map((section, index) => {
               const parts = section.split("\n");
               const prompt = parts[0] || "";
@@ -74,6 +79,17 @@ export default function JournalScreen() {
 }
 
 const styles = StyleSheet.create({
+  entryHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  entryMood: {
+    fontSize: 14,
+    fontFamily: "Poppins_600SemiBold",
+    color: Theme.colors.primary,
+  },
   headerContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
