@@ -1,4 +1,3 @@
-
 import { supabase } from './supabase';
 
 export async function generateSuggestions(entries: string[], mood: string): Promise<string[]> {
@@ -8,26 +7,12 @@ export async function generateSuggestions(entries: string[], mood: string): Prom
     });
 
     if (error) throw error;
-    
-    const suggestions = data.suggestions || [
-        {
-          role: "system",
-          content: "You are a compassionate journal assistant. Based on the user's entries and current mood, provide 3 thoughtful, relevant prompts for further reflection. Keep responses concise and focused on emotional growth."
-        },
-        {
-          role: "user",
-          content: `Previous entries: ${entries.join('\n')}\nCurrent mood: ${mood}\nGenerate 3 relevant prompts for deeper reflection.`
-        }
-      ],
-      temperature: 0.7,
-      max_tokens: 150
-    });
 
-    const suggestions = response.choices[0].message.content.split('\n')
-      .filter(line => line.trim().length > 0)
-      .slice(0, 3);
-      
-    return suggestions;
+    return data?.suggestions || [
+      "What's on your mind right now?",
+      "How has your day been going?",
+      "What are you grateful for today?"
+    ];
   } catch (error) {
     console.error('Error generating suggestions:', error);
     return [
