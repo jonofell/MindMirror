@@ -103,8 +103,10 @@ export default function NewJournalEntry() {
       // Save locally (optional)
       const existingEntries = await AsyncStorage.getItem("journal_entries");
       const allEntries = existingEntries ? JSON.parse(existingEntries) : [];
-      allEntries.unshift(data[0]);
-      await AsyncStorage.setItem("journal_entries", JSON.stringify(allEntries));
+      if (entryData && entryData[0]) {
+        allEntries.unshift(entryData[0]);
+        await AsyncStorage.setItem("journal_entries", JSON.stringify(allEntries));
+      }
 
       // Navigate to reflection screen
       router.push({
