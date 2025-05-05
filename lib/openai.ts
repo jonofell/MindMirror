@@ -1,35 +1,34 @@
 
-import OpenAI from 'openai';
+import { supabase } from './supabase';
 
-const openai = new OpenAI({
-  apiKey: process.env.EXPO_PUBLIC_OPENAI_API_KEY
-});
+const INITIAL_PROMPTS = [
+  "What's on your mind right now?",
+  "How has your day been going?",
+  "What are you grateful for today?"
+];
 
 export async function generateSuggestions(entries: string[], mood: string): Promise<string[]> {
+  if (entries.length === 0) {
+    return INITIAL_PROMPTS;
+  }
+
   try {
-    const response = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
-      messages: [
-        {
-          role: "system",
-          content: "You are a compassionate journal assistant. Based on the user's entries and current mood, provide 3 thoughtful, relevant prompts for further reflection. Keep responses concise and focused on emotional growth."
-        },
-        {
-          role: "user", 
-          content: `Previous entries: ${entries.join('\n')}\nCurrent mood: ${mood}`
-        }
-      ],
-      temperature: 0.7,
-      max_tokens: 150
+    const { data, error } = await supabase.functions.invoke('clever-processor', {
+      body: { 
+        entries: entries.map(entry => ({ response: entry })),
+        mood,
+        timestamp: new Date().toISOString()
+      }
     });
 
-    return response.choices[0].message.content.split('\n').filter(s => s.length > 0);
+    if (error) {
+      console.error('Error from edge function:', error);
+      return INITIAL_PROMPTS;
+    }
+
+    return data?.suggestions || INITIAL_PROMPTS;
   } catch (error) {
     console.error('Error generating suggestions:', error);
-    return [
-      "What's on your mind right now?",
-      "How has your day been going?", 
-      "What are you grateful for today?"
-    ];
+    return INITIAL_PROMPTS;
   }
 }
