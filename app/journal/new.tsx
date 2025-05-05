@@ -75,7 +75,11 @@ export default function NewJournalEntry() {
       // Get reflection from Edge Function
       const { data: reflectionData, error: reflectionError } =
         await supabase.functions.invoke("clever-processor", {
-          body: { content: entryContent },
+          body: { 
+            entries: finalEntries.map(entry => ({ response: entry.text })),
+            mood: selectedMood,
+            timestamp: new Date().toISOString()
+          }
         });
 
       if (reflectionError) {
