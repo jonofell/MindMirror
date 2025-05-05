@@ -15,45 +15,45 @@ import { Theme } from "@/constants/Theme";
 import { supabase } from "@/lib/supabase";
 import 'react-native-get-random-values';
 import { v4 as uuidv4 } from 'uuid';
-
 import { generateSuggestions } from '@/lib/openai';
-
-const [prompts, setPrompts] = useState([
-  "What's on your mind?",
-  "How are you feeling today?",
-  "What would you like to explore?"
-]);
-
-useEffect(() => {
-  const loadSuggestions = async () => {
-    try {
-      const { data: recentEntries } = await supabase
-        .from('entries')
-        .select('content, mood')
-        .order('timestamp', { ascending: false })
-        .limit(3);
-      
-      if (recentEntries && recentEntries.length > 0) {
-        const entryContents = recentEntries.map(entry => entry.content);
-        const currentMood = selectedMood || recentEntries[0].mood;
-        const suggestions = await generateSuggestions(entryContents, currentMood);
-        setPrompts(suggestions);
-      }
-    } catch (error) {
-      console.error('Error loading suggestions:', error);
-    }
-  };
-
-  loadSuggestions();
-}, [selectedMood]);
 
 export default function NewJournalEntry() {
   const router = useRouter();
   const [currentPrompt, setCurrentPrompt] = useState(0);
   const [currentEntry, setCurrentEntry] = useState("");
-  const [entries, setEntries] = useState<{ text: string; prompt: string }[]>(
-    [],
-  );
+  const [entries, setEntries] = useState<{ text: string; prompt: string }[]>([]);
+  const [selectedMood, setSelectedMood] = useState<string>("");
+  const [prompts, setPrompts] = useState([
+    "What's on your mind?",
+    "How are you feeling today?",
+    "What would you like to explore?"
+  ]);
+
+  const scrollViewRef = useRef(null);
+  const moods = ["😊 Happy", "😌 Calm", "😰 Anxious", "😢 Sad", "😠 Angry"];
+
+  useEffect(() => {
+    const loadSuggestions = async () => {
+      try {
+        const { data: recentEntries } = await supabase
+          .from('entries')
+          .select('content, mood')
+          .order('timestamp', { ascending: false })
+          .limit(3);
+
+        if (recentEntries && recentEntries.length > 0) {
+          const entryContents = recentEntries.map(entry => entry.content);
+          const currentMood = selectedMood || recentEntries[0].mood;
+          const suggestions = await generateSuggestions(entryContents, currentMood);
+          setPrompts(suggestions);
+        }
+      } catch (error) {
+        console.error('Error loading suggestions:', error);
+      }
+    };
+
+    loadSuggestions();
+  }, [selectedMood]);
 
   useLayoutEffect(() => {
     router.setParams({
@@ -61,20 +61,16 @@ export default function NewJournalEntry() {
     });
   }, [router]);
 
-  const scrollViewRef = useRef(null);
-const [selectedMood, setSelectedMood] = useState<string>("");
-const moods = ["😊 Happy", "😌 Calm", "😰 Anxious", "😢 Sad", "😠 Angry"];
-
   const handleSubmitEntry = () => {
     if (!currentEntry.trim()) return;
 
     setEntries([
       ...entries,
-      { text: currentEntry, prompt: PROMPTS[currentPrompt] },
+      { text: currentEntry, prompt: prompts[currentPrompt] },
     ]);
     setCurrentEntry("");
 
-    if (currentPrompt < PROMPTS.length - 1) {
+    if (currentPrompt < prompts.length - 1) {
       setCurrentPrompt((prev) => prev + 1);
     }
 
@@ -88,7 +84,7 @@ const moods = ["😊 Happy", "😌 Calm", "😰 Anxious", "😢 Sad", "😠 Angr
     try {
       // Include the current entry if it's not empty
       const finalEntries = currentEntry.trim()
-        ? [...entries, { text: currentEntry, prompt: PROMPTS[currentPrompt] }]
+        ? [...entries, { text: currentEntry, prompt: prompts[currentPrompt] }]
         : entries;
 
       const entryContent = finalEntries
@@ -151,8 +147,8 @@ const moods = ["😊 Happy", "😌 Calm", "😰 Anxious", "😢 Sad", "😠 Angr
       console.error("Error saving entry:", err);
       router.push({
         pathname: "/journal/reflection",
-        params: { 
-          error: err.message === "AI processing failed" 
+        params: {
+          error: err.message === "AI processing failed"
             ? "Failed to generate reflection"
             : "Failed to save entry"
         },
@@ -188,7 +184,7 @@ const moods = ["😊 Happy", "😌 Calm", "😰 Anxious", "😢 Sad", "😠 Angr
 
         <View style={styles.currentPromptContainer}>
           <ThemedText style={styles.prompt}>
-            {PROMPTS[currentPrompt]}
+            {prompts[currentPrompt]}
           </ThemedText>
           <TextInput
             style={styles.input}
