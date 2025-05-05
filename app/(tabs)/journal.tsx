@@ -18,9 +18,9 @@ export default function JournalScreen() {
   const loadEntries = async () => {
     try {
       const { data: entries, error } = await supabase
-        .from('entries')
-        .select('*')
-        .order('timestamp', { ascending: false });
+        .from("entries")
+        .select("*")
+        .order("timestamp", { ascending: false });
 
       if (error) throw error;
       setEntries(entries || []);
@@ -80,9 +80,9 @@ export default function JournalScreen() {
 
 const styles = StyleSheet.create({
   entryHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 8,
   },
   entryMood: {

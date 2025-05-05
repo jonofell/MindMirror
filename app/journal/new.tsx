@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router";
-import React, { useState, useEffect, useLayoutEffect, useRef } from "react";
+import React, { useState, useLayoutEffect, useRef } from "react";
 import {
   StyleSheet,
   TextInput,
@@ -13,49 +13,22 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ThemedText } from "@/components/ThemedText";
 import { Theme } from "@/constants/Theme";
 import { supabase } from "@/lib/supabase";
-import 'react-native-get-random-values';
-import { v4 as uuidv4 } from 'uuid';
-import { generateSuggestions } from '@/lib/openai';
+import "react-native-get-random-values";
+import { v4 as uuidv4 } from "uuid";
+
+const PROMPTS = [
+  "What's on your mind?",
+  "It sounds like you might be feeling a bit frustrated or overwhelmed. What's been going on that's led you to feel this way?",
+  "It seems like there's a lot you might want to express. What's been the most challenging part of your day or week so far?",
+];
 
 export default function NewJournalEntry() {
   const router = useRouter();
   const [currentPrompt, setCurrentPrompt] = useState(0);
   const [currentEntry, setCurrentEntry] = useState("");
-  const [entries, setEntries] = useState<{ text: string; prompt: string }[]>([]);
-  const [selectedMood, setSelectedMood] = useState<string>("");
-  const [prompts, setPrompts] = useState([
-    "What's on your mind?",
-    "How are you feeling today?",
-    "What would you like to explore?"
-  ]);
-
-  const scrollViewRef = useRef(null);
-  const moods = ["😊 Happy", "😌 Calm", "😰 Anxious", "😢 Sad", "😠 Angry"];
-
-  useEffect(() => {
-    const loadSuggestions = async () => {
-      try {
-        const { data: recentEntries } = await supabase
-          .from('entries')
-          .select('content, mood')
-          .order('timestamp', { ascending: false })
-          .limit(3);
-
-        if (recentEntries && recentEntries.length > 0) {
-          const entryContents = recentEntries.map(entry => entry.content.split('\n\n')
-            .map(section => section.split('\n').slice(1).join('\n'))
-            .join(' '));
-          const currentMood = selectedMood || recentEntries[0].mood;
-          const suggestions = await generateSuggestions(entryContents, currentMood);
-          setPrompts(suggestions);
-        }
-      } catch (error) {
-        console.error('Error loading suggestions:', error);
-      }
-    };
-
-    loadSuggestions();
-  }, [selectedMood]);
+  const [entries, setEntries] = useState<{ text: string; prompt: string }[]>(
+    [],
+  );
 
   useLayoutEffect(() => {
     router.setParams({
@@ -63,16 +36,20 @@ export default function NewJournalEntry() {
     });
   }, [router]);
 
+  const scrollViewRef = useRef(null);
+  const [selectedMood, setSelectedMood] = useState<string>("");
+  const moods = ["😊 Happy", "😌 Calm", "😰 Anxious", "😢 Sad", "😠 Angry"];
+
   const handleSubmitEntry = () => {
     if (!currentEntry.trim()) return;
 
     setEntries([
       ...entries,
-      { text: currentEntry, prompt: prompts[currentPrompt] },
+      { text: currentEntry, prompt: PROMPTS[currentPrompt] },
     ]);
     setCurrentEntry("");
 
-    if (currentPrompt < prompts.length - 1) {
+    if (currentPrompt < PROMPTS.length - 1) {
       setCurrentPrompt((prev) => prev + 1);
     }
 
@@ -86,7 +63,7 @@ export default function NewJournalEntry() {
     try {
       // Include the current entry if it's not empty
       const finalEntries = currentEntry.trim()
-        ? [...entries, { text: currentEntry, prompt: prompts[currentPrompt] }]
+        ? [...entries, { text: currentEntry, prompt: PROMPTS[currentPrompt] }]
         : entries;
 
       const entryContent = finalEntries
@@ -96,16 +73,18 @@ export default function NewJournalEntry() {
       console.log("Sending entry to Edge Function");
 
       // Get reflection from Edge Function
-      const { data: reflectionData, error: reflectionError } = await supabase.functions.invoke("clever-processor", {
-        body: { content: entryContent }
-      });
+      const { data: reflectionData, error: reflectionError } =
+        await supabase.functions.invoke("clever-processor", {
+          body: { content: entryContent },
+        });
 
       if (reflectionError) {
         console.error("Edge function error:", reflectionError);
         throw new Error("Failed to generate reflection");
       }
 
-      const reflection = reflectionData?.reflection || "No reflection returned.";
+      const reflection =
+        reflectionData?.reflection || "No reflection returned.";
 
       if (!selectedMood) {
         alert("Please select a mood before finishing your entry");
@@ -136,7 +115,10 @@ export default function NewJournalEntry() {
       const allEntries = existingEntries ? JSON.parse(existingEntries) : [];
       if (entryData && entryData[0]) {
         allEntries.unshift(entryData[0]);
-        await AsyncStorage.setItem("journal_entries", JSON.stringify(allEntries));
+        await AsyncStorage.setItem(
+          "journal_entries",
+          JSON.stringify(allEntries),
+        );
       }
 
       // Navigate to reflection screen
@@ -144,15 +126,15 @@ export default function NewJournalEntry() {
         pathname: "/journal/reflection",
         params: { reflection },
       });
-
     } catch (err) {
       console.error("Error saving entry:", err);
       router.push({
         pathname: "/journal/reflection",
         params: {
-          error: err.message === "AI processing failed"
-            ? "Failed to generate reflection"
-            : "Failed to save entry"
+          error:
+            err.message === "AI processing failed"
+              ? "Failed to generate reflection"
+              : "Failed to save entry",
         },
       });
     }
@@ -186,7 +168,7 @@ export default function NewJournalEntry() {
 
         <View style={styles.currentPromptContainer}>
           <ThemedText style={styles.prompt}>
-            {prompts[currentPrompt]}
+            {PROMPTS[currentPrompt]}
           </ThemedText>
           <TextInput
             style={styles.input}
@@ -197,7 +179,9 @@ export default function NewJournalEntry() {
             placeholderTextColor="#999"
           />
           <View style={styles.moodContainer}>
-            <ThemedText style={styles.moodLabel}>How are you feeling?</ThemedText>
+            <ThemedText style={styles.moodLabel}>
+              How are you feeling?
+            </ThemedText>
             <View style={styles.moodPicker}>
               {moods.map((mood) => (
                 <TouchableOpacity
@@ -208,10 +192,12 @@ export default function NewJournalEntry() {
                   ]}
                   onPress={() => setSelectedMood(mood)}
                 >
-                  <ThemedText style={[
-                    styles.moodButtonText,
-                    selectedMood === mood && styles.selectedMoodButtonText,
-                  ]}>
+                  <ThemedText
+                    style={[
+                      styles.moodButtonText,
+                      selectedMood === mood && styles.selectedMoodButtonText,
+                    ]}
+                  >
                     {mood}
                   </ThemedText>
                 </TouchableOpacity>
@@ -248,8 +234,8 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins_600SemiBold",
   },
   moodPicker: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
     gap: 8,
   },
   moodButton: {
@@ -267,7 +253,7 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins_600SemiBold",
   },
   selectedMoodButtonText: {
-    color: '#fff',
+    color: "#fff",
   },
   container: {
     flex: 1,
