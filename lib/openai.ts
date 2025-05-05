@@ -4,7 +4,11 @@ import { supabase } from './supabase';
 export async function generateSuggestions(entries: string[], mood: string): Promise<string[]> {
   try {
     const { data, error } = await supabase.functions.invoke('clever-processor', {
-      body: { entries, mood, timestamp: new Date().toISOString() }
+      body: { 
+        entries: entries.map(entry => ({ response: entry })),
+        mood,
+        timestamp: new Date().toISOString()
+      }
     });
 
     if (error) {
