@@ -14,5 +14,5 @@ task = "shell.exec"
 args = "EXPO_PUBLIC_ALLOW_ORIGIN=* EXPO_NO_TUNNEL=1 EXPO_PACKAGER_PROXY_URL=https://$REPLIT_DEV_DOMAIN REACT_NATIVE_PACKAGER_HOSTNAME=$REPLIT_DEV_DOMAIN HTTPS=true npx expo start --web --port=8081 --clear --host=localhost"
 
 [deployment]
-run = ["sh", "-c", "npx expo start --web --port=8081 --host=localhost"]
+run = ["sh", "-c", "npx expo start --web --port 8081"]
 build = ["sh", "-c", "npm install"]
