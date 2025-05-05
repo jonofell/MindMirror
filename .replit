@@ -11,7 +11,7 @@ mode = "sequential"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "EXPO_PUBLIC_ALLOW_ORIGIN=* EXPO_NO_TUNNEL=1 EXPO_PACKAGER_PROXY_URL=https://$REPLIT_DEV_DOMAIN REACT_NATIVE_PACKAGER_HOSTNAME=$REPLIT_DEV_DOMAIN HTTPS=true npx expo start --port=8081 --clear --localhost"
+args = "npx expo start --tunnel --port 8081 --clear"
 
 [deployment]
 run = ["sh", "-c", "npx serve web-build -l 0.0.0.0:5000"]
