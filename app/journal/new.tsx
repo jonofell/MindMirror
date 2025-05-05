@@ -95,9 +95,9 @@ export default function NewJournalEntry() {
         ])
         .select();
 
-      if (error) {
-        console.error("Supabase save error:", error);
-        throw new Error(`Failed to save entry: ${error.message}`);
+      if (entryError) {
+        console.error("Supabase save error:", entryError);
+        throw new Error(`Failed to save entry: ${entryError.message}`);
       }
 
       // Save locally (optional)
