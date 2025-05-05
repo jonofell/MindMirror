@@ -38,7 +38,7 @@ export default function NewJournalEntry() {
 
   const scrollViewRef = useRef(null);
 const [selectedMood, setSelectedMood] = useState<string>("");
-const moods = ["Happy", "Calm", "Anxious", "Sad", "Angry"];
+const moods = ["😊 Happy", "😌 Calm", "😰 Anxious", "😢 Sad", "😠 Angry"];
 
   const handleSubmitEntry = () => {
     if (!currentEntry.trim()) return;
