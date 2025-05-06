@@ -6,10 +6,12 @@ import { StyleSheet, TouchableOpacity, View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ThemedText } from "@/components/ThemedText";
 import { Theme } from "@/constants/Theme";
+import { IconSymbol } from "@/components/ui/IconSymbol";
 
 export default function HomeScreen() {
   const router = useRouter();
-  const [latestEntry, setLatestEntry] = useState(""); 
+  const [latestEntry, setLatestEntry] = useState("");
+  const [userName, setUserName] = useState("Friend");
 
   useEffect(() => {
     const loadLatestEntry = async () => {
@@ -18,9 +20,7 @@ export default function HomeScreen() {
         if (storedEntries) {
           const entries = JSON.parse(storedEntries);
           if (entries.length > 0) {
-            // Get first paragraph of content
-            const content = entries[0].content.split('\n\n')[1] || entries[0].content;
-            setLatestEntry(content);
+            setLatestEntry(entries[0].content.split('\n\n')[1] || entries[0].content);
           }
         }
       } catch (error) {
@@ -34,24 +34,50 @@ export default function HomeScreen() {
   return (
     <View style={styles.container}>
       <LinearGradient
-        colors={[Theme.colors.background, '#FFF']}
+        colors={['#FFE5E5', '#E5F0FF']}
         style={styles.gradient}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
       >
-        <View style={styles.header}>
-          <ThemedText style={styles.greeting}>Good{'\n'}Morning</ThemedText>
-          <ThemedText style={styles.subtitle}>Let's tune in. What's on your mind?</ThemedText>
-        </View>
+        <View style={styles.content}>
+          <View style={styles.header}>
+            <ThemedText style={styles.greeting}>
+              Good Morning,{'\n'}{userName}
+            </ThemedText>
+            <ThemedText style={styles.subtitle}>
+              Let's tune in. What's on your mind?
+            </ThemedText>
+          </View>
 
-        <TouchableOpacity 
-          style={styles.entryCard}
-          onPress={() => router.push('/journal')}
-        >
-          <ThemedText style={styles.entryTitle}>Latest Entry</ThemedText>
-          <ThemedText style={styles.entryText}>
-            {latestEntry || "No entries yet. Start journaling!"}
-          </ThemedText>
-          <ThemedText style={styles.entryTime}>Today</ThemedText>
-        </TouchableOpacity>
+          <TouchableOpacity 
+            style={styles.mainButton}
+            onPress={() => router.push('/journal/new')}
+          >
+            <IconSymbol name="pencil" size={24} color="#FFF" />
+            <ThemedText style={styles.mainButtonText}>Start journaling</ThemedText>
+          </TouchableOpacity>
+
+          <View style={styles.buttonRow}>
+            <TouchableOpacity style={styles.secondaryButton}>
+              <IconSymbol name="flame.fill" size={20} color="#000" />
+              <ThemedText style={styles.secondaryButtonText}>Set intention</ThemedText>
+            </TouchableOpacity>
+            
+            <TouchableOpacity style={styles.secondaryButton}>
+              <IconSymbol name="waveform" size={20} color="#000" />
+              <ThemedText style={styles.secondaryButtonText}>Talk to a Coach</ThemedText>
+            </TouchableOpacity>
+          </View>
+
+          {latestEntry && (
+            <View style={styles.entryCard}>
+              <ThemedText style={styles.entryTitle}>Latest Entry</ThemedText>
+              <ThemedText style={styles.entryText}>
+                Felt a bit better today 😊
+              </ThemedText>
+            </View>
+          )}
+        </View>
       </LinearGradient>
     </View>
   );
@@ -63,39 +89,80 @@ const styles = StyleSheet.create({
   },
   gradient: {
     flex: 1,
+  },
+  content: {
+    flex: 1,
     padding: 20,
+    paddingTop: 60,
   },
   header: {
-    marginTop: 60,
-    marginBottom: 30,
+    alignItems: 'center',
+    marginBottom: 40,
   },
   greeting: {
-    fontSize: 32,
-    fontFamily: "Poppins_600SemiBold",
-    marginBottom: 8,
+    fontSize: 40,
+    textAlign: 'center',
+    fontFamily: 'Poppins_600SemiBold',
+    color: '#FF7E67',
+    marginBottom: 10,
   },
   subtitle: {
     fontSize: 16,
-    color: Theme.colors.textLight,
+    textAlign: 'center',
+    color: '#666',
+    fontFamily: 'Poppins_400Regular',
+  },
+  mainButton: {
+    backgroundColor: '#FF7E67',
+    padding: 16,
+    borderRadius: 30,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 20,
+  },
+  mainButtonText: {
+    color: '#FFF',
+    fontSize: 20,
+    marginLeft: 10,
+    fontFamily: 'Poppins_600SemiBold',
+  },
+  buttonRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 20,
+    gap: 10,
+  },
+  secondaryButton: {
+    flex: 1,
+    backgroundColor: '#FFF',
+    padding: 16,
+    borderRadius: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    ...Theme.shadows.soft,
+  },
+  secondaryButtonText: {
+    fontSize: 16,
+    marginLeft: 8,
+    color: '#000',
+    fontFamily: 'Poppins_600SemiBold',
   },
   entryCard: {
-    backgroundColor: Theme.colors.card,
-    padding: 16,
-    borderRadius: 12,
-    marginTop: 20,
+    backgroundColor: '#FFF',
+    padding: 20,
+    borderRadius: 20,
+    ...Theme.shadows.soft,
   },
   entryTitle: {
-    fontSize: 18,
-    fontFamily: "Poppins_600SemiBold",
-    marginBottom: 8,
+    fontSize: 24,
+    fontFamily: 'Poppins_600SemiBold',
+    marginBottom: 10,
   },
   entryText: {
     fontSize: 16,
-    color: Theme.colors.text,
-    marginBottom: 12,
-  },
-  entryTime: {
-    fontSize: 14,
-    color: Theme.colors.textLight,
+    color: '#666',
+    fontFamily: 'Poppins_400Regular',
   },
 });
