@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
   promptText: {
     fontSize: 14,
     fontFamily: "Poppins_600SemiBold",
-    color: Theme.colors.textLight,
+    color: "#FF69B4", // Pink color
     marginBottom: 4,
   },
   container: {
@@ -154,9 +154,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: "Poppins_400Regular",
     marginTop: 8,
+    color: Theme.colors.text,
   },
   suggestionText: {
-    color: Theme.colors.primary,
-    fontStyle: 'italic',
+    color: Theme.colors.text,
+    fontStyle: 'normal',
   },
 });
