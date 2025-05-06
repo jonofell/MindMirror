@@ -46,7 +46,7 @@ export default function JournalScreen() {
             </ThemedText>
           </TouchableOpacity>
         </View>
-        {entries.map((entry) => (
+        {entries?.length > 0 ? entries.map((entry) => (
           <View key={entry.id} style={styles.entryCard}>
             <View style={styles.entryHeader}>
               <ThemedText style={styles.entryDate}>
@@ -68,7 +68,11 @@ export default function JournalScreen() {
               ) : null;
             })}
           </View>
-        ))}
+        )) : (
+          <View style={styles.emptyState}>
+            <ThemedText style={styles.emptyStateText}>No journal entries yet</ThemedText>
+          </View>
+        )}
       </ScrollView>
     </LinearGradient>
   );
