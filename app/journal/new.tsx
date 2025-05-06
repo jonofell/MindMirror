@@ -17,7 +17,7 @@ import "react-native-get-random-values";
 import { v4 as uuidv4 } from "uuid";
 
 const PROMPTS = [
-  "What's on your mind?",
+  "",
   "It sounds like you might be feeling a bit frustrated or overwhelmed. What's been going on that's led you to feel this way?",
   "It seems like there's a lot you might want to express. What's been the most challenging part of your day or week so far?",
 ];
