@@ -59,22 +59,25 @@ export default function JournalScreen() {
             {entry.content.split("\n\n").map((section, index) => {
               const parts = section.split("\n");
               const prompt = parts[0];
-              const response = parts.slice(1).join("\n") || "";
-              return response ? (
+              const response = parts.slice(1).join("\n");
+              
+              return (
                 <View key={index}>
-                  {!isCollapsed && prompt.startsWith("It sounds like") && (
+                  {!isCollapsed && (
                     <ThemedText style={styles.promptText}>
                       {prompt}
                     </ThemedText>
                   )}
-                  <ThemedText style={[
-                    styles.entryContent,
-                    prompt.startsWith("It sounds like") && styles.suggestionText
-                  ]}>
-                    {response}
-                  </ThemedText>
+                  {response && (
+                    <ThemedText style={[
+                      styles.entryContent,
+                      prompt.startsWith("It sounds like") && styles.suggestionText
+                    ]}>
+                      {response}
+                    </ThemedText>
+                  )}
                 </View>
-              ) : null;
+              );
             })}
           </View>
         )) : (
