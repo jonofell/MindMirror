@@ -49,11 +49,27 @@ export default function JournalScreen() {
         {entries?.length > 0 ? entries.map((entry) => (
           <View key={entry.id} style={styles.entryCard}>
             <View style={styles.entryHeader}>
-              <ThemedText style={styles.entryDate}>
-                {new Date(entry.timestamp).toLocaleDateString()}
-              </ThemedText>
+              <View style={styles.dateContainer}>
+                <ThemedText style={styles.entryDay}>
+                  {new Date(entry.timestamp).toLocaleDateString('en-US', { weekday: 'long' })}
+                </ThemedText>
+                <ThemedText style={styles.entryDate}>
+                  {new Date(entry.timestamp).toLocaleDateString('en-US', { 
+                    month: 'long',
+                    day: 'numeric',
+                    year: 'numeric'
+                  })}
+                </ThemedText>
+              </View>
               {entry.mood && (
-                <ThemedText style={styles.entryMood}>{entry.mood}</ThemedText>
+                <View style={styles.moodContainer}>
+                  <ThemedText style={styles.moodEmoji}>
+                    {entry.mood.split(' ')[0]}
+                  </ThemedText>
+                  <ThemedText style={styles.moodText}>
+                    {entry.mood.split(' ')[1]}
+                  </ThemedText>
+                </View>
               )}
             </View>
             {entry.content.split("\n\n").map((section, index) => {
@@ -94,13 +110,40 @@ const styles = StyleSheet.create({
   entryHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 8,
+    alignItems: "flex-start",
+    marginBottom: 12,
   },
-  entryMood: {
-    fontSize: 14,
+  dateContainer: {
+    flexDirection: "column",
+    alignItems: "flex-start",
+  },
+  entryDay: {
+    fontSize: 16,
     fontFamily: "Poppins_600SemiBold",
     color: Theme.colors.primary,
+    marginBottom: 2,
+  },
+  entryDate: {
+    fontSize: 14,
+    fontFamily: "Poppins_400Regular",
+    color: Theme.colors.textLight,
+  },
+  moodContainer: {
+    flexDirection: "column",
+    alignItems: "center",
+    backgroundColor: Theme.colors.cardLight,
+    borderRadius: 12,
+    padding: 8,
+  },
+  moodEmoji: {
+    fontSize: 24,
+    marginBottom: 4,
+  },
+  moodText: {
+    fontSize: 12,
+    fontFamily: "Poppins_600SemiBold",
+    color: Theme.colors.primary,
+    textTransform: 'capitalize',
   },
   headerContainer: {
     flexDirection: "row",
