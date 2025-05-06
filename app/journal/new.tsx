@@ -294,8 +294,7 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    paddingHorizontal: 16,
-    paddingBottom: 16,
+    padding: 24,
   },
   currentPromptContainer: {
     paddingBottom: 16,
