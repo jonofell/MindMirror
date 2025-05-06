@@ -223,7 +223,7 @@ export default function NewJournalEntry() {
           onPress={saveEntry}
         >
           <ThemedText style={[styles.buttonText, styles.finishButtonText]}>
-            Finish entry
+            Submit
           </ThemedText>
         </TouchableOpacity>
       </View>

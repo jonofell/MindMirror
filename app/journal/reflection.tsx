@@ -37,6 +37,13 @@ export default function ReflectionScreen() {
           </View>
         )}
       </ScrollView>
+      
+      <TouchableOpacity
+        style={styles.doneButton}
+        onPress={() => router.replace('/(tabs)')}
+      >
+        <ThemedText style={styles.doneButtonText}>Done</ThemedText>
+      </TouchableOpacity>
     </LinearGradient>
   );
 }
@@ -89,5 +96,17 @@ const styles = StyleSheet.create({
     color: '#DC2626',
     fontSize: 16,
     fontFamily: 'Poppins_400Regular',
+  },
+  doneButton: {
+    backgroundColor: Theme.colors.primary,
+    margin: 16,
+    padding: 12,
+    borderRadius: 20,
+    alignItems: 'center',
+  },
+  doneButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontFamily: 'Poppins_600SemiBold',
   },
 });
