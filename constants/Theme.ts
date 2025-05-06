@@ -1,31 +1,25 @@
 
 export const Theme = {
   colors: {
-    primary: '#FF7E67',
-    background: '#FFF5F5',
-    text: '#2D3142',
-    textLight: '#6B7280',
+    primary: '#FA8072', // Salmon pink
+    text: '#333333',
+    textLight: '#666666',
+    background: '#FFFFFF',
     card: '#FFFFFF',
-    gradientStart: '#FF9190',
-    gradientEnd: '#B5C6E0',
-  },
-  spacing: {
-    sm: 8,
-    md: 16,
-    lg: 24,
-    xl: 32,
+    gradientStart: '#FFE5E5', // Soft peach
+    gradientEnd: '#E5F0FF', // Light blue
   },
   borderRadius: {
     sm: 8,
-    md: 16,
-    lg: 24,
+    md: 12,
+    lg: 16,
   },
   shadows: {
     soft: {
       shadowColor: '#000',
       shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.05,
-      shadowRadius: 10,
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
       elevation: 3,
     }
   }

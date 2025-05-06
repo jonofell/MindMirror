@@ -8,6 +8,8 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  SafeAreaView,
+  LinearGradient,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ThemedText } from "@/components/ThemedText";
@@ -148,86 +150,101 @@ export default function NewJournalEntry() {
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={styles.container}
-      keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
-    >
-      <TouchableOpacity
-        onPress={() => router.push("/(tabs)")}
-        style={styles.backButton}
+    <SafeAreaView style={styles.container}>
+      <LinearGradient
+        colors={["#FFDAB9", "#ADD8E6"]}
+        style={{ flex: 1 }}
       >
-        <ThemedText style={styles.backButtonText}>← Back</ThemedText>
-      </TouchableOpacity>
-
-      <ScrollView
-        ref={scrollViewRef}
-        style={styles.content}
-        keyboardShouldPersistTaps="handled"
-        showsVerticalScrollIndicator={false}
-      >
-        {entries.map((entry, index) => (
-          <View key={index} style={styles.entryContainer}>
-            <ThemedText style={styles.entryPrompt}>{entry.prompt}</ThemedText>
-            <ThemedText style={styles.entryText}>{entry.text}</ThemedText>
-          </View>
-        ))}
-
-        <View style={styles.currentPromptContainer}>
-          <ThemedText style={styles.prompt}>
-            {PROMPTS[currentPrompt]}
-          </ThemedText>
-          <TextInput
-            style={styles.input}
-            value={currentEntry}
-            onChangeText={setCurrentEntry}
-            multiline
-            placeholder="Write..."
-            placeholderTextColor="#999"
-          />
-          <View style={styles.moodContainer}>
-            <ThemedText style={styles.moodLabel}>
-              How are you feeling?
-            </ThemedText>
-            <View style={styles.moodPicker}>
-              {moods.map((mood) => (
-                <TouchableOpacity
-                  key={mood}
-                  style={[
-                    styles.moodButton,
-                    selectedMood === mood && styles.selectedMoodButton,
-                  ]}
-                  onPress={() => setSelectedMood(mood)}
-                >
-                  <ThemedText
-                    style={[
-                      styles.moodButtonText,
-                      selectedMood === mood && styles.selectedMoodButtonText,
-                    ]}
-                  >
-                    {mood}
-                  </ThemedText>
-                </TouchableOpacity>
-              ))}
-            </View>
-          </View>
-        </View>
-      </ScrollView>
-
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.button} onPress={handleSubmitEntry}>
-          <ThemedText style={styles.buttonText}>Suggest</ThemedText>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.button, styles.finishButton]}
-          onPress={saveEntry}
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={{ flex:1 }}
+          keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
         >
-          <ThemedText style={[styles.buttonText, styles.finishButtonText]}>
-            Submit
-          </ThemedText>
-        </TouchableOpacity>
-      </View>
-    </KeyboardAvoidingView>
+          <TouchableOpacity
+            onPress={() => router.push("/(tabs)")}
+            style={styles.backButton}
+          >
+            <ThemedText style={styles.backButtonText}>← Back</ThemedText>
+          </TouchableOpacity>
+
+          <ScrollView
+            ref={scrollViewRef}
+            style={styles.content}
+            keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={false}
+          >
+            {entries.map((entry, index) => (
+              <View key={index} style={styles.entryContainer}>
+                <ThemedText style={styles.entryPrompt}>
+                  {entry.prompt}
+                </ThemedText>
+                <ThemedText style={styles.entryText}>{entry.text}</ThemedText>
+              </View>
+            ))}
+
+            <View style={styles.currentPromptContainer}>
+              <ThemedText style={styles.prompt}>
+                {PROMPTS[currentPrompt]}
+              </ThemedText>
+              <TextInput
+                style={styles.input}
+                value={currentEntry}
+                onChangeText={setCurrentEntry}
+                multiline
+                placeholder="Write..."
+                placeholderTextColor="#999"
+              />
+              <View style={styles.moodContainer}>
+                <ThemedText style={styles.moodLabel}>
+                  How are you feeling?
+                </ThemedText>
+                <View style={styles.moodPicker}>
+                  {moods.map((mood) => (
+                    <TouchableOpacity
+                      key={mood}
+                      style={[
+                        styles.moodButton,
+                        selectedMood === mood && styles.selectedMoodButton,
+                      ]}
+                      onPress={() => setSelectedMood(mood)}
+                    >
+                      <ThemedText
+                        style={[
+                          styles.moodButtonText,
+                          selectedMood === mood &&
+                            styles.selectedMoodButtonText,
+                        ]}
+                      >
+                        {mood}
+                      </ThemedText>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              </View>
+            </View>
+          </ScrollView>
+
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={handleSubmitEntry}
+            >
+              <ThemedText style={styles.buttonText}>Suggest</ThemedText>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.button, styles.finishButton]}
+              onPress={saveEntry}
+            >
+              <ThemedText
+                style={[styles.buttonText, styles.finishButtonText]}
+              >
+                Submit
+              </ThemedText>
+            </TouchableOpacity>
+          </View>
+        </KeyboardAvoidingView>
+      </LinearGradient>
+    </SafeAreaView>
   );
 }
 
@@ -264,7 +281,6 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: "#fff",
   },
   backButton: {
     paddingHorizontal: 16,
