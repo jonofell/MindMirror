@@ -1,4 +1,3 @@
-
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
@@ -12,6 +11,37 @@ export default function HomeScreen() {
   const router = useRouter();
   const [latestEntry, setLatestEntry] = useState("");
   const [userName, setUserName] = useState("Friend");
+  const [streak, setStreak] = useState(0);
+
+  const calculateStreak = async () => {
+    try {
+      const storedEntries = await AsyncStorage.getItem("journal_entries");
+      if (storedEntries) {
+        const entries = JSON.parse(storedEntries);
+        if (entries.length > 0) {
+          let currentStreak = 0;
+          let lastDate = null;
+          for (let i = entries.length -1; i >=0; i--){
+            const entryDate = new Date(entries[i].timestamp);
+            const dateString = entryDate.toDateString();
+
+            if (lastDate === null || dateString === new Date(lastDate).toDateString() || new Date(lastDate).getDate() === new Date(entryDate).getDate() +1 ){
+              currentStreak++;
+              lastDate = entries[i].timestamp;
+            } else {
+              break;
+            }
+          }
+          setStreak(currentStreak);
+          return currentStreak;
+        }
+      }
+      return 0;
+    } catch (error) {
+      console.error("Error calculating streak:", error);
+      return 0;
+    }
+  };
 
   useEffect(() => {
     const loadLatestEntry = async () => {
@@ -29,6 +59,7 @@ export default function HomeScreen() {
     };
 
     loadLatestEntry();
+    calculateStreak();
   }, []);
 
   return (
@@ -47,6 +78,7 @@ export default function HomeScreen() {
             <ThemedText style={styles.subtitle}>
               Let's tune in. What's on your mind?
             </ThemedText>
+            <ThemedText style={styles.streakText}>Current Streak: {streak} days</ThemedText>
           </View>
 
           <TouchableOpacity 
@@ -62,7 +94,7 @@ export default function HomeScreen() {
               <IconSymbol name="flame.fill" size={20} color="#000" />
               <ThemedText style={styles.secondaryButtonText}>Set intention</ThemedText>
             </TouchableOpacity>
-            
+
             <TouchableOpacity style={styles.secondaryButton}>
               <IconSymbol name="waveform" size={20} color="#000" />
               <ThemedText style={styles.secondaryButtonText}>Talk to a Coach</ThemedText>
@@ -111,6 +143,14 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#666',
     fontFamily: 'Poppins_400Regular',
+    marginBottom: 10,
+  },
+  streakText: {
+    fontSize: 18,
+    textAlign: 'center',
+    color: '#666',
+    fontFamily: 'Poppins_400Regular',
+    marginBottom: 20,
   },
   mainButton: {
     backgroundColor: '#FF7E67',
