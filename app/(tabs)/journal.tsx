@@ -118,7 +118,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: "Poppins_600SemiBold",
     color: "#FF69B4", // Pink color
-    marginBottom: 4,
+    marginTop: 16,
+    marginBottom: 8,
   },
   container: {
     flex: 1,
@@ -153,11 +154,12 @@ const styles = StyleSheet.create({
   entryContent: {
     fontSize: 16,
     fontFamily: "Poppins_400Regular",
-    marginTop: 8,
     color: Theme.colors.text,
+    marginBottom: 16,
   },
   suggestionText: {
     color: Theme.colors.text,
     fontStyle: 'normal',
+    marginTop: 0,
   },
 });
