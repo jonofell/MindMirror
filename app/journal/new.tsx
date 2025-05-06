@@ -9,8 +9,8 @@ import {
   Platform,
   ScrollView,
   SafeAreaView,
-  LinearGradient,
 } from "react-native";
+import { LinearGradient } from 'expo-linear-gradient';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ThemedText } from "@/components/ThemedText";
 import { Theme } from "@/constants/Theme";
