@@ -58,13 +58,9 @@ export default function JournalScreen() {
             </View>
             {entry.content.split("\n\n").map((section, index) => {
               const parts = section.split("\n");
-              const prompt = parts[0] || "";
               const response = parts.slice(1).join("\n") || "";
-              return prompt && response ? (
+              return response ? (
                 <View key={index}>
-                  {!isCollapsed && (
-                    <ThemedText style={styles.promptText}>{prompt}</ThemedText>
-                  )}
                   <ThemedText style={styles.entryContent}>
                     {response}
                   </ThemedText>
