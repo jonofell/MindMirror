@@ -106,9 +106,13 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   toggleButton: {
-    color: Theme.colors.primary,
+    backgroundColor: Theme.colors.primary,
+    color: '#FFFFFF',
     fontSize: 16,
     fontFamily: "Poppins_600SemiBold",
+    padding: 8,
+    paddingHorizontal: 16,
+    borderRadius: 8,
   },
   promptText: {
     fontSize: 14,
