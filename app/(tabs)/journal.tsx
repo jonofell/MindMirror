@@ -58,10 +58,19 @@ export default function JournalScreen() {
             </View>
             {entry.content.split("\n\n").map((section, index) => {
               const parts = section.split("\n");
+              const prompt = parts[0];
               const response = parts.slice(1).join("\n") || "";
               return response ? (
                 <View key={index}>
-                  <ThemedText style={styles.entryContent}>
+                  {!isCollapsed && prompt.startsWith("It sounds like") && (
+                    <ThemedText style={styles.promptText}>
+                      {prompt}
+                    </ThemedText>
+                  )}
+                  <ThemedText style={[
+                    styles.entryContent,
+                    prompt.startsWith("It sounds like") && styles.suggestionText
+                  ]}>
                     {response}
                   </ThemedText>
                 </View>
@@ -141,5 +150,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: "Poppins_400Regular",
     marginTop: 8,
+  },
+  suggestionText: {
+    color: Theme.colors.primary,
+    fontStyle: 'italic',
   },
 });
