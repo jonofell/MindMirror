@@ -3,24 +3,36 @@ import React from 'react';
 import { View, Dimensions } from 'react-native';
 import Svg, { Path, Circle, Text } from 'react-native-svg';
 import { Theme } from '@/constants/Theme';
+import { JournalEntry } from '@/types/journal';
 
-const MOCK_DATA = [
-  { day: 'Mon', mood: 0.6, emoji: '😊' },
-  { day: 'Tue', mood: 0.8, emoji: '😄' },
-  { day: 'Wed', mood: 0.4, emoji: '🧘' },
-  { day: 'Thu', mood: 0.9, emoji: '😊' },
-  { day: 'Fri', mood: 0.85, emoji: '😄' },
-  { day: 'Sun', mood: 1, emoji: '☀️' },
-];
+interface Props {
+  entries: JournalEntry[];
+}
 
-export function MoodLineChart() {
+const getMoodValue = (mood: string): number => {
+  const moodMap: { [key: string]: number } = {
+    '😊 Happy': 1,
+    '😌 Calm': 0.8,
+    '😰 Anxious': 0.4,
+    '😢 Sad': 0.2,
+    '😠 Angry': 0.3
+  };
+  return moodMap[mood] || 0.5;
+};
+
+export function MoodLineChart({ entries }: Props) {
   const width = Dimensions.get('window').width - 80;
   const height = 200;
   const padding = 40;
 
-  const points = MOCK_DATA.map((d, i) => ({
-    x: (i * (width - padding * 2)) / (MOCK_DATA.length - 1) + padding,
-    y: height - (d.mood * (height - padding * 2) + padding),
+  const sortedEntries = [...entries]
+    .sort((a, b) => a.timestamp - b.timestamp)
+    .slice(-7); // Last 7 entries
+
+  const points = sortedEntries.map((entry, i) => ({
+    x: (i * (width - padding * 2)) / (Math.max(sortedEntries.length - 1, 1)) + padding,
+    y: height - (getMoodValue(entry.mood) * (height - padding * 2) + padding),
+    mood: entry.mood
   }));
 
   const pathData = points.reduce((path, point, i) => 
@@ -52,7 +64,7 @@ export function MoodLineChart() {
               fontSize="16"
               textAnchor="middle"
             >
-              {MOCK_DATA[i].emoji}
+              {sortedEntries[i].mood.split(' ')[0]}
             </Text>
           </React.Fragment>
         ))}
