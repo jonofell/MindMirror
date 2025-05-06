@@ -25,7 +25,8 @@ export function MoodLineChart({ entries }: Props) {
   const height = 200;
   const padding = 40;
 
-  const sortedEntries = [...entries]
+  const validEntries = entries.filter(entry => entry && entry.mood);
+  const sortedEntries = [...validEntries]
     .sort((a, b) => a.timestamp - b.timestamp)
     .slice(-7); // Last 7 entries
 
@@ -34,6 +35,10 @@ export function MoodLineChart({ entries }: Props) {
     y: height - (getMoodValue(entry.mood) * (height - padding * 2) + padding),
     mood: entry.mood
   }));
+
+  if (sortedEntries.length === 0) {
+    return <View style={{ height: height }} />;
+  }
 
   const pathData = points.reduce((path, point, i) => 
     path + (i === 0 ? `M ${point.x} ${point.y}` : ` L ${point.x} ${point.y}`), 
