@@ -72,14 +72,17 @@ export default function NewJournalEntry() {
 
       console.log("Sending entry to Edge Function");
 
-      // Get reflection from Edge Function
+      // ✅ FIXED: Send both prompt and response
       const { data: reflectionData, error: reflectionError } =
         await supabase.functions.invoke("clever-processor", {
-          body: { 
-            entries: finalEntries.map(entry => ({ response: entry.text })),
+          body: {
+            entries: finalEntries.map((entry) => ({
+              prompt: entry.prompt,
+              response: entry.text,
+            })),
             mood: selectedMood,
-            timestamp: new Date().toISOString()
-          }
+            timestamp: new Date().toISOString(),
+          },
         });
 
       if (reflectionError) {
