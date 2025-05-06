@@ -182,7 +182,7 @@ export default function NewJournalEntry() {
               </View>
             ))}
 
-            <View style={styles.currentPromptContainer}>
+            <View style={styles.card}>
               <ThemedText style={styles.prompt}>
                 {PROMPTS[currentPrompt]}
               </ThemedText>
@@ -194,6 +194,9 @@ export default function NewJournalEntry() {
                 placeholder="Write..."
                 placeholderTextColor="#999"
               />
+            </View>
+
+            <View style={[styles.card, styles.moodCard]}>
               <View style={styles.moodContainer}>
                 <ThemedText style={styles.moodLabel}>
                   How are you feeling?
@@ -249,8 +252,22 @@ export default function NewJournalEntry() {
 }
 
 const styles = StyleSheet.create({
+  card: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  moodCard: {
+    marginTop: 8,
+  },
   moodContainer: {
-    marginTop: 16,
+    marginTop: 8,
   },
   moodLabel: {
     fontSize: 16,
