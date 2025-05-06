@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
   promptText: {
     fontSize: 14,
     fontFamily: "Poppins_600SemiBold",
-    color: "#FF69B4", // Pink color
+    color: "#FA8072", // Salmon pink to match app theme
     marginTop: 16,
     marginBottom: 8,
   },
