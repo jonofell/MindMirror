@@ -114,20 +114,19 @@ export default function HomeScreen() {
             </TouchableOpacity>
           </View>
 
+          <TouchableOpacity 
+            style={styles.clearStorageButton}
+            onPress={clearStorage}
+          >
+            <IconSymbol name="trash" size={16} color="#FF0000" />
+            <ThemedText style={styles.clearStorageText}>Clear Local Storage</ThemedText>
+          </TouchableOpacity>
+
           {latestEntry && latestEntry.length > 0 && (
-            <>
-              <View style={styles.entryCard}>
-                <ThemedText style={styles.entryTitle}>Latest Entry</ThemedText>
-                <ThemedText style={styles.entryText}>{latestEntry}</ThemedText>
-              </View>
-              <TouchableOpacity 
-                style={styles.clearStorageButton}
-                onPress={clearStorage}
-              >
-                <IconSymbol name="trash" size={16} color="#FF0000" />
-                <ThemedText style={styles.clearStorageText}>Clear Local Storage</ThemedText>
-              </TouchableOpacity>
-            </>
+            <View style={styles.entryCard}>
+              <ThemedText style={styles.entryTitle}>Latest Entry</ThemedText>
+              <ThemedText style={styles.entryText}>{latestEntry}</ThemedText>
+            </View>
           )}
 
           <View style={styles.bottomContainer}>
