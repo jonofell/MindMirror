@@ -73,7 +73,7 @@ export default function NewJournalEntry() {
         .join("\n\n");
 
       console.log("Fetching recent entries and sending to Edge Function");
-      
+
       // Get recent entries from Supabase
       const { data: recentEntries, error: fetchError } = await supabase
         .from("entries")
@@ -96,11 +96,12 @@ export default function NewJournalEntry() {
         };
       });
 
-      // Combine current and recent entries
+      // Format current entry and combine with recent entries
       const allEntries = [
-        ...finalEntries.map((entry) => ({
-          prompt: entry.prompt,
-          response: entry.text,
+        ...finalEntries.map(entry => ({
+          content: `${entry.prompt}\n\n${entry.text}`,
+          timestamp: new Date().toISOString(),
+          mood: selectedMood
         })),
         ...recentProcessedEntries
       ];
