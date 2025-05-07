@@ -43,6 +43,17 @@ export default function HomeScreen() {
     }
   };
 
+  const clearStorage = async () => {
+    try {
+      await AsyncStorage.clear();
+      setLatestEntry("");
+      setStreak(0);
+      console.log("Storage cleared successfully");
+    } catch (error) {
+      console.error("Error clearing storage:", error);
+    }
+  };
+
   useEffect(() => {
     const loadLatestEntry = async () => {
       try {
@@ -102,6 +113,14 @@ export default function HomeScreen() {
               <ThemedText style={styles.secondaryButtonText}>Talk to a Coach</ThemedText>
             </TouchableOpacity>
           </View>
+          
+          <TouchableOpacity 
+            style={[styles.secondaryButton, { marginTop: 10 }]}
+            onPress={clearStorage}
+          >
+            <IconSymbol name="trash" size={20} color="#FF0000" />
+            <ThemedText style={[styles.secondaryButtonText, { color: '#FF0000' }]}>Clear All Entries</ThemedText>
+          </TouchableOpacity>
 
           {latestEntry && latestEntry.length > 0 && (
             <View style={styles.entryCard}>
