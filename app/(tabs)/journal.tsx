@@ -134,7 +134,111 @@ export default function JournalScreen() {
 }
 
 const styles = StyleSheet.create({
-  // ... existing styles ...
+  entryHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    marginBottom: 8,
+  },
+  dateContainer: {
+    flexDirection: "column",
+    alignItems: "flex-start",
+  },
+  entryDay: {
+    fontSize: 16,
+    fontFamily: "Poppins_600SemiBold",
+    color: "#666",
+    marginBottom: 2,
+  },
+  entryDate: {
+    fontSize: 14,
+    fontFamily: "Poppins_400Regular",
+    color: Theme.colors.textLight,
+  },
+  moodContainer: {
+    flexDirection: "column",
+    alignItems: "center",
+    backgroundColor: Theme.colors.cardLight,
+    borderRadius: 12,
+    padding: 8,
+  },
+  moodEmoji: {
+    fontSize: 24,
+    marginBottom: 4,
+  },
+  moodText: {
+    fontSize: 12,
+    fontFamily: "Poppins_600SemiBold",
+    color: Theme.colors.primary,
+    textTransform: 'capitalize',
+  },
+  headerContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 20,
+  },
+  toggleButton: {
+    backgroundColor: Theme.colors.primary,
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontFamily: "Poppins_600SemiBold",
+    padding: 8,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+  },
+  promptText: {
+    fontSize: 14,
+    fontFamily: "Poppins_600SemiBold",
+    color: "#FA8072",
+    marginTop: 8,
+    marginBottom: 4,
+  },
+  container: {
+    flex: 1,
+  },
+  scrollView: {
+    flex: 1,
+    padding: 16,
+    paddingTop: 60,
+  },
+  title: {
+    fontSize: 24,
+    fontFamily: "Poppins_600SemiBold",
+    marginBottom: 16,
+  },
+  entryCard: {
+    backgroundColor: Theme.colors.card,
+    padding: 20,
+    borderRadius: 12,
+    marginBottom: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  entryContent: {
+    fontSize: 16,
+    fontFamily: "Poppins_400Regular",
+    color: Theme.colors.text,
+    marginBottom: 16,
+  },
+  suggestionText: {
+    color: Theme.colors.text,
+    fontStyle: 'normal',
+    marginTop: 0,
+  },
+  emptyState: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  emptyStateText: {
+    fontSize: 18,
+    fontFamily: 'Poppins_400Regular',
+    color: Theme.colors.textLight,
+  },
   loadMoreButton: {
     backgroundColor: Theme.colors.primary,
     padding: 10,
