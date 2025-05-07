@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import { View, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -6,14 +7,13 @@ import { Theme } from "@/constants/Theme";
 import { JournalEntry } from "@/types/journal";
 import { supabase } from "@/lib/supabase";
 import { LinearGradient } from "expo-linear-gradient";
-import { groupBy, format } from 'date-fns';
 
 export default function JournalScreen() {
   const [entries, setEntries] = useState<JournalEntry[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [offset, setOffset] = useState(0);
-  const LIMIT = 20; // Number of entries to load per request
+  const LIMIT = 20;
 
   useEffect(() => {
     loadEntries();
@@ -40,7 +40,6 @@ export default function JournalScreen() {
       setOffset(prev => append ? prev + LIMIT : LIMIT);
     } catch (error) {
       console.error("Error loading entries:", error);
-      // Fallback to local storage
       const storedEntries = await AsyncStorage.getItem("journal_entries");
       setEntries(storedEntries ? JSON.parse(storedEntries) : []);
     } finally {
@@ -49,15 +48,18 @@ export default function JournalScreen() {
   };
 
   const groupEntriesByMonth = (entries: JournalEntry[]) => {
-    const groupedEntries = groupBy(
-      entries,
-      entry => {
-        const date = new Date(entry.timestamp * 1000); // Convert to milliseconds
-        return format(date, 'yyyy-MM'); // Format as 'year-month'
+    const groups: { [key: string]: JournalEntry[] } = {};
+    
+    entries.forEach(entry => {
+      const date = new Date(entry.timestamp * 1000);
+      const monthYear = `${date.getFullYear()}-${date.getMonth() + 1}`;
+      if (!groups[monthYear]) {
+        groups[monthYear] = [];
       }
-    );
-
-    return groupedEntries;
+      groups[monthYear].push(entry);
+    });
+    
+    return groups;
   };
 
   const entriesByMonth = groupEntriesByMonth(entries);
@@ -68,21 +70,26 @@ export default function JournalScreen() {
       style={styles.container}
     >
       <ScrollView style={styles.scrollView}>
-        {Object.entries(entriesByMonth).map(([month, entries]) => (
-          <View key={month} style={styles.monthGroup}>
-            <ThemedText style={styles.monthHeader}>
-              {new Date(month).toLocaleString('default', { month: 'long', year: 'numeric' })}
-            </ThemedText>
-            {entries.map((entry) => (
-              <View key={entry.id} style={styles.entryCard}>
-                <ThemedText style={styles.entryText}>{entry.content}</ThemedText>
-                <ThemedText style={styles.entryDate}>
-                  {new Date(entry.timestamp * 1000).toLocaleDateString()}
-                </ThemedText>
-              </View>
-            ))}
-          </View>
-        ))}
+        {Object.entries(entriesByMonth).map(([month, entries]) => {
+          const [year, monthNum] = month.split('-');
+          const monthName = new Date(parseInt(year), parseInt(monthNum) - 1).toLocaleString('default', { month: 'long' });
+          
+          return (
+            <View key={month} style={styles.monthGroup}>
+              <ThemedText style={styles.monthHeader}>
+                {`${monthName} ${year}`}
+              </ThemedText>
+              {entries.map((entry) => (
+                <View key={entry.id} style={styles.entryCard}>
+                  <ThemedText style={styles.entryText}>{entry.content}</ThemedText>
+                  <ThemedText style={styles.entryDate}>
+                    {new Date(entry.timestamp * 1000).toLocaleDateString()}
+                  </ThemedText>
+                </View>
+              ))}
+            </View>
+          );
+        })}
         {hasMore && (
           <TouchableOpacity
             style={styles.loadMoreButton}
@@ -100,6 +107,9 @@ export default function JournalScreen() {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   monthGroup: {
     marginBottom: 20,
   },
