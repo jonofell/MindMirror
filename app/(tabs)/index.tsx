@@ -101,12 +101,10 @@ export default function HomeScreen() {
             </TouchableOpacity>
           </View>
 
-          {latestEntry && (
+          {latestEntry && latestEntry.length > 0 && (
             <View style={styles.entryCard}>
               <ThemedText style={styles.entryTitle}>Latest Entry</ThemedText>
-              <ThemedText style={styles.entryText}>
-                Felt a bit better today 😊
-              </ThemedText>
+              <ThemedText style={styles.entryText}>{latestEntry}</ThemedText>
             </View>
           )}
         </View>
