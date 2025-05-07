@@ -106,6 +106,12 @@ export default function NewJournalEntry() {
         ...recentProcessedEntries
       ];
 
+      console.log("Sending to edge function:", {
+        entries: allEntries,
+        mood: selectedMood,
+        timestamp: new Date().toISOString()
+      });
+
       const { data: reflectionData, error: reflectionError } =
         await supabase.functions.invoke("clever-processor", {
           body: {
