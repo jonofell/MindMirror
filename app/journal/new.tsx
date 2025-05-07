@@ -72,27 +72,8 @@ export default function NewJournalEntry() {
         .map((e) => `${e.prompt}\n${e.text}`)
         .join("\n\n");
 
-      // Get past entries from local storage or Supabase
-      // Get last few entries from database
-      const { data: dbEntries } = await supabase
-        .from("entries")
-        .select("*")
-        .order("timestamp", { ascending: false })
-        .limit(5);
-
-      const combinedEntries = [
-        ...finalEntries.map(entry => ({
-          prompt: entry.prompt,
-          response: entry.text
-        })),
-        ...(dbEntries || []).map(entry => ({
-          prompt: entry.content.split('\n')[0],
-          response: entry.content.split('\n').slice(1).join('\n')
-        }))
-      ].slice(0, 5);
-
-      console.log("Sending entry to Edge Function");
-
+      console.log("Fetching recent entries and sending to Edge Function");
+      
       // Get recent entries from Supabase
       const { data: recentEntries, error: fetchError } = await supabase
         .from("entries")
