@@ -1,0 +1,48 @@
+entry.bundle?platfor…routerRoot=app:4006 Unexpected text node: . A text node cannot be a child of a <View>.
+
+entry.bundle?platfor…routerRoot=app:9434 props.pointerEvents is deprecated. Use style.pointerEvents
+entry.bundle?platfor…routerRoot=app:4006 Unexpected text node: . A text node cannot be a child of a <View>.
+entry.bundle?platfor…routerRoot=app:4006 Error loading entries: ReferenceError: supabase is not defined
+    at loadEntries (entry.bundle?platfor…erRoot=app:61825:13)
+    at entry.bundle?platfor…terRoot=app:61818:7
+    at react-stack-bottom-frame (entry.bundle?platfor…rRoot=app:106916:20)
+    at runWithFiberInDEV (entry.bundle?platfor…erRoot=app:95399:16)
+    at commitHookEffectListMount (entry.bundle?platfor…Root=app:100513:620)
+    at commitHookPassiveMountEffects (entry.bundle?platfor…rRoot=app:100550:58)
+    at reconnectPassiveEffects (entry.bundle?platfor…rRoot=app:101504:11)
+    at recursivelyTraverseReconnectPassiveEffects (entry.bundle?platfor…rRoot=app:101495:68)
+    at commitPassiveMountOnFiber (entry.bundle?platfor…Root=app:101482:538)
+    at recursivelyTraversePassiveMountEffects (entry.bundle?platfor…Root=app:101448:106)
+    at commitPassiveMountOnFiber (entry.bundle?platfor…rRoot=app:101490:11)
+    at recursivelyTraversePassiveMountEffects (entry.bundle?platfor…Root=app:101448:106)
+    at commitPassiveMountOnFiber (entry.bundle?platfor…rRoot=app:101490:11)
+    at recursivelyTraversePassiveMountEffects (entry.bundle?platfor…Root=app:101448:106)
+    at commitPassiveMountOnFiber (entry.bundle?platfor…rRoot=app:101490:11)
+    at recursivelyTraversePassiveMountEffects (entry.bundle?platfor…Root=app:101448:106)
+    at commitPassiveMountOnFiber (entry.bundle?platfor…rRoot=app:101456:11)
+    at recursivelyTraversePassiveMountEffects (entry.bundle?platfor…Root=app:101448:106)
+    at commitPassiveMountOnFiber (entry.bundle?platfor…rRoot=app:101456:11)
+    at recursivelyTraversePassiveMountEffects (entry.bundle?platfor…Root=app:101448:106)
+    at commitPassiveMountOnFiber (entry.bundle?platfor…rRoot=app:101456:11)
+    at recursivelyTraversePassiveMountEffects (entry.bundle?platfor…Root=app:101448:106)
+    at commitPassiveMountOnFiber (entry.bundle?platfor…rRoot=app:101490:11)
+    at recursivelyTraversePassiveMountEffects (entry.bundle?platfor…Root=app:101448:106)
+    at commitPassiveMountOnFiber (entry.bundle?platfor…rRoot=app:101490:11)
+    at recursivelyTraversePassiveMountEffects (entry.bundle?platfor…Root=app:101448:106)
+    at commitPassiveMountOnFiber (entry.bundle?platfor…rRoot=app:101456:11)
+    at recursivelyTraversePassiveMountEffects (entry.bundle?platfor…Root=app:101448:106)
+    at commitPassiveMountOnFiber (entry.bundle?platfor…rRoot=app:101490:11)
+    at recursivelyTraversePassiveMountEffects (entry.bundle?platfor…Root=app:101448:106)
+    at commitPassiveMountOnFiber (entry.bundle?platfor…rRoot=app:101490:11)
+    at recursivelyTraversePassiveMountEffects (entry.bundle?platfor…Root=app:101448:106)
+    at commitPassiveMountOnFiber (entry.bundle?platfor…rRoot=app:101456:11)
+    at recursivelyTraversePassiveMountEffects (entry.bundle?platfor…Root=app:101448:106)
+    at commitPassiveMountOnFiber (entry.bundle?platfor…rRoot=app:101490:11)
+
+4
+entry.bundle?platfor…routerRoot=app:4006 Unexpected text node: . A text node cannot be a child of a <View>.
+entry.bundle?platfor…outerRoot=app:92255 Sending entry to Edge Function
+entry.bundle?platfor…routerRoot=app:4006 Unexpected text node: . A text node cannot be a child of a <View>.
+entry.bundle?platfor…outerRoot=app:92255 Sending entry to Edge Function
+﻿
+
