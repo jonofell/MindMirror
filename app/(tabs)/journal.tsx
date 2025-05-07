@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "flex-start",
-    marginBottom: 12,
+    marginBottom: 8,
   },
   dateContainer: {
     flexDirection: "column",
@@ -164,8 +164,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: "Poppins_600SemiBold",
     color: "#FA8072", // Salmon pink to match app theme
-    marginTop: 16,
-    marginBottom: 8,
+    marginTop: 8,
+    marginBottom: 4,
   },
   container: {
     flex: 1,
