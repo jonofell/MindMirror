@@ -115,9 +115,11 @@ export default function HomeScreen() {
           </View>
 
           {latestEntry && latestEntry.length > 0 && (
-            <View style={styles.entryCard}>
-              <ThemedText style={styles.entryTitle}>Latest Entry</ThemedText>
-              <ThemedText style={styles.entryText}>{latestEntry}</ThemedText>
+            <>
+              <View style={styles.entryCard}>
+                <ThemedText style={styles.entryTitle}>Latest Entry</ThemedText>
+                <ThemedText style={styles.entryText}>{latestEntry}</ThemedText>
+              </View>
               <TouchableOpacity 
                 style={styles.clearStorageButton}
                 onPress={clearStorage}
@@ -125,7 +127,7 @@ export default function HomeScreen() {
                 <IconSymbol name="trash" size={16} color="#FF0000" />
                 <ThemedText style={styles.clearStorageText}>Clear Local Storage</ThemedText>
               </TouchableOpacity>
-            </View>
+            </>
           )}
 
           <View style={styles.bottomContainer}>
