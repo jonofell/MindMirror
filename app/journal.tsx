@@ -1,12 +1,12 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useRouter } from 'expo-router';
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, TouchableOpacity, View, ScrollView } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useRouter } from "expo-router";
+import React, { useEffect, useState } from "react";
+import { StyleSheet, TouchableOpacity, View, ScrollView } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 
-import { ThemedText } from '@/components/ThemedText';
-import { Theme } from '@/constants/Theme';
-import { JournalEntry } from '@/types/journal';
+import { ThemedText } from "@/components/ThemedText";
+import { Theme } from "@/constants/Theme";
+import { JournalEntry } from "@/types/journal";
 
 export default function JournalScreen() {
   const router = useRouter();
@@ -18,12 +18,12 @@ export default function JournalScreen() {
 
   const loadEntries = async () => {
     try {
-      const storedEntries = await AsyncStorage.getItem('journal_entries');
+      const storedEntries = await AsyncStorage.getItem("journal_entries");
       if (storedEntries) {
         setEntries(JSON.parse(storedEntries));
       }
     } catch (error) {
-      console.error('Error loading entries:', error);
+      console.error("Error loading entries:", error);
     }
   };
 
@@ -35,7 +35,7 @@ export default function JournalScreen() {
       <ScrollView style={styles.content}>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => router.push('/journal/new')}
+          onPress={() => router.push("/journal/new")}
         >
           <ThemedText style={styles.buttonText}>Write New Entry</ThemedText>
         </TouchableOpacity>
@@ -66,29 +66,29 @@ const styles = StyleSheet.create({
     padding: Theme.spacing.lg,
     borderRadius: Theme.borderRadius.md,
     marginVertical: Theme.spacing.xl,
-    boxShadow: '0px 2px 10px rgba(0, 0, 0, 0.05)', // Updated shadow style
+    boxShadow: "0px 2px 10px rgba(0, 0, 0, 0.05)", // Updated shadow style
   },
   buttonText: {
-    fontFamily: 'Inter_600SemiBold',
+    fontFamily: "Inter_600SemiBold",
     fontSize: 18,
-    color: '#FFFFFF',
-    textAlign: 'center',
+    color: "#FFFFFF",
+    textAlign: "center",
   },
   entryCard: {
     backgroundColor: Theme.colors.card,
     padding: Theme.spacing.lg,
     borderRadius: Theme.borderRadius.md,
     marginBottom: Theme.spacing.xl,
-    boxShadow: '0px 2px 10px rgba(0, 0, 0, 0.05)', // Updated shadow style
+    boxShadow: "0px 2px 10px rgba(0, 0, 0, 0.05)", // Updated shadow style
   },
   entryText: {
-    fontFamily: 'Inter_400Regular',
+    fontFamily: "Inter_400Regular",
     fontSize: 16,
     color: Theme.colors.text,
     marginBottom: Theme.spacing.md,
   },
   entryDate: {
-    fontFamily: 'Inter_400Regular',
+    fontFamily: "Inter_400Regular",
     fontSize: 14,
     color: Theme.colors.textLight,
   },
