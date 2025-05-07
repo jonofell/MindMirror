@@ -1,0 +1,64 @@
+entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=app:4006 Error loading entries: ReferenceError: supabase is not defined
+    at loadEntries (entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=app:61835:13)
+    at entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=app:61823:7
+    at react-stack-bottom-frame (entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=app:106969:20)
+    at runWithFiberInDEV (entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=app:95452:16)
+    at commitHookEffectListMount (entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=app:100566:620)
+    at commitHookPassiveMountEffects (entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=app:100603:58)
+    at reconnectPassiveEffects (entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=app:101557:11)
+    at recursivelyTraverseReconnectPassiveEffects (entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=app:101548:68)
+    at commitPassiveMountOnFiber (entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=app:101535:538)
+    at recursivelyTraversePassiveMountEffects (entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=app:101501:106)
+    at commitPassiveMountOnFiber (entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=app:101543:11)
+    at recursivelyTraversePassiveMountEffects (entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=app:101501:106)
+    at commitPassiveMountOnFiber (entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=app:101543:11)
+    at recursivelyTraversePassiveMountEffects (entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=app:101501:106)
+    at commitPassiveMountOnFiber (entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=app:101543:11)
+    at recursivelyTraversePassiveMountEffects (entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=app:101501:106)
+    at commitPassiveMountOnFiber (entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=app:101509:11)
+    at recursivelyTraversePassiveMountEffects (entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=app:101501:106)
+    at commitPassiveMountOnFiber (entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=app:101509:11)
+    at recursivelyTraversePassiveMountEffects (entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=app:101501:106)
+    at commitPassiveMountOnFiber (entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=app:101509:11)
+    at recursivelyTraversePassiveMountEffects (entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=app:101501:106)
+    at commitPassiveMountOnFiber (entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=app:101543:11)
+    at recursivelyTraversePassiveMountEffects (entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=app:101501:106)
+    at commitPassiveMountOnFiber (entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=app:101543:11)
+    at recursivelyTraversePassiveMountEffects (entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=app:101501:106)
+    at commitPassiveMountOnFiber (entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=app:101509:11)
+    at recursivelyTraversePassiveMountEffects (entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=app:101501:106)
+    at commitPassiveMountOnFiber (entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=app:101543:11)
+    at recursivelyTraversePassiveMountEffects (entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=app:101501:106)
+    at commitPassiveMountOnFiber (entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=app:101543:11)
+    at recursivelyTraversePassiveMountEffects (entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=app:101501:106)
+    at commitPassiveMountOnFiber (entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=app:101509:11)
+    at recursivelyTraversePassiveMountEffects (entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=app:101501:106)
+    at commitPassiveMountOnFiber (entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=app:101543:11)
+registerError @ entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=app:4006Understand this error
+4entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=app:4006 Unexpected text node: . A text node cannot be a child of a <View>.
+registerError @ entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=app:4006Understand this error
+entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=app:4006 Error loading entries: ReferenceError: supabase is not defined
+    at loadEntries (entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=app:61835:13)
+    at onPress (entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=app:61990:26)
+    at onClick (entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=app:15065:15)
+    at processDispatchQueue (entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=app:103246:15)
+    at entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=app:103543:9
+    at batchedUpdates$1 (entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=app:96914:40)
+    at dispatchEventForPluginEventSystem (entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=app:103326:7)
+    at dispatchEvent (entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=app:105408:33)
+    at dispatchDiscreteEvent (entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=app:105390:60)
+registerError @ entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=app:4006Understand this error
+8entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=app:4006 Unexpected text node: . A text node cannot be a child of a <View>.
+registerError @ entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=app:4006Understand this error
+entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=app:4006 Error loading entries: ReferenceError: supabase is not defined
+    at loadEntries (entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=app:61835:13)
+    at onPress (entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=app:61990:26)
+    at onClick (entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=app:15065:15)
+    at processDispatchQueue (entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=app:103246:15)
+    at entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=app:103543:9
+    at batchedUpdates$1 (entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=app:96914:40)
+    at dispatchEventForPluginEventSystem (entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=app:103326:7)
+    at dispatchEvent (entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=app:105408:33)
+    at dispatchDiscreteEvent (entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=app:105390:60)
+registerError @ entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=app:4006Understand this error
+8entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=app:4006 Unexpected text node: . A text node cannot be a child of a <View>.
