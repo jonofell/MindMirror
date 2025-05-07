@@ -97,12 +97,15 @@ export default function NewJournalEntry() {
       });
 
       // Format current entry and combine with recent entries
+      // Format entries for the edge function
       const allEntries = [
-        ...finalEntries.map(entry => ({
-          content: `${entry.prompt}\n\n${entry.text}`,
+        {
+          content: finalEntries.map(entry => 
+            `${entry.prompt}\n\n${entry.text}`
+          ).join("\n\n"),
           timestamp: new Date().toISOString(),
           mood: selectedMood
-        })),
+        },
         ...recentProcessedEntries
       ];
 
@@ -123,11 +126,17 @@ export default function NewJournalEntry() {
 
       if (reflectionError) {
         console.error("Edge function error:", reflectionError);
-        throw new Error("Failed to generate reflection");
+        alert("There was an issue generating your reflection. Please try again.");
+        return;
       }
 
-      const reflection =
-        reflectionData?.reflection || "No reflection returned.";
+      if (!reflectionData?.reflection) {
+        console.error("No reflection data returned");
+        alert("Unable to process your entry. Please try again.");
+        return;
+      }
+
+      const reflection = reflectionData.reflection;
 
       if (!selectedMood) {
         alert("Please select a mood before finishing your entry");
