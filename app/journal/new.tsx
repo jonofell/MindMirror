@@ -73,40 +73,23 @@ export default function NewJournalEntry() {
         .join("\n\n");
 
       // Get past entries from local storage or Supabase
-      const storedEntries = await AsyncStorage.getItem("journal_entries");
-      let pastEntries = [];
-      
-      if (storedEntries) {
-        // Use local entries if available
-        const parsedEntries = JSON.parse(storedEntries);
-        pastEntries = parsedEntries.slice(0, 5).map(entry => ({
-          prompt: entry.content.split('\n')[0],
-          response: entry.content.split('\n').slice(1).join('\n')
-        }));
-      } else {
-        // Fetch from Supabase if no local entries
-        const { data: dbEntries, error } = await supabase
-          .from("entries")
-          .select("*")
-          .order("timestamp", { ascending: false })
-          .limit(5);
-          
-        if (!error && dbEntries) {
-          pastEntries = dbEntries.map(entry => ({
-            prompt: entry.content.split('\n')[0],
-            response: entry.content.split('\n').slice(1).join('\n')
-          }));
-        }
-      }
+      // Get last few entries from database
+      const { data: dbEntries } = await supabase
+        .from("entries")
+        .select("*")
+        .order("timestamp", { ascending: false })
+        .limit(5);
 
-      // Combine current entries with past entries
-      const allEntries = [
+      const combinedEntries = [
         ...finalEntries.map(entry => ({
           prompt: entry.prompt,
           response: entry.text
         })),
-        ...pastEntries
-      ].slice(0, 5); // Keep only last 5 entries
+        ...(dbEntries || []).map(entry => ({
+          prompt: entry.content.split('\n')[0],
+          response: entry.content.split('\n').slice(1).join('\n')
+        }))
+      ].slice(0, 5);
 
       console.log("Sending entry to Edge Function");
 
