@@ -22,23 +22,22 @@ export default function JournalScreen() {
   const loadEntries = async (append = true) => {
     setIsLoading(true);
     try {
+      if (!append) {
+        setOffset(0);
+      }
+      
       const { data: entriesData, error, count } = await supabase
         .from("entries")
         .select("*", { count: 'exact' })
         .order("timestamp", { ascending: false })
-        .limit(LIMIT)
-        .offset(offset);
+        .range(offset, offset + LIMIT - 1);
 
       if (error) throw error;
 
       const newEntries = entriesData || [];
-      if (append) {
-        setEntries([...entries, ...newEntries]);
-      } else {
-        setEntries(newEntries);
-      }
+      setEntries(append ? [...entries, ...newEntries] : newEntries);
       setHasMore(count > offset + LIMIT);
-      setOffset(offset + LIMIT);
+      setOffset(prev => append ? prev + LIMIT : LIMIT);
     } catch (error) {
       console.error("Error loading entries:", error);
       // Load from local storage as fallback
