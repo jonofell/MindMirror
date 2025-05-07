@@ -113,7 +113,7 @@ export default function HomeScreen() {
               <ThemedText style={styles.secondaryButtonText}>Talk to a Coach</ThemedText>
             </TouchableOpacity>
           </View>
-          
+
           <TouchableOpacity 
             style={[styles.secondaryButton, { marginTop: 10 }]}
             onPress={clearStorage}
@@ -126,8 +126,15 @@ export default function HomeScreen() {
             <View style={styles.entryCard}>
               <ThemedText style={styles.entryTitle}>Latest Entry</ThemedText>
               <ThemedText style={styles.entryText}>{latestEntry}</ThemedText>
+              <TouchableOpacity style={styles.clearButton} onPress={clearStorage}>
+                <IconSymbol name="xmark.circle.fill" size={16} color="#FF0000"/>
+                <ThemedText style={styles.clearButtonText}>Clear Entry</ThemedText>
+              </TouchableOpacity>
             </View>
           )}
+          <View style={styles.versionContainer}>
+            <ThemedText style={styles.versionText}>MindMirror Beta v1.4</ThemedText>
+          </View>
         </View>
       </LinearGradient>
     </View>
@@ -223,5 +230,30 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#666',
     fontFamily: 'Poppins_400Regular',
+    marginBottom: 15,
+  },
+  clearButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'flex-end',
+    padding: 8,
+    borderRadius: 15,
+    backgroundColor: '#FFF0F0',
+  },
+  clearButtonText: {
+    fontSize: 12,
+    marginLeft: 4,
+    color: '#FF0000',
+    fontFamily: 'Poppins_600SemiBold',
+  },
+  versionContainer: {
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  versionText: {
+    fontSize: 14,
+    color: '#888',
+    fontFamily: 'Poppins_600SemiBold',
+    opacity: 0.7,
   },
 });
