@@ -17,13 +17,13 @@ export default function JournalScreen() {
 
   const loadEntries = async () => {
     try {
-      const { data: entries, error } = await supabase
+      const { data: entriesData, error } = await supabase
         .from("entries")
         .select("*")
         .order("timestamp", { ascending: false });
 
       if (error) throw error;
-      setEntries(entries || []);
+      setEntries(entriesData || []);
     } catch (error) {
       console.error("Error loading entries:", error);
       // Load from local storage as fallback
@@ -31,20 +31,6 @@ export default function JournalScreen() {
       setEntries(storedEntries ? JSON.parse(storedEntries) : []);
     }
   };
-
-  const { data: entries, error: entriesError } = await supabase
-    .from("entries")
-    .select("*")
-    .order("timestamp", { ascending: false });
-
-  if (entriesError) {
-    console.error("Error loading entries:", entriesError.message);
-    setEntries([]);
-    return;
-  }
-
-  setEntries(entries || []);
-};
 
   return (
     <LinearGradient
