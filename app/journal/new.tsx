@@ -167,12 +167,12 @@ export default function NewJournalEntry() {
 
       // Save locally (optional)
       const existingEntries = await AsyncStorage.getItem("journal_entries");
-      const allEntries = existingEntries ? JSON.parse(existingEntries) : [];
+      const localEntries = existingEntries ? JSON.parse(existingEntries) : [];
       if (entryData && entryData[0]) {
-        allEntries.unshift(entryData[0]);
+        localEntries.unshift(entryData[0]);
         await AsyncStorage.setItem(
           "journal_entries",
-          JSON.stringify(allEntries),
+          JSON.stringify(localEntries),
         );
       }
 
