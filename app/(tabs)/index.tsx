@@ -85,6 +85,16 @@ export default function HomeScreen() {
       >
         <View style={styles.content}>
           <View style={styles.header}>
+            <View style={styles.headerTop}>
+              <ThemedText style={styles.appTitle}>MindMirror Beta v1.4</ThemedText>
+              <TouchableOpacity 
+                style={styles.clearStorageButton}
+                onPress={clearStorage}
+              >
+                <IconSymbol name="trash" size={16} color="#FF0000" />
+                <ThemedText style={styles.clearStorageText}>Clear Local Storage</ThemedText>
+              </TouchableOpacity>
+            </View>
             <ThemedText style={styles.greeting}>
               Good Morning,{'\n'}{userName}
             </ThemedText>
@@ -121,16 +131,7 @@ export default function HomeScreen() {
             </View>
           )}
 
-          <TouchableOpacity 
-            style={styles.clearStorageButton}
-            onPress={clearStorage}
-          >
-            <IconSymbol name="trash" size={16} color="#FF0000" />
-            <ThemedText style={styles.clearStorageText}>Clear Local Storage</ThemedText>
-          </TouchableOpacity>
-          <View style={styles.versionContainer}>
-            <ThemedText style={styles.versionText}>MindMirror Beta v1.4</ThemedText>
-          </View>
+          
         </View>
       </LinearGradient>
     </View>
@@ -150,8 +151,18 @@ const styles = StyleSheet.create({
     paddingTop: 60,
   },
   header: {
-    alignItems: 'center',
     marginBottom: 40,
+  },
+  headerTop: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  appTitle: {
+    fontSize: 16,
+    color: '#888',
+    fontFamily: 'Poppins_600SemiBold',
   },
   greeting: {
     fontSize: 40,
