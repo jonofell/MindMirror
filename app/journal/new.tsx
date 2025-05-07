@@ -72,9 +72,44 @@ export default function NewJournalEntry() {
         .map((e) => `${e.prompt}\n${e.text}`)
         .join("\n\n");
 
+      // Get past entries from local storage or Supabase
+      const storedEntries = await AsyncStorage.getItem("journal_entries");
+      let pastEntries = [];
+      
+      if (storedEntries) {
+        // Use local entries if available
+        const parsedEntries = JSON.parse(storedEntries);
+        pastEntries = parsedEntries.slice(0, 5).map(entry => ({
+          prompt: entry.content.split('\n')[0],
+          response: entry.content.split('\n').slice(1).join('\n')
+        }));
+      } else {
+        // Fetch from Supabase if no local entries
+        const { data: dbEntries, error } = await supabase
+          .from("entries")
+          .select("*")
+          .order("timestamp", { ascending: false })
+          .limit(5);
+          
+        if (!error && dbEntries) {
+          pastEntries = dbEntries.map(entry => ({
+            prompt: entry.content.split('\n')[0],
+            response: entry.content.split('\n').slice(1).join('\n')
+          }));
+        }
+      }
+
+      // Combine current entries with past entries
+      const allEntries = [
+        ...finalEntries.map(entry => ({
+          prompt: entry.prompt,
+          response: entry.text
+        })),
+        ...pastEntries
+      ].slice(0, 5); // Keep only last 5 entries
+
       console.log("Sending entry to Edge Function");
 
-      // ✅ FIXED: Send both prompt and response
       const { data: reflectionData, error: reflectionError } =
         await supabase.functions.invoke("clever-processor", {
           body: {
