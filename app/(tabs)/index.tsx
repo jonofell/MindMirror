@@ -47,8 +47,10 @@ export default function HomeScreen() {
     const loadLatestEntry = async () => {
       try {
         const storedEntries = await AsyncStorage.getItem("journal_entries");
+        console.log("Stored entries:", storedEntries);
         if (storedEntries) {
           const entries = JSON.parse(storedEntries);
+          console.log("Parsed entries:", entries);
           if (entries.length > 0) {
             setLatestEntry(entries[0].content.split('\n\n')[1] || entries[0].content);
           }
