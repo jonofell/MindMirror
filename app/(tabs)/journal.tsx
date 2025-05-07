@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { View, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ThemedText } from "@/components/ThemedText";
-import { Collapsible } from "@/components/Collapsible";
-import { JournalEntry } from "@/types/journal";
 import { Theme } from "@/constants/Theme";
+import { JournalEntry } from "@/types/journal";
+import { supabase } from "@/lib/supabase";
 import { LinearGradient } from "expo-linear-gradient";
 
 export default function JournalScreen() {
@@ -25,7 +25,7 @@ export default function JournalScreen() {
       if (!append) {
         setOffset(0);
       }
-      
+
       const { data: entriesData, error, count } = await supabase
         .from("entries")
         .select("*", { count: 'exact' })
@@ -52,16 +52,7 @@ export default function JournalScreen() {
     <LinearGradient
       colors={[Theme.colors.gradientStart, Theme.colors.gradientEnd]}
       style={styles.container}>
-      <ScrollView style={styles.scrollView}>
-        <View style={styles.headerContainer}>
-          <ThemedText style={styles.title}>Journal Entries</ThemedText>
-          <TouchableOpacity onPress={() => setIsCollapsed(!isCollapsed)}>
-            <ThemedText style={styles.toggleButton}>
-              {isCollapsed ? "Show prompts" : "Hide prompts"}
-            </ThemedText>
-          </TouchableOpacity>
-        </View>
-        {entries?.length > 0 ? entries.map((entry) => (
+      <ScrollView style={styles.scrollView}>{entries?.length > 0 ? entries.map((entry) => (
           <View key={entry.id} style={styles.entryCard}>
             <View style={styles.entryHeader}>
               <View style={styles.dateContainer}>
