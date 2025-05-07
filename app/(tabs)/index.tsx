@@ -85,16 +85,6 @@ export default function HomeScreen() {
       >
         <View style={styles.content}>
           <View style={styles.header}>
-            <View style={styles.headerTop}>
-              <ThemedText style={styles.appTitle}>MindMirror Beta v1.4</ThemedText>
-              <TouchableOpacity 
-                style={styles.clearStorageButton}
-                onPress={clearStorage}
-              >
-                <IconSymbol name="trash" size={16} color="#FF0000" />
-                <ThemedText style={styles.clearStorageText}>Clear Local Storage</ThemedText>
-              </TouchableOpacity>
-            </View>
             <ThemedText style={styles.greeting}>
               Good Morning,{'\n'}{userName}
             </ThemedText>
@@ -123,6 +113,14 @@ export default function HomeScreen() {
               <ThemedText style={styles.secondaryButtonText}>Talk to a Coach</ThemedText>
             </TouchableOpacity>
           </View>
+          
+          <TouchableOpacity 
+            style={[styles.secondaryButton, { marginTop: 10 }]}
+            onPress={clearStorage}
+          >
+            <IconSymbol name="trash" size={20} color="#FF0000" />
+            <ThemedText style={[styles.secondaryButtonText, { color: '#FF0000' }]}>Clear All Entries</ThemedText>
+          </TouchableOpacity>
 
           {latestEntry && latestEntry.length > 0 && (
             <View style={styles.entryCard}>
@@ -130,8 +128,6 @@ export default function HomeScreen() {
               <ThemedText style={styles.entryText}>{latestEntry}</ThemedText>
             </View>
           )}
-
-          
         </View>
       </LinearGradient>
     </View>
@@ -151,18 +147,8 @@ const styles = StyleSheet.create({
     paddingTop: 60,
   },
   header: {
-    marginBottom: 40,
-  },
-  headerTop: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 20,
-  },
-  appTitle: {
-    fontSize: 16,
-    color: '#888',
-    fontFamily: 'Poppins_600SemiBold',
+    marginBottom: 40,
   },
   greeting: {
     fontSize: 40,
@@ -237,45 +223,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#666',
     fontFamily: 'Poppins_400Regular',
-    marginBottom: 15,
-  },
-  clearButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    alignSelf: 'flex-end',
-    padding: 8,
-    borderRadius: 15,
-    backgroundColor: '#FFF0F0',
-  },
-  clearButtonText: {
-    fontSize: 12,
-    marginLeft: 4,
-    color: '#FF0000',
-    fontFamily: 'Poppins_600SemiBold',
-  },
-  versionContainer: {
-    alignItems: 'center',
-    marginTop: 20,
-  },
-  versionText: {
-    fontSize: 14,
-    color: '#888',
-    fontFamily: 'Poppins_600SemiBold',
-    opacity: 0.7,
-  },
-  clearStorageButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    alignSelf: 'center',
-    padding: 8,
-    borderRadius: 15,
-    backgroundColor: '#FFF0F0',
-    marginBottom: 10,
-  },
-  clearStorageText: {
-    fontSize: 12,
-    marginLeft: 4,
-    color: '#FF0000',
-    fontFamily: 'Poppins_600SemiBold',
   },
 });
