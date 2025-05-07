@@ -114,6 +114,14 @@ export default function HomeScreen() {
             </TouchableOpacity>
           </View>
 
+          <TouchableOpacity 
+            style={styles.clearStorageButton}
+            onPress={clearStorage}
+          >
+            <IconSymbol name="trash" size={16} color="#FF0000" />
+            <ThemedText style={styles.clearStorageText}>Clear Local Storage</ThemedText>
+          </TouchableOpacity>
+
           {latestEntry && latestEntry.length > 0 && (
             <View style={styles.entryCard}>
               <ThemedText style={styles.entryTitle}>Latest Entry</ThemedText>
@@ -121,14 +129,7 @@ export default function HomeScreen() {
             </View>
           )}
 
-          <TouchableOpacity 
-            style={[styles.clearStorageButton, { marginTop: 10 }]}
-            onPress={clearStorage}
-          >
-            <IconSymbol name="trash" size={16} color="#FF0000" />
-            <ThemedText style={styles.clearStorageText}>Clear Local Storage</ThemedText>
-          </TouchableOpacity>
-          <View style={styles.versionContainer}>
+          <View style={styles.bottomContainer}>
             <ThemedText style={styles.versionText}>MindMirror Beta v1.4</ThemedText>
           </View>
         </View>
@@ -242,14 +243,30 @@ const styles = StyleSheet.create({
     color: '#FF0000',
     fontFamily: 'Poppins_600SemiBold',
   },
-  versionContainer: {
+  bottomContainer: {
     alignItems: 'center',
-    marginTop: 20,
+    marginTop: 'auto',
+    marginBottom: 70,
   },
   versionText: {
     fontSize: 14,
     color: '#888',
     fontFamily: 'Poppins_600SemiBold',
     opacity: 0.7,
+  },
+  clearStorageButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'flex-end',
+    padding: 8,
+    marginBottom: 20,
+    borderRadius: 15,
+    backgroundColor: '#FFF0F0',
+  },
+  clearStorageText: {
+    fontSize: 12,
+    marginLeft: 4,
+    color: '#FF0000',
+    fontFamily: 'Poppins_600SemiBold',
   },
 });
