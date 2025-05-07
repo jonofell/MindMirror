@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { View, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -10,11 +9,11 @@ import { LinearGradient } from "expo-linear-gradient";
 
 export default function JournalScreen() {
   const [entries, setEntries] = useState<JournalEntry[]>([]);
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [offset, setOffset] = useState(0);
-  const [showPrompts, setShowPrompts] = useState(true);
-  const LIMIT = 20;
+  const LIMIT = 20; // Number of entries to load per request
 
   useEffect(() => {
     loadEntries();
@@ -27,9 +26,13 @@ export default function JournalScreen() {
         setOffset(0);
       }
 
-      const { data: entriesData, error, count } = await supabase
+      const {
+        data: entriesData,
+        error,
+        count,
+      } = await supabase
         .from("entries")
-        .select("*", { count: 'exact' })
+        .select("*", { count: "exact" })
         .order("timestamp", { ascending: false })
         .range(offset, offset + LIMIT - 1);
 
@@ -38,34 +41,15 @@ export default function JournalScreen() {
       const newEntries = entriesData || [];
       setEntries(append ? [...entries, ...newEntries] : newEntries);
       setHasMore(count > offset + LIMIT);
-      setOffset(prev => append ? prev + LIMIT : LIMIT);
+      setOffset((prev) => (append ? prev + LIMIT : LIMIT));
     } catch (error) {
       console.error("Error loading entries:", error);
+      // Load from local storage as fallback
       const storedEntries = await AsyncStorage.getItem("journal_entries");
       setEntries(storedEntries ? JSON.parse(storedEntries) : []);
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const getMoodEmoji = (mood: string) => {
-    const moodMap = {
-      "😊 Happy": "😊",
-      "😌 Calm": "😌",
-      "😰 Anxious": "😰",
-      "😢 Sad": "😢",
-      "😠 Angry": "😠"
-    };
-    return moodMap[mood] || "😐";
-  };
-
-  const formatDate = (timestamp: number) => {
-    return new Date(timestamp * 1000).toLocaleDateString('en-US', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
   };
 
   return (
@@ -74,41 +58,74 @@ export default function JournalScreen() {
       style={styles.container}
     >
       <ScrollView style={styles.scrollView}>
-        <View style={styles.header}>
-          <ThemedText style={styles.title}>Your Journal</ThemedText>
-          <TouchableOpacity
-            style={styles.toggleButton}
-            onPress={() => setShowPrompts(!showPrompts)}
-          >
-            <ThemedText style={styles.toggleButtonText}>
-              {showPrompts ? "Hide Prompts" : "Show Prompts"}
-            </ThemedText>
-          </TouchableOpacity>
-        </View>
-
-        {entries.map((entry) => (
-          <View key={entry.id} style={styles.entryCard}>
-            {showPrompts && (
-              <View style={styles.promptContainer}>
-                <ThemedText style={styles.promptText}>
-                  {entry.content.split('\n\n')[0]}
-                </ThemedText>
+        {entries?.length > 0 ? (
+          entries.map((entry) => (
+            <View key={entry.id} style={styles.entryCard}>
+              <View style={styles.entryHeader}>
+                <View style={styles.dateContainer}>
+                  <ThemedText style={styles.entryDay}>
+                    {new Date(entry.timestamp * 1000).toLocaleDateString(
+                      "en-US",
+                      { weekday: "long" },
+                    )}
+                  </ThemedText>
+                  <ThemedText style={styles.entryDate}>
+                    {new Date(entry.timestamp * 1000).toLocaleDateString(
+                      "en-US",
+                      {
+                        month: "long",
+                        day: "numeric",
+                        year: "numeric",
+                      },
+                    )}
+                  </ThemedText>
+                </View>
+                {entry.mood && (
+                  <View style={styles.moodContainer}>
+                    <ThemedText style={styles.moodEmoji}>
+                      {entry.mood.split(" ")[0]}
+                    </ThemedText>
+                    <ThemedText style={styles.moodText}>
+                      {entry.mood.split(" ")[1]}
+                    </ThemedText>
+                  </View>
+                )}
               </View>
-            )}
-            <ThemedText style={styles.entryText}>
-              {entry.content.split('\n\n').slice(1).join('\n\n')}
-            </ThemedText>
-            <View style={styles.entryFooter}>
-              <ThemedText style={styles.moodText}>
-                {getMoodEmoji(entry.mood)}
-              </ThemedText>
-              <ThemedText style={styles.dateText}>
-                {formatDate(entry.timestamp)}
-              </ThemedText>
+              {entry.content.split("\n\n").map((section, index) => {
+                const parts = section.split("\n");
+                const prompt = parts[0];
+                const response = parts.slice(1).join("\n");
+
+                return (
+                  <View key={index}>
+                    {!isCollapsed && (
+                      <ThemedText style={styles.promptText}>
+                        {prompt}
+                      </ThemedText>
+                    )}
+                    {response && (
+                      <ThemedText
+                        style={[
+                          styles.entryContent,
+                          prompt.startsWith("It sounds like") &&
+                            styles.suggestionText,
+                        ]}
+                      >
+                        {response}
+                      </ThemedText>
+                    )}
+                  </View>
+                );
+              })}
             </View>
+          ))
+        ) : (
+          <View style={styles.emptyState}>
+            <ThemedText style={styles.emptyStateText}>
+              No journal entries yet
+            </ThemedText>
           </View>
-        ))}
-        
+        )}
         {hasMore && (
           <TouchableOpacity
             style={styles.loadMoreButton}
@@ -126,85 +143,120 @@ export default function JournalScreen() {
 }
 
 const styles = StyleSheet.create({
+  entryHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    marginBottom: 8,
+  },
+  dateContainer: {
+    flexDirection: "column",
+    alignItems: "flex-start",
+  },
+  entryDay: {
+    fontSize: 16,
+    fontFamily: "Poppins_600SemiBold",
+    color: "#666",
+    marginBottom: 2,
+  },
+  entryDate: {
+    fontSize: 14,
+    fontFamily: "Poppins_400Regular",
+    color: Theme.colors.textLight,
+  },
+  moodContainer: {
+    flexDirection: "column",
+    alignItems: "center",
+    backgroundColor: Theme.colors.cardLight,
+    borderRadius: 12,
+    padding: 8,
+  },
+  moodEmoji: {
+    fontSize: 24,
+    marginBottom: 4,
+  },
+  moodText: {
+    fontSize: 12,
+    fontFamily: "Poppins_600SemiBold",
+    color: Theme.colors.primary,
+    textTransform: "capitalize",
+  },
+  headerContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 20,
+  },
+  toggleButton: {
+    backgroundColor: Theme.colors.primary,
+    color: "#FFFFFF",
+    fontSize: 16,
+    fontFamily: "Poppins_600SemiBold",
+    padding: 8,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+  },
+  promptText: {
+    fontSize: 14,
+    fontFamily: "Poppins_600SemiBold",
+    color: "#FA8072",
+    marginTop: 8,
+    marginBottom: 4,
+  },
   container: {
     flex: 1,
   },
   scrollView: {
     flex: 1,
     padding: 16,
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 20,
+    paddingTop: 60,
   },
   title: {
     fontSize: 24,
-    fontFamily: 'Poppins_600SemiBold',
-  },
-  toggleButton: {
-    backgroundColor: Theme.colors.primary,
-    padding: 8,
-    borderRadius: 20,
-  },
-  toggleButtonText: {
-    color: '#fff',
-    fontSize: 14,
-    fontFamily: 'Poppins_400Regular',
+    fontFamily: "Poppins_600SemiBold",
+    marginBottom: 16,
   },
   entryCard: {
     backgroundColor: Theme.colors.card,
-    padding: 16,
+    padding: 20,
     borderRadius: 12,
-    marginBottom: 16,
-    ...Theme.shadows.soft,
+    marginBottom: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
-  promptContainer: {
-    marginBottom: 12,
-    paddingBottom: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
-  },
-  promptText: {
-    fontSize: 14,
-    fontFamily: 'Poppins_400Regular',
-    color: Theme.colors.textLight,
-    fontStyle: 'italic',
-  },
-  entryText: {
+  entryContent: {
     fontSize: 16,
-    fontFamily: 'Poppins_400Regular',
+    fontFamily: "Poppins_400Regular",
     color: Theme.colors.text,
-    lineHeight: 24,
+    marginBottom: 16,
   },
-  entryFooter: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: 12,
-    paddingTop: 12,
-    borderTopWidth: 1,
-    borderTopColor: '#eee',
+  suggestionText: {
+    color: Theme.colors.text,
+    fontStyle: "normal",
+    marginTop: 0,
   },
-  moodText: {
-    fontSize: 20,
+  emptyState: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
-  dateText: {
-    fontSize: 14,
-    fontFamily: 'Poppins_400Regular',
+  emptyStateText: {
+    fontSize: 18,
+    fontFamily: "Poppins_400Regular",
     color: Theme.colors.textLight,
   },
   loadMoreButton: {
     backgroundColor: Theme.colors.primary,
-    padding: 12,
-    borderRadius: 20,
-    alignItems: 'center',
-    marginVertical: 16,
+    padding: 10,
+    margin: 10,
+    borderRadius: 5,
+    alignSelf: "center",
   },
   loadMoreText: {
-    color: '#fff',
+    color: "white",
     fontSize: 16,
-    fontFamily: 'Poppins_600SemiBold',
   },
 });
