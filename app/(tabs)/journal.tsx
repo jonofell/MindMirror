@@ -32,11 +32,24 @@ export default function JournalScreen() {
     }
   };
 
+  const { data: entries, error: entriesError } = await supabase
+    .from("entries")
+    .select("*")
+    .order("timestamp", { ascending: false });
+
+  if (entriesError) {
+    console.error("Error loading entries:", entriesError.message);
+    setEntries([]);
+    return;
+  }
+
+  setEntries(entries || []);
+};
+
   return (
     <LinearGradient
       colors={[Theme.colors.gradientStart, Theme.colors.gradientEnd]}
-      style={styles.container}
-    >
+      style={styles.container}>
       <ScrollView style={styles.scrollView}>
         <View style={styles.headerContainer}>
           <ThemedText style={styles.title}>Journal Entries</ThemedText>
