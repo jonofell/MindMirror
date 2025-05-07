@@ -114,24 +114,20 @@ export default function HomeScreen() {
             </TouchableOpacity>
           </View>
 
-          <TouchableOpacity 
-            style={[styles.secondaryButton, { marginTop: 10 }]}
-            onPress={clearStorage}
-          >
-            <IconSymbol name="trash" size={20} color="#FF0000" />
-            <ThemedText style={[styles.secondaryButtonText, { color: '#FF0000' }]}>Clear All Entries</ThemedText>
-          </TouchableOpacity>
-
           {latestEntry && latestEntry.length > 0 && (
             <View style={styles.entryCard}>
               <ThemedText style={styles.entryTitle}>Latest Entry</ThemedText>
               <ThemedText style={styles.entryText}>{latestEntry}</ThemedText>
-              <TouchableOpacity style={styles.clearButton} onPress={clearStorage}>
-                <IconSymbol name="xmark.circle.fill" size={16} color="#FF0000"/>
-                <ThemedText style={styles.clearButtonText}>Clear Entry</ThemedText>
-              </TouchableOpacity>
             </View>
           )}
+
+          <TouchableOpacity 
+            style={[styles.clearStorageButton, { marginTop: 10 }]}
+            onPress={clearStorage}
+          >
+            <IconSymbol name="trash" size={16} color="#FF0000" />
+            <ThemedText style={styles.clearStorageText}>Clear Local Storage</ThemedText>
+          </TouchableOpacity>
           <View style={styles.versionContainer}>
             <ThemedText style={styles.versionText}>MindMirror Beta v1.4</ThemedText>
           </View>
