@@ -57,10 +57,10 @@ export default function JournalScreen() {
             <View style={styles.entryHeader}>
               <View style={styles.dateContainer}>
                 <ThemedText style={styles.entryDay}>
-                  {new Date(entry.timestamp).toLocaleDateString('en-US', { weekday: 'long' })}
+                  {new Date(entry.timestamp * 1000).toLocaleDateString('en-US', { weekday: 'long' })}
                 </ThemedText>
                 <ThemedText style={styles.entryDate}>
-                  {new Date(entry.timestamp).toLocaleDateString('en-US', {
+                  {new Date(entry.timestamp * 1000).toLocaleDateString('en-US', {
                     month: 'long',
                     day: 'numeric',
                     year: 'numeric'
