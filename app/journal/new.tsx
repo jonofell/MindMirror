@@ -93,13 +93,41 @@ export default function NewJournalEntry() {
 
       console.log("Sending entry to Edge Function");
 
+      // Get recent entries from Supabase
+      const { data: recentEntries, error: fetchError } = await supabase
+        .from("entries")
+        .select("content,timestamp,mood")
+        .order("timestamp", { ascending: false })
+        .limit(4);
+
+      if (fetchError) {
+        console.error("Error fetching recent entries:", fetchError);
+      }
+
+      // Process recent entries into the same format
+      const recentProcessedEntries = (recentEntries || []).map(entry => {
+        const [prompt, ...responseParts] = entry.content.split('\n\n');
+        return {
+          prompt,
+          response: responseParts.join('\n\n'),
+          timestamp: entry.timestamp,
+          mood: entry.mood
+        };
+      });
+
+      // Combine current and recent entries
+      const allEntries = [
+        ...finalEntries.map((entry) => ({
+          prompt: entry.prompt,
+          response: entry.text,
+        })),
+        ...recentProcessedEntries
+      ];
+
       const { data: reflectionData, error: reflectionError } =
         await supabase.functions.invoke("clever-processor", {
           body: {
-            entries: finalEntries.map((entry) => ({
-              prompt: entry.prompt,
-              response: entry.text,
-            })),
+            entries: allEntries,
             mood: selectedMood,
             timestamp: new Date().toISOString(),
           },
