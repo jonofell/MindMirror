@@ -76,7 +76,7 @@ export default function JournalScreen() {
               const parts = section.split("\n");
               const prompt = parts[0];
               const response = parts.slice(1).join("\n");
-              
+
               return (
                 <View key={index}>
                   {!isCollapsed && (
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
   entryDay: {
     fontSize: 16,
     fontFamily: "Poppins_600SemiBold",
-    color: Theme.colors.primary,
+    color: "#666",
     marginBottom: 2,
   },
   entryDate: {
@@ -172,19 +172,19 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     flex: 1,
-    padding: 20,
+    padding: 16,
+    paddingTop: 60,
   },
   title: {
     fontSize: 24,
     fontFamily: "Poppins_600SemiBold",
-    marginTop: 60,
-    marginBottom: 20,
+    marginBottom: 16,
   },
   entryCard: {
     backgroundColor: Theme.colors.card,
-    padding: 16,
+    padding: 20,
     borderRadius: 12,
-    marginBottom: 16,
+    marginBottom: 20,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -208,4 +208,14 @@ const styles = StyleSheet.create({
     fontStyle: 'normal',
     marginTop: 0,
   },
+  emptyState: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  emptyStateText: {
+    fontSize: 18,
+    fontFamily: 'Poppins_400Regular',
+    color: Theme.colors.textLight,
+  }
 });
