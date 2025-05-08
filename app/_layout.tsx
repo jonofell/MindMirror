@@ -34,7 +34,7 @@ function RootLayoutNav() {
   const { session, loading } = useAuth();
 
   if (loading) {
-    return <View />; // Loading screen
+    return <View aria-label="Loading view" />; // Loading screen
   }
 
   return (
