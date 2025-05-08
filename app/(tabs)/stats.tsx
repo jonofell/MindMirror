@@ -5,6 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ThemedText } from '@/components/ThemedText';
 import { MoodLineChart } from '@/components/charts/MoodLineChart';
 import { BubbleChart } from '@/components/charts/BubbleChart';
+import { MoodInsights } from '@/components/charts/MoodInsights';
 import { Theme } from '@/constants/Theme';
 import { JournalEntry } from '@/types/journal';
 import { supabase } from '@/lib/supabase';
@@ -49,6 +50,11 @@ export default function StatsScreen() {
         <View style={styles.chartContainer}>
           <ThemedText style={styles.chartTitle}>Mood vs Entry Length</ThemedText>
           <BubbleChart entries={entries} />
+        </View>
+
+        <View style={styles.chartContainer}>
+          <ThemedText style={styles.chartTitle}>Mood Insights</ThemedText>
+          <MoodInsights entries={entries} />
         </View>
       </LinearGradient>
     </ScrollView>
