@@ -30,6 +30,8 @@ export default function RootLayout() {
   );
 }
 
+import { ThemedText } from '@/components/ThemedText';
+
 function RootLayoutNav() {
   const { session, loading } = useAuth();
 
