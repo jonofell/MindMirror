@@ -100,6 +100,7 @@ const useAuth = () => {
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
+  const { session, loading } = useAuth();
   const [loaded] = useFonts({
     Poppins_400Regular,
     Poppins_600SemiBold,
@@ -112,7 +113,7 @@ export default function RootLayout() {
     }
   }, [loaded]);
 
-  if (!loaded) {
+  if (!loaded || loading) {
     return null;
   }
 
@@ -120,7 +121,11 @@ export default function RootLayout() {
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <AuthProvider>
         <Stack screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          {session ? (
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          ) : (
+            <Stack.Screen name="login" options={{ headerShown: false }} />
+          )}
           <Stack.Screen name="+not-found" />
         </Stack>
         <StatusBar style="auto" />
