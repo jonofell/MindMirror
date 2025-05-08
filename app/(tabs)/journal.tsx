@@ -9,10 +9,16 @@ import { LinearGradient } from "expo-linear-gradient";
 
 export default function JournalScreen() {
   const [entries, setEntries] = useState<JournalEntry[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [offset, setOffset] = useState(0);
+
+  const filteredEntries = entries.filter(entry => 
+    entry.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    entry.mood?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
   const LIMIT = 20; // Number of entries to load per request
 
   useEffect(() => {
@@ -57,9 +63,18 @@ export default function JournalScreen() {
       colors={[Theme.colors.gradientStart, Theme.colors.gradientEnd]}
       style={styles.container}
     >
+      <View style={styles.searchContainer}>
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Search entries..."
+          placeholderTextColor={Theme.colors.textLight}
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+        />
+      </View>
       <ScrollView style={styles.scrollView}>
-        {entries?.length > 0 ? (
-          entries.map((entry) => (
+        {filteredEntries?.length > 0 ? (
+          filteredEntries.map((entry) => (
             <View key={entry.id} style={styles.entryCard}>
                 <TouchableOpacity 
                   style={styles.deleteButton}
@@ -156,6 +171,18 @@ export default function JournalScreen() {
 }
 
 const styles = StyleSheet.create({
+  searchContainer: {
+    padding: 16,
+    paddingTop: 60,
+  },
+  searchInput: {
+    backgroundColor: Theme.colors.card,
+    padding: 12,
+    borderRadius: 8,
+    color: Theme.colors.text,
+    fontFamily: "Poppins_400Regular",
+    fontSize: 16,
+  },
   entryHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
