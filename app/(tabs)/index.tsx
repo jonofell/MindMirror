@@ -16,27 +16,43 @@ export default function HomeScreen() {
   const calculateStreak = async () => {
     try {
       const storedEntries = await AsyncStorage.getItem("journal_entries");
-      if (storedEntries) {
-        const entries = JSON.parse(storedEntries);
-        if (entries.length > 0) {
-          let currentStreak = 0;
-          let lastDate = null;
-          for (let i = entries.length -1; i >=0; i--){
-            const entryDate = new Date(entries[i].timestamp);
-            const dateString = entryDate.toDateString();
+      if (!storedEntries) return 0;
 
-            if (lastDate === null || dateString === new Date(lastDate).toDateString() || new Date(lastDate).getDate() === new Date(entryDate).getDate() +1 ){
-              currentStreak++;
-              lastDate = entries[i].timestamp;
-            } else {
-              break;
-            }
-          }
-          setStreak(currentStreak);
-          return currentStreak;
+      const entries = JSON.parse(storedEntries);
+      if (entries.length === 0) return 0;
+
+      // Sort entries by timestamp in descending order (newest first)
+      const sortedEntries = entries.sort((a, b) => b.timestamp - a.timestamp);
+
+      // Check if the most recent entry is from today or yesterday
+      const mostRecentDate = new Date(sortedEntries[0].timestamp * 1000);
+      const today = new Date();
+      const dayDiff = Math.floor((today.getTime() - mostRecentDate.getTime()) / (1000 * 60 * 60 * 24));
+
+      // If the most recent entry is older than yesterday, streak is 0
+      if (dayDiff > 1) {
+        setStreak(0);
+        return 0;
+      }
+
+      let currentStreak = 1;
+      let lastDate = new Date(sortedEntries[0].timestamp * 1000);
+
+      // Count consecutive days
+      for (let i = 1; i < sortedEntries.length; i++) {
+        const currentDate = new Date(sortedEntries[i].timestamp * 1000);
+        const daysBetween = Math.floor((lastDate.getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24));
+
+        if (daysBetween === 1) {
+          currentStreak++;
+          lastDate = currentDate;
+        } else {
+          break;
         }
       }
-      return 0;
+
+      setStreak(currentStreak);
+      return currentStreak;
     } catch (error) {
       console.error("Error calculating streak:", error);
       return 0;
