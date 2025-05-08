@@ -133,20 +133,24 @@ export default function HomeScreen() {
 
           <View style={styles.buttonRow}>
             <TouchableOpacity 
-              style={styles.secondaryButton}
+              style={[styles.secondaryButton, styles.activeButton]}
               onPress={() => router.push('/coach-settings')}
             >
-              <IconSymbol name="waveform" size={20} color="#000" />
-              <ThemedText style={styles.secondaryButtonText}>Coach Settings</ThemedText>
+              <View style={styles.buttonContent}>
+                <IconSymbol name="waveform" size={20} color={Theme.colors.text} />
+                <ThemedText style={styles.secondaryButtonText}>Coach Settings</ThemedText>
+              </View>
             </TouchableOpacity>
             <TouchableOpacity 
-              style={[styles.secondaryButton, { opacity: 0.7 }]}
+              style={[styles.secondaryButton, styles.disabledButton]}
               disabled={true}
             >
-              <IconSymbol name="waveform" size={20} color="#666" />
-              <View>
-                <ThemedText style={[styles.secondaryButtonText, { color: '#666' }]}>Set Intention</ThemedText>
-                <ThemedText style={styles.comingSoonText}>Coming Soon</ThemedText>
+              <View style={styles.buttonContent}>
+                <IconSymbol name="waveform" size={20} color={Theme.colors.textLight} />
+                <View>
+                  <ThemedText style={[styles.secondaryButtonText, styles.disabledText]}>Set Intention</ThemedText>
+                  <ThemedText style={styles.comingSoonText}>Coming Soon</ThemedText>
+                </View>
               </View>
             </TouchableOpacity>
           </View>
@@ -170,6 +174,21 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
+  buttonContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  activeButton: {
+    backgroundColor: Theme.colors.card,
+  },
+  disabledButton: {
+    backgroundColor: Theme.colors.cardLight,
+    opacity: 0.7,
+  },
+  disabledText: {
+    color: Theme.colors.textLight,
+  },
   container: {
     flex: 1,
   },
