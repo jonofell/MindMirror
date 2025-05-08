@@ -80,7 +80,18 @@ export default function JournalScreen() {
                   style={styles.deleteButton}
                   onPress={async () => {
                     try {
+                      // Delete from Supabase
                       await supabase.from('entries').delete().eq('id', entry.id);
+                      
+                      // Delete from local storage
+                      const storedEntries = await AsyncStorage.getItem('journal_entries');
+                      if (storedEntries) {
+                        const parsedEntries = JSON.parse(storedEntries);
+                        const updatedEntries = parsedEntries.filter(e => e.id !== entry.id);
+                        await AsyncStorage.setItem('journal_entries', JSON.stringify(updatedEntries));
+                      }
+                      
+                      // Update state
                       setEntries(entries.filter(e => e.id !== entry.id));
                     } catch (error) {
                       console.error('Error deleting entry:', error);
