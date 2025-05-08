@@ -86,6 +86,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'Poppins_400Regular',
     lineHeight: 24,
+    color: Theme.colors.text,
   },
   errorContainer: {
     padding: 20,
