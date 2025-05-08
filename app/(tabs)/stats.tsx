@@ -69,7 +69,11 @@ const styles = StyleSheet.create({
   gradient: {
     flex: 1,
     padding: 20,
-    paddingTop: '15%',
+    paddingTop: Platform.OS === 'web' ? '5%' : '15%',
+    alignItems: 'center',
+    maxWidth: 1200,
+    alignSelf: 'center',
+    width: '100%',
   },
   title: {
     fontSize: 40,

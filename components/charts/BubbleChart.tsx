@@ -22,9 +22,10 @@ const getMoodValue = (mood: string): number => {
 
 export function BubbleChart({ entries }: Props) {
   const screenWidth = Dimensions.get('window').width;
-  const width = Math.min(screenWidth - 40, 400);
-  const height = Math.min(screenWidth * 0.5, 200);
-  const padding = Math.min(width * 0.08, 25);
+  const isLargeScreen = screenWidth > 768;
+  const width = isLargeScreen ? Math.min(screenWidth * 0.8, 800) : screenWidth - 40;
+  const height = isLargeScreen ? 350 : Math.min(screenWidth * 0.6, 250);
+  const padding = isLargeScreen ? 40 : Math.min(width * 0.08, 25);
   const innerWidth = width - padding * 2;
   const innerHeight = height - padding * 2;
 
