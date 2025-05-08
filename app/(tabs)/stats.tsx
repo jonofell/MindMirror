@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, View, Platform } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ThemedText } from '@/components/ThemedText';
@@ -37,7 +37,7 @@ export default function StatsScreen() {
   return (
     <ScrollView style={styles.container}>
       <LinearGradient
-        colors={[Theme.colors.gradientStart, Theme.colors.gradientEnd]}
+        colors={[Theme.colors.background, '#FFF']}
         style={styles.gradient}
       >
         <ThemedText style={styles.title}>Weekly Mood{'\n'}Reflection</ThemedText>
@@ -69,11 +69,7 @@ const styles = StyleSheet.create({
   gradient: {
     flex: 1,
     padding: 20,
-    paddingTop: Platform.OS === 'web' ? '5%' : '15%',
-    alignItems: 'center',
-    maxWidth: 1200,
-    alignSelf: 'center',
-    width: '100%',
+    paddingTop: '15%',
   },
   title: {
     fontSize: 40,

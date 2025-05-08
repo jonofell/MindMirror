@@ -21,11 +21,9 @@ const getMoodValue = (mood: string): number => {
 };
 
 export function BubbleChart({ entries }: Props) {
-  const screenWidth = Dimensions.get('window').width;
-  const isLargeScreen = screenWidth > 768;
-  const width = isLargeScreen ? Math.min(screenWidth * 0.8, 800) : screenWidth - 40;
-  const height = isLargeScreen ? 350 : Math.min(screenWidth * 0.6, 250);
-  const padding = isLargeScreen ? 40 : Math.min(width * 0.08, 25);
+  const width = Dimensions.get('window').width - 40;
+  const height = 300;
+  const padding = 40;
   const innerWidth = width - padding * 2;
   const innerHeight = height - padding * 2;
 
@@ -56,7 +54,7 @@ export function BubbleChart({ entries }: Props) {
 
   // Axis labels
   const xAxisLabels = [0, maxWordCount];
-  const yAxisLabels = ['Negative', 'Positive'];
+  const yAxisLabels = ['Less\nPositive', 'More\nPositive'];
 
   return (
     <View>
