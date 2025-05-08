@@ -3,18 +3,26 @@ import React, { useState } from 'react';
 import { View, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { Theme } from '@/constants/Theme';
-import { signIn } from '@/lib/supabase';
+import { signIn, signUp } from '@/lib/supabase';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isLogin, setIsLogin] = useState(true);
 
-  const handleLogin = async () => {
+  const handleAuth = async () => {
     try {
-      const { error } = await signIn(email, password);
+      const { error } = isLogin 
+        ? await signIn(email, password)
+        : await signUp(email, password);
+      
       if (error) throw error;
+      if (!isLogin) {
+        alert('Check your email for verification link');
+        return;
+      }
       router.replace('/(tabs)');
     } catch (error) {
       alert(error.message);
@@ -27,13 +35,16 @@ export default function LoginScreen() {
       style={styles.container}
     >
       <View style={styles.formContainer}>
-        <ThemedText style={styles.title}>Welcome Back</ThemedText>
+        <ThemedText style={styles.title}>
+          {isLogin ? 'Welcome Back' : 'Create Account'}
+        </ThemedText>
         <TextInput
           style={styles.input}
           placeholder="Email"
           value={email}
           onChangeText={setEmail}
           autoCapitalize="none"
+          placeholderTextColor="#999"
         />
         <TextInput
           style={styles.input}
@@ -41,9 +52,21 @@ export default function LoginScreen() {
           value={password}
           onChangeText={setPassword}
           secureTextEntry
+          placeholderTextColor="#999"
         />
-        <TouchableOpacity style={styles.button} onPress={handleLogin}>
-          <ThemedText style={styles.buttonText}>Login</ThemedText>
+        <TouchableOpacity style={styles.button} onPress={handleAuth}>
+          <ThemedText style={styles.buttonText}>
+            {isLogin ? 'Login' : 'Sign Up'}
+          </ThemedText>
+        </TouchableOpacity>
+        
+        <TouchableOpacity 
+          style={styles.switchButton} 
+          onPress={() => setIsLogin(!isLogin)}
+        >
+          <ThemedText style={styles.switchText}>
+            {isLogin ? 'Need an account? Sign up' : 'Have an account? Login'}
+          </ThemedText>
         </TouchableOpacity>
       </View>
     </LinearGradient>
@@ -71,6 +94,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins_600SemiBold',
     textAlign: 'center',
     marginBottom: 20,
+    color: Theme.colors.primary,
   },
   input: {
     backgroundColor: '#f5f5f5',
@@ -78,6 +102,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginBottom: 10,
     fontFamily: 'Poppins_400Regular',
+    color: '#333',
   },
   button: {
     backgroundColor: Theme.colors.primary,
@@ -89,5 +114,13 @@ const styles = StyleSheet.create({
     color: 'white',
     textAlign: 'center',
     fontFamily: 'Poppins_600SemiBold',
+  },
+  switchButton: {
+    marginTop: 15,
+  },
+  switchText: {
+    color: Theme.colors.primary,
+    textAlign: 'center',
+    fontFamily: 'Poppins_400Regular',
   },
 });
