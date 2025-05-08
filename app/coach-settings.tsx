@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { StyleSheet, View, TouchableOpacity, ScrollView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -8,36 +7,36 @@ import { useRouter } from 'expo-router';
 
 export default function CoachSettingsScreen() {
   const router = useRouter();
-  const [selectedVoice, setSelectedVoice] = useState('mirror');
+  const [selectedCoach, setSelectedCoach] = useState('mirror');
 
-  const voices = [
+  const coaches = [
     {
-      id: 'coach',
-      title: 'The Coach',
-      description: 'Supportive & goal-oriented',
-      example: '"What\'s one thing you can take action on today?"',
-      icon: '⭐️'
+      id: 'builder',
+      title: 'The Builder',
+      description: 'Practical & goal-oriented',
+      example: '"Let\'s break this down into actionable steps..."',
+      icon: '🛠️'
+    },
+    {
+      id: 'buddhist',
+      title: 'The Buddhist',
+      description: 'Mindful & present',
+      example: '"Notice how these feelings arise and pass..."',
+      icon: '🪷'
+    },
+    {
+      id: 'christian',
+      title: 'The Christian',
+      description: 'Faith-based guidance',
+      example: '"Through faith, we find strength..."',
+      icon: '✝️'
     },
     {
       id: 'mirror',
       title: 'The Mirror',
       description: 'Neutral & reflective',
-      example: '"You\'ve mentioned this before—want to go deeper?"',
-      icon: '🍃'
-    },
-    {
-      id: 'poet',
-      title: 'The Poet',
-      description: 'Dreamy & expressive',
-      example: '"You floated through the day like a paper boat..."',
-      icon: '💗'
-    },
-    {
-      id: 'inner_child',
-      title: 'The Inner Child',
-      description: 'Playful & emotional',
-      example: '"Hey... what made you smile today?"',
-      icon: '💙'
+      example: '"What do you see when you look deeper?"',
+      icon: '🪞'
     }
   ];
 
@@ -54,43 +53,35 @@ export default function CoachSettingsScreen() {
       </TouchableOpacity>
       <ScrollView style={styles.content}>
         <View style={styles.header}>
-          <ThemedText style={styles.title}>Choose Your{'\n'}Journaling Voice</ThemedText>
-          <ThemedText style={styles.subtitle}>Pick a tone that feels right for you.{'\n'}You can always change it later.</ThemedText>
-          <ThemedText style={styles.description}>Your journal can reflect like a mirror, guide like a coach,{'\n'}or dream like a poet. Who do you want to write with today?</ThemedText>
+          <ThemedText style={styles.title}>Choose Your{'\n'}Reflection Guide</ThemedText>
+          <ThemedText style={styles.subtitle}>Select a guide that resonates with you.{'\n'}You can change this anytime.</ThemedText>
         </View>
 
-        {voices.map((voice) => (
+        {coaches.map((coach) => (
           <TouchableOpacity
-            key={voice.id}
+            key={coach.id}
             style={[
-              styles.voiceOption,
-              selectedVoice === voice.id && styles.selectedVoice
+              styles.coachOption,
+              selectedCoach === coach.id && styles.selectedCoach
             ]}
-            onPress={() => setSelectedVoice(voice.id)}
+            onPress={() => setSelectedCoach(coach.id)}
           >
-            <View style={styles.voiceHeader}>
-              <View style={styles.voiceIconContainer}>
-                <ThemedText style={styles.voiceIcon}>{voice.icon}</ThemedText>
+            <View style={styles.coachHeader}>
+              <View style={styles.coachIconContainer}>
+                <ThemedText style={styles.coachIcon}>{coach.icon}</ThemedText>
               </View>
-              <View style={styles.voiceTitleContainer}>
-                <ThemedText style={styles.voiceTitle}>{voice.title}</ThemedText>
-                <ThemedText style={styles.voiceDescription}>{voice.description}</ThemedText>
+              <View style={styles.coachTitleContainer}>
+                <ThemedText style={styles.coachTitle}>{coach.title}</ThemedText>
+                <ThemedText style={styles.coachDescription}>{coach.description}</ThemedText>
               </View>
               <View style={[
                 styles.radioButton,
-                selectedVoice === voice.id && styles.radioButtonSelected
+                selectedCoach === coach.id && styles.radioButtonSelected
               ]} />
             </View>
-            <ThemedText style={styles.voiceExample}>{voice.example}</ThemedText>
+            <ThemedText style={styles.coachExample}>{coach.example}</ThemedText>
           </TouchableOpacity>
         ))}
-
-        <TouchableOpacity style={styles.blendOption}>
-          <View style={styles.blendContainer}>
-            <ThemedText style={styles.blendText}>Blend voices based on entry style</ThemedText>
-            <View style={styles.radioButton} />
-          </View>
-        </TouchableOpacity>
       </ScrollView>
     </LinearGradient>
   );
@@ -111,7 +102,6 @@ const styles = StyleSheet.create({
   content: {
     padding: 20,
     flex: 1,
-    paddingBottom: 100,
   },
   header: {
     marginTop: 20,
@@ -132,28 +122,22 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     color: '#2D3142',
   },
-  description: {
-    fontSize: 16,
-    textAlign: 'center',
-    color: '#666',
-    fontStyle: 'italic',
-  },
-  voiceOption: {
+  coachOption: {
     backgroundColor: '#FFF',
     borderRadius: 15,
     padding: 15,
     marginBottom: 15,
   },
-  selectedVoice: {
+  selectedCoach: {
     borderColor: '#E88D72',
     borderWidth: 2,
   },
-  voiceHeader: {
+  coachHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 10,
   },
-  voiceIconContainer: {
+  coachIconContainer: {
     width: 40,
     height: 40,
     borderRadius: 20,
@@ -161,23 +145,23 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  voiceIcon: {
+  coachIcon: {
     fontSize: 24,
   },
-  voiceTitleContainer: {
+  coachTitleContainer: {
     flex: 1,
     marginLeft: 15,
   },
-  voiceTitle: {
+  coachTitle: {
     fontSize: 18,
     fontFamily: 'Poppins_600SemiBold',
     color: '#2D3142',
   },
-  voiceDescription: {
+  coachDescription: {
     fontSize: 14,
     color: '#666',
   },
-  voiceExample: {
+  coachExample: {
     fontSize: 14,
     color: '#666',
     fontStyle: 'italic',
@@ -193,20 +177,5 @@ const styles = StyleSheet.create({
   radioButtonSelected: {
     borderColor: '#E88D72',
     backgroundColor: '#E88D72',
-  },
-  blendOption: {
-    backgroundColor: '#FFF',
-    borderRadius: 15,
-    padding: 15,
-    marginTop: 5,
-  },
-  blendContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  blendText: {
-    fontSize: 16,
-    color: '#2D3142',
-  },
+  }
 });

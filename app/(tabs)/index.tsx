@@ -108,7 +108,10 @@ export default function HomeScreen() {
               <ThemedText style={styles.secondaryButtonText}>Set intention</ThemedText>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.secondaryButton}>
+            <TouchableOpacity 
+              style={styles.secondaryButton}
+              onPress={() => router.push('/coach-settings')}
+            >
               <IconSymbol name="waveform" size={20} color="#000" />
               <ThemedText style={styles.secondaryButtonText}>Talk to a Coach</ThemedText>
             </TouchableOpacity>
