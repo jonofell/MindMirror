@@ -46,7 +46,10 @@ function RootLayoutNav() {
             <Stack.Screen name="+not-found" options={{ title: 'Not Found' }} />
           </>
         ) : (
-          <Stack.Screen name="login" options={{ headerShown: false }} />
+          <>
+            <Stack.Screen name="login" options={{ headerShown: false }} />
+            <Stack.Screen name="+not-found" options={{ title: 'Not Found' }} />
+          </>
         )}
       </Stack>
       <StatusBar style="light" />
