@@ -30,20 +30,23 @@ const AuthProvider = ({ children }) => {
   const [session, setSession] = useState(null);
 
   useEffect(() => {
-    const session = supabase.auth.session();
-    setSession(session);
+    const initSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      setSession(session);
+    };
+    initSession();
     
-    const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
       if(session){
         AsyncStorage.setItem('supabase-auth-session', JSON.stringify(session))
       } else {
         AsyncStorage.removeItem('supabase-auth-session')
       }
-    })
+    });
 
     return () => {
-      authListener.unsubscribe();
+      subscription.unsubscribe();
     }
   }, []);
 
