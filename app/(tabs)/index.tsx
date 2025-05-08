@@ -226,13 +226,14 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   mainButton: {
-    backgroundColor: '#FF7E67',
+    backgroundColor: Theme.colors.primary,
     padding: 16,
     borderRadius: 30,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 20,
+    ...Theme.shadows.soft,
   },
   mainButtonText: {
     color: '#FFF',

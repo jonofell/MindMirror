@@ -1,4 +1,3 @@
-
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React from 'react';
 import { StyleSheet, View, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
@@ -24,7 +23,7 @@ export default function ReflectionScreen() {
 
       <ScrollView style={styles.content}>
         <ThemedText style={styles.title}>Your Reflection</ThemedText>
-        
+
         {error ? (
           <View style={styles.errorContainer}>
             <ThemedText style={styles.errorText}>
@@ -37,7 +36,7 @@ export default function ReflectionScreen() {
           </View>
         )}
       </ScrollView>
-      
+
       <TouchableOpacity
         style={styles.doneButton}
         onPress={() => router.replace('/(tabs)')}
