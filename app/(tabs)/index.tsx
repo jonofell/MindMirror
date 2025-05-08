@@ -65,18 +65,18 @@ export default function HomeScreen() {
       await AsyncStorage.clear();
       setLatestEntry("");
       setStreak(0);
-
+      
       // Clear Supabase entries
       const { error } = await supabase
         .from('entries')
         .delete()
         .neq('id', '0'); // Delete all entries
-
+        
       if (error) {
         console.error("Error clearing Supabase:", error);
         return;
       }
-
+      
       console.log("Storage cleared successfully");
     } catch (error) {
       console.error("Error clearing storage:", error);
@@ -133,20 +133,29 @@ export default function HomeScreen() {
 
           <View style={styles.buttonRow}>
             <TouchableOpacity 
-              style={styles.secondaryButton}
+              style={[styles.secondaryButton, styles.activeButton]}
               onPress={() => router.push('/coach-settings')}
             >
-              <ThemedText style={styles.secondaryButtonText}>Coach Settings</ThemedText>
+              <View style={styles.buttonContent}>
+                <IconSymbol name="waveform" size={20} color={Theme.colors.text} />
+                <ThemedText style={styles.secondaryButtonText}>Coach Settings</ThemedText>
+              </View>
             </TouchableOpacity>
             <TouchableOpacity 
-              style={styles.secondaryButton}
-              onPress={() => router.push('/set-intention')}
+              style={[styles.secondaryButton, styles.disabledButton]}
+              disabled={true}
             >
-              <ThemedText style={styles.secondaryButtonText}>Set Intention</ThemedText>
+              <View style={styles.buttonContent}>
+                <IconSymbol name="waveform" size={20} color={Theme.colors.textLight} />
+                <View>
+                  <ThemedText style={[styles.secondaryButtonText, styles.disabledText]}>Set Intention</ThemedText>
+                  <ThemedText style={styles.comingSoonText}>Coming Soon</ThemedText>
+                </View>
+              </View>
             </TouchableOpacity>
           </View>
 
-
+          
 
           {latestEntry && latestEntry.length > 0 && (
             <View style={styles.entryCard}>
