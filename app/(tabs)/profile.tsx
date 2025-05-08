@@ -4,6 +4,8 @@ import { ThemedText } from '@/components/ThemedText';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Theme } from '@/constants/Theme';
 import { router } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { supabase } from '@/lib/supabase';
 
 export default function ProfileScreen() {
   return (
@@ -31,6 +33,33 @@ export default function ProfileScreen() {
 
         <TouchableOpacity style={styles.button}>
           <ThemedText style={styles.buttonText}>Log Out</ThemedText>
+        </TouchableOpacity>
+
+        <TouchableOpacity 
+          style={[styles.button, styles.dangerButton]}
+          onPress={async () => {
+            try {
+              // Clear local storage
+              await AsyncStorage.clear();
+              
+              // Clear Supabase entries
+              const { error } = await supabase
+                .from('entries')
+                .delete()
+                .neq('id', '0');
+                
+              if (error) {
+                console.error("Error clearing Supabase:", error);
+                return;
+              }
+              
+              console.log("Storage cleared successfully");
+            } catch (error) {
+              console.error("Error clearing storage:", error);
+            }
+          }}
+        >
+          <ThemedText style={[styles.buttonText, styles.dangerText]}>Reset Journal</ThemedText>
         </TouchableOpacity>
       </View>
     </LinearGradient>
@@ -65,5 +94,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#2D3142',
     fontFamily: 'Poppins_400Regular',
+  },
+  dangerButton: {
+    backgroundColor: '#FFF0F0',
+    borderColor: '#FFD0D0',
+  },
+  dangerText: {
+    color: '#FF0000',
   },
 });

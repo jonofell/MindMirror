@@ -151,13 +151,7 @@ export default function HomeScreen() {
             </TouchableOpacity>
           </View>
 
-          <TouchableOpacity 
-            style={styles.clearStorageButton}
-            onPress={clearStorage}
-          >
-            <IconSymbol name="trash" size={16} color="#FF0000" />
-            <ThemedText style={styles.clearStorageText}>Reset Journal</ThemedText>
-          </TouchableOpacity>
+          
 
           {latestEntry && latestEntry.length > 0 && (
             <View style={styles.entryCard}>
