@@ -103,12 +103,27 @@ export default function HomeScreen() {
           </TouchableOpacity>
 
           <View style={styles.buttonRow}>
+            <TouchableOpacity style={styles.secondaryButton}>
+              <IconSymbol name="flame.fill" size={20} color="#000" />
+              <ThemedText style={styles.secondaryButtonText}>Set intention</ThemedText>
+            </TouchableOpacity>
+
             <TouchableOpacity 
               style={styles.secondaryButton}
               onPress={() => router.push('/coach-settings')}
             >
               <IconSymbol name="waveform" size={20} color="#000" />
-              <ThemedText style={styles.secondaryButtonText}>Talk to Coach</ThemedText>
+              <ThemedText style={styles.secondaryButtonText}>Coach Settings</ThemedText>
+            </TouchableOpacity>
+            <TouchableOpacity 
+              style={[styles.secondaryButton, { opacity: 0.7 }]}
+              disabled={true}
+            >
+              <IconSymbol name="waveform" size={20} color="#666" />
+              <View>
+                <ThemedText style={[styles.secondaryButtonText, { color: '#666' }]}>Set Intention</ThemedText>
+                <ThemedText style={styles.comingSoonText}>Coming Soon</ThemedText>
+              </View>
             </TouchableOpacity>
           </View>
 
