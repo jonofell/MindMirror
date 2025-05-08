@@ -18,8 +18,8 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 SplashScreen.preventAutoHideAsync();
 
 //Supabase Client Initialization
-const supabaseUrl = EXPO_PUBLIC_SUPABASE_URL; // Replace with your Supabase URL
-const supabaseAnonKey = EXPO_PUBLIC_SUPABASE_ANON_KEY; // Replace with your Supabase anon key
+const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL; // Replace with your Supabase URL
+const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY; // Replace with your Supabase anon key
 
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
