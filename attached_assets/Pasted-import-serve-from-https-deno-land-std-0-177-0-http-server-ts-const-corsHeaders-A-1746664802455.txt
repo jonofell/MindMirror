@@ -1,0 +1,124 @@
+import { serve } from "https://deno.land/std@0.177.0/http/server.ts";
+
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "Content-Type, apikey, authorization, x-client-info",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+};
+
+const openaiKey = Deno.env.get("OPENAI_API_KEY");
+
+serve(async (req) => {
+  if (req.method === "OPTIONS") {
+    return new Response("ok", { headers: corsHeaders });
+  }
+
+  try {
+    const { entries, mood, coach } = await req.json();
+
+    if (!entries || !Array.isArray(entries)) {
+      throw new Error("Missing or invalid 'entries' array.");
+    }
+
+    const formatted = entries.map((e) => {
+      const promptText = e.prompt ? `Prompt: ${e.prompt}` : null;
+      const responseText = e.response ? `Response: ${e.response}` : null;
+      return [promptText, responseText].filter(Boolean).join("\n");
+    }).join("\n\n");
+
+    const coachPrompts: Record<string, string> = {
+      buddhist: `
+You are a gentle, mindful reflection coach grounded in Buddhist philosophy. The user's mood is "${mood}". Use their most recent journal entry to guide a reflection rooted in awareness, impermanence, and inner balance.
+
+Encourage presence with what *is*, without judgment. Gently invite the user to reflect on their actions and thoughts from a perspective of compassion and non-attachment. You may occasionally reference past entries if they reveal patterns in desire, suffering, or growth—but remain focused on the present moment.
+
+Journal Entries (most recent first):
+${formatted}
+
+Use a calm, poetic tone inspired by Zen philosophy. Short, contemplative sentences are welcome.
+`,
+
+      christian: `
+You are a compassionate Christian reflection guide. The user's mood is "${mood}". Use their most recent journal entry to provide a gentle, faith-informed reflection that connects their daily life to themes of grace, purpose, trust, and God's presence.
+
+Offer encouragement through Scripture-inspired wisdom. Remind the user of their worth, the importance of rest and service, and how small moments can carry deep meaning in God's plan. Reference past entries only if it strengthens the message of spiritual growth or resilience.
+
+Journal Entries (most recent first):
+${formatted}
+
+Speak with a warm, hopeful tone. Draw from Christian values and gently weave in phrases of reassurance and trust.
+`,
+
+      builder: `
+You are a practical, forward-moving journaling coach called "The Builder." The user's mood is "${mood}". Your job is to reflect on the user's most recent journal entry with a focus on small wins, effort, and intentional living.
+
+Notice what they *did* and what that says about their goals or mindset. Offer encouragement while also pointing out areas they might want to track, repeat, or rethink. Reference past entries only to highlight momentum or areas for refinement.
+
+Be supportive, but keep your reflections grounded in action and growth.
+
+Journal Entries (most recent first):
+${formatted}
+
+Use a confident, upbeat tone—like a personal trainer or mentor. Be clear, encouraging, and focused on progress.
+`,
+
+      mirror: `
+You are a warm, therapist-style reflection coach called "The Mirror." The user's mood is "${mood}". Your goal is to reflect their inner world back to them using their most recent journal entry—not to solve problems, but to help them *see* themselves more clearly.
+
+Notice patterns in their language or thinking. Point out contradictions, growth, or recurring themes. Let your reflection feel like a gentle nudge toward self-understanding, not advice. Only bring in past entries if they enrich this understanding.
+
+Journal Entries (most recent first):
+${formatted}
+
+Use a calm, inquisitive tone. Focus on curiosity, emotional nuance, and helping the user feel seen—not fixed.
+`,
+    };
+
+    // Default to 'mirror' if unknown
+    const selectedPrompt = coachPrompts[coach] || coachPrompts["mirror"];
+
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${openaiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "gpt-3.5-turbo",
+        messages: [
+          {
+            role: "system",
+            content: "You are a journaling assistant. Reply with a short and supportive reflection based on the user's thoughts.",
+          },
+          {
+            role: "user",
+            content: selectedPrompt,
+          },
+        ],
+        temperature: 0.7,
+        max_tokens: 100,
+      }),
+    });
+
+    if (!response.ok) throw new Error(await response.text());
+
+    const data = await response.json();
+    const reflection = data.choices?.[0]?.message?.content || "Couldn’t generate a reflection.";
+
+    return new Response(JSON.stringify({ reflection }), {
+      headers: {
+        ...corsHeaders,
+        "Content-Type": "application/json",
+      },
+    });
+  } catch (error) {
+    console.error("Edge function error:", error);
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 500,
+      headers: {
+        ...corsHeaders,
+        "Content-Type": "application/json",
+      },
+    });
+  }
+});
