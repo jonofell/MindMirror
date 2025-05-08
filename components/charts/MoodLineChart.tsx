@@ -21,9 +21,10 @@ const getMoodValue = (mood: string): number => {
 };
 
 export function MoodLineChart({ entries }: Props) {
-  const width = Dimensions.get('window').width - 80;
-  const height = 200;
-  const padding = 40;
+  const screenWidth = Dimensions.get('window').width;
+  const width = Math.min(screenWidth - 40, 400);
+  const height = Math.min(screenWidth * 0.4, 180);
+  const padding = Math.min(width * 0.08, 25);
 
   const validEntries = entries.filter(entry => entry && entry.mood);
   const sortedEntries = [...validEntries]
