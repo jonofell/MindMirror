@@ -1,0 +1,35 @@
+Console.js:61 TypeError: Cannot destructure property 'session' of 'useAuth(...)' as it is null.
+    at RootLayout (entry.bundle?platfor…terRoot=app:69454:7)
+    at react-stack-bottom-frame (entry.bundle?platfor…rRoot=app:112479:20)
+    at renderWithHooks (entry.bundle?platfor…rRoot=app:103796:22)
+    at updateFunctionComponent (entry.bundle?platfor…rRoot=app:105065:19)
+    at beginWork (entry.bundle?platfor…rRoot=app:105683:18)
+    at runWithFiberInDEV (entry.bundle?platfor…rRoot=app:101024:16)
+    at performUnitOfWork (entry.bundle?platfor…rRoot=app:108268:95)
+    at workLoopSync (entry.bundle?platfor…rRoot=app:108162:40)
+    at renderRootSync (entry.bundle?platfor…erRoot=app:108146:9)
+    at performWorkOnRoot (entry.bundle?platfor…rRoot=app:107907:44)
+
+The above error occurred in the <RootLayout(./_layout.tsx)> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, LogBoxStateSubscription.
+
+Console.js:61 Can't perform a React state update on a component that hasn't mounted yet. This indicates that you have a side-effect in your render function that asynchronously later calls tries to update the component. Move this work to useEffect instead.
+2
+Console.js:61 TypeError: Cannot destructure property 'session' of 'useAuth(...)' as it is null.
+    at RootLayout (entry.bundle?platfor…terRoot=app:69454:7)
+    at react-stack-bottom-frame (entry.bundle?platfor…rRoot=app:112479:20)
+    at renderWithHooks (entry.bundle?platfor…rRoot=app:103796:22)
+    at updateFunctionComponent (entry.bundle?platfor…rRoot=app:105065:19)
+    at beginWork (entry.bundle?platfor…rRoot=app:105683:18)
+    at runWithFiberInDEV (entry.bundle?platfor…rRoot=app:101024:16)
+    at performUnitOfWork (entry.bundle?platfor…rRoot=app:108268:95)
+    at workLoopSync (entry.bundle?platfor…rRoot=app:108162:40)
+    at renderRootSync (entry.bundle?platfor…erRoot=app:108146:9)
+    at performWorkOnRoot (entry.bundle?platfor…rRoot=app:107907:44)
+    at performWorkOnRootViaSchedulerTask (entry.bundle?platfor…erRoot=app:108709:7)
+    at MessagePort.performWorkUntilDeadline (entry.bundle?platfor…rRoot=app:114328:48)
+
+The above error occurred in the <RootLayout(./_layout.tsx)> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, LogBoxStateSubscription.
