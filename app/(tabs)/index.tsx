@@ -103,11 +103,6 @@ export default function HomeScreen() {
           </TouchableOpacity>
 
           <View style={styles.buttonRow}>
-            <TouchableOpacity style={styles.secondaryButton}>
-              <IconSymbol name="flame.fill" size={20} color="#000" />
-              <ThemedText style={styles.secondaryButtonText}>Set intention</ThemedText>
-            </TouchableOpacity>
-
             <TouchableOpacity 
               style={styles.secondaryButton}
               onPress={() => router.push('/coach-settings')}
