@@ -113,17 +113,7 @@ export default function HomeScreen() {
               onPress={() => router.push('/coach-settings')}
             >
               <IconSymbol name="waveform" size={20} color="#000" />
-              <ThemedText style={styles.secondaryButtonText}>Coach Settings</ThemedText>
-            </TouchableOpacity>
-            <TouchableOpacity 
-              style={[styles.secondaryButton, { opacity: 0.7 }]}
-              disabled={true}
-            >
-              <IconSymbol name="waveform" size={20} color="#666" />
-              <View>
-                <ThemedText style={[styles.secondaryButtonText, { color: '#666' }]}>Set Intention</ThemedText>
-                <ThemedText style={styles.comingSoonText}>Coming Soon</ThemedText>
-              </View>
+              <ThemedText style={styles.secondaryButtonText}>Talk to a Coach</ThemedText>
             </TouchableOpacity>
           </View>
 
@@ -224,12 +214,6 @@ const styles = StyleSheet.create({
     marginLeft: 8,
     color: '#000',
     fontFamily: 'Poppins_600SemiBold',
-  },
-  comingSoonText: {
-    fontSize: 12,
-    color: '#666',
-    fontFamily: 'Poppins_400Regular',
-    marginLeft: 8,
   },
   entryCard: {
     backgroundColor: '#FFF',
