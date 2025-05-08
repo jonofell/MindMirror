@@ -7,9 +7,41 @@ import { Session } from '@supabase/supabase-js';
 const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
 
+const storage = {
+  getItem: async (key: string) => {
+    try {
+      if (typeof window !== 'undefined') {
+        return await AsyncStorage.getItem(key);
+      }
+      return null;
+    } catch (error) {
+      console.error('Error reading from storage:', error);
+      return null;
+    }
+  },
+  setItem: async (key: string, value: string) => {
+    try {
+      if (typeof window !== 'undefined') {
+        return await AsyncStorage.setItem(key, value);
+      }
+    } catch (error) {
+      console.error('Error writing to storage:', error);
+    }
+  },
+  removeItem: async (key: string) => {
+    try {
+      if (typeof window !== 'undefined') {
+        return await AsyncStorage.removeItem(key);
+      }
+    } catch (error) {
+      console.error('Error removing from storage:', error);
+    }
+  }
+};
+
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
-    storage: AsyncStorage,
+    storage,
     autoRefreshToken: true,
     persistSession: true,
     detectSessionInUrl: false,
@@ -43,7 +75,6 @@ export const getSession = async (): Promise<Session | null> => {
   return session;
 };
 
-// Journal entry functions
 export const createEntry = async (content: string, mood: string, reflection?: string) => {
   const { data, error } = await supabase
     .from('entries')
