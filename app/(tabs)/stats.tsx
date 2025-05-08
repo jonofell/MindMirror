@@ -37,7 +37,7 @@ export default function StatsScreen() {
   return (
     <ScrollView style={styles.container}>
       <LinearGradient
-        colors={[Theme.colors.background, '#FFF']}
+        colors={[Theme.colors.gradientStart, Theme.colors.gradientEnd]}
         style={styles.gradient}
       >
         <ThemedText style={styles.title}>Weekly Mood{'\n'}Reflection</ThemedText>
