@@ -100,7 +100,9 @@ const useAuth = () => {
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
-  const { session, loading } = useAuth();
+  const auth = useAuth();
+  const session = auth?.session;
+  const loading = auth?.loading;
   const [loaded] = useFonts({
     Poppins_400Regular,
     Poppins_600SemiBold,
