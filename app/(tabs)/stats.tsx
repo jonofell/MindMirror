@@ -48,7 +48,7 @@ export default function StatsScreen() {
 
         <View style={styles.chartContainer}>
           <ThemedText style={styles.chartTitle}>Mood vs Entry Length</ThemedText>
-          <BubbleChart />
+          <BubbleChart entries={entries} />
         </View>
       </LinearGradient>
     </ScrollView>
