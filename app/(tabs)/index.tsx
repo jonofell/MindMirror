@@ -65,18 +65,18 @@ export default function HomeScreen() {
       await AsyncStorage.clear();
       setLatestEntry("");
       setStreak(0);
-      
+
       // Clear Supabase entries
       const { error } = await supabase
         .from('entries')
         .delete()
         .neq('id', '0'); // Delete all entries
-        
+
       if (error) {
         console.error("Error clearing Supabase:", error);
         return;
       }
-      
+
       console.log("Storage cleared successfully");
     } catch (error) {
       console.error("Error clearing storage:", error);
@@ -155,7 +155,7 @@ export default function HomeScreen() {
             </TouchableOpacity>
           </View>
 
-          
+
 
           {latestEntry && latestEntry.length > 0 && (
             <View style={styles.entryCard}>
