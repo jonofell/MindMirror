@@ -61,6 +61,19 @@ export default function JournalScreen() {
         {entries?.length > 0 ? (
           entries.map((entry) => (
             <View key={entry.id} style={styles.entryCard}>
+                <TouchableOpacity 
+                  style={styles.deleteButton}
+                  onPress={async () => {
+                    try {
+                      await supabase.from('entries').delete().eq('id', entry.id);
+                      setEntries(entries.filter(e => e.id !== entry.id));
+                    } catch (error) {
+                      console.error('Error deleting entry:', error);
+                    }
+                  }}
+                >
+                  <ThemedText style={styles.deleteButtonText}>×</ThemedText>
+                </TouchableOpacity>
               <View style={styles.entryHeader}>
                 <View style={styles.dateContainer}>
                   <ThemedText style={styles.entryDay}>
@@ -226,6 +239,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
+    flexDirection: "row", // Added for delete button layout
+    alignItems: "center", // Added for delete button layout
   },
   entryContent: {
     fontSize: 16,
@@ -258,5 +273,12 @@ const styles = StyleSheet.create({
   loadMoreText: {
     color: "white",
     fontSize: 16,
+  },
+  deleteButton: {
+    marginRight: 10, // Added for spacing
+  },
+  deleteButtonText: {
+    fontSize: 20,
+    color: "red",
   },
 });
