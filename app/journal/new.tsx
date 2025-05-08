@@ -221,7 +221,7 @@ export default function NewJournalEntry() {
             ))}
 
             <View style={styles.card}>
-              <ThemedText style={styles.prompt}>
+              <ThemedText style={[styles.prompt, styles.boldText]}>
                 {PROMPTS[currentPrompt]}
               </ThemedText>
               <TextInput
@@ -310,6 +310,10 @@ const styles = StyleSheet.create({
   moodLabel: {
     fontSize: 16,
     marginBottom: 8,
+    fontFamily: "Poppins_600SemiBold",
+    color: Theme.colors.primary,
+  },
+  boldText: {
     fontFamily: "Poppins_600SemiBold",
   },
   moodPicker: {
