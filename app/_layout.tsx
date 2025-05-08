@@ -33,23 +33,21 @@ export default function RootLayout() {
 function RootLayoutNav() {
   const { session, loading } = useAuth();
 
-  if (loading) {
-    return <View aria-label="Loading view" />; // Loading screen
-  }
-
   return (
     <ThemeProvider value={DarkTheme}>
       <Stack screenOptions={{ headerShown: false }}>
-        {session ? (
-          <>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="+not-found" options={{ title: 'Not Found' }} />
-          </>
-        ) : (
-          <>
-            <Stack.Screen name="login" options={{ headerShown: false }} />
-            <Stack.Screen name="+not-found" options={{ title: 'Not Found' }} />
-          </>
+        {!loading && (
+          session ? (
+            <>
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              <Stack.Screen name="+not-found" options={{ title: 'Not Found' }} />
+            </>
+          ) : (
+            <>
+              <Stack.Screen name="login" options={{ headerShown: false }} />
+              <Stack.Screen name="+not-found" options={{ title: 'Not Found' }} />
+            </>
+          )
         )}
       </Stack>
       <StatusBar style="light" />
