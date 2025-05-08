@@ -31,7 +31,18 @@ export default function ProfileScreen() {
           <ThemedText style={styles.buttonText}>Subscription</ThemedText>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity 
+          style={styles.button}
+          onPress={async () => {
+            try {
+              const { error } = await supabase.auth.signOut();
+              if (error) throw error;
+              router.replace('/login');
+            } catch (error) {
+              console.error("Error signing out:", error);
+            }
+          }}
+        >
           <ThemedText style={styles.buttonText}>Log Out</ThemedText>
         </TouchableOpacity>
 
