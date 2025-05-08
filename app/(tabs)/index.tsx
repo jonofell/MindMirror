@@ -61,9 +61,22 @@ export default function HomeScreen() {
 
   const clearStorage = async () => {
     try {
+      // Clear local storage
       await AsyncStorage.clear();
       setLatestEntry("");
       setStreak(0);
+      
+      // Clear Supabase entries
+      const { error } = await supabase
+        .from('entries')
+        .delete()
+        .neq('id', '0'); // Delete all entries
+        
+      if (error) {
+        console.error("Error clearing Supabase:", error);
+        return;
+      }
+      
       console.log("Storage cleared successfully");
     } catch (error) {
       console.error("Error clearing storage:", error);
@@ -143,7 +156,7 @@ export default function HomeScreen() {
             onPress={clearStorage}
           >
             <IconSymbol name="trash" size={16} color="#FF0000" />
-            <ThemedText style={styles.clearStorageText}>Clear Local Storage</ThemedText>
+            <ThemedText style={styles.clearStorageText}>Reset Journal</ThemedText>
           </TouchableOpacity>
 
           {latestEntry && latestEntry.length > 0 && (
