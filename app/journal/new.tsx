@@ -63,6 +63,9 @@ export default function NewJournalEntry() {
 
   const saveEntry = async () => {
     try {
+      // Get selected coach
+      const selectedCoach = await AsyncStorage.getItem('selected_coach') || 'mirror';
+
       // Include the current entry if it's not empty
       const finalEntries = currentEntry.trim()
         ? [...entries, { text: currentEntry, prompt: PROMPTS[currentPrompt] }]
@@ -117,6 +120,7 @@ export default function NewJournalEntry() {
           body: {
             entries: allEntries,
             mood: selectedMood,
+            coach: selectedCoach,
             timestamp: new Date().toISOString(),
           },
         });

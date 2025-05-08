@@ -9,6 +9,20 @@ export default function CoachSettingsScreen() {
   const router = useRouter();
   const [selectedCoach, setSelectedCoach] = useState('mirror');
 
+useEffect(() => {
+  const loadSelectedCoach = async () => {
+    const coach = await AsyncStorage.getItem('selected_coach');
+    if (coach) setSelectedCoach(coach);
+  };
+  loadSelectedCoach();
+}, []);
+
+const handleCoachSelect = async (coach: string) => {
+  setSelectedCoach(coach);
+  await AsyncStorage.setItem('selected_coach', coach);
+  router.back();
+};
+
   const coaches = [
     {
       id: 'builder',
@@ -64,7 +78,7 @@ export default function CoachSettingsScreen() {
               styles.coachOption,
               selectedCoach === coach.id && styles.selectedCoach
             ]}
-            onPress={() => setSelectedCoach(coach.id)}
+            onPress={() => handleCoachSelect(coach.id)}
           >
             <View style={styles.coachHeader}>
               <View style={styles.coachIconContainer}>
