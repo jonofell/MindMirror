@@ -154,8 +154,10 @@ export default function HomeScreen() {
               onPress={() => router.push('/coach-settings')}
             >
               <View style={styles.buttonContent}>
-                <IconSymbol name="waveform" size={20} color={Theme.colors.text} />
-                <ThemedText style={styles.secondaryButtonText}>Coach Settings</ThemedText>
+                <IconSymbol name="waveform" size={24} color={Theme.colors.primary} />
+                <View style={styles.buttonTextContainer}>
+                  <ThemedText style={styles.secondaryButtonText}>Coach Settings</ThemedText>
+                </View>
               </View>
             </TouchableOpacity>
             <TouchableOpacity 
@@ -163,8 +165,8 @@ export default function HomeScreen() {
               disabled={true}
             >
               <View style={styles.buttonContent}>
-                <IconSymbol name="waveform" size={20} color={Theme.colors.textLight} />
-                <View>
+                <IconSymbol name="waveform" size={24} color={Theme.colors.textLight} />
+                <View style={styles.buttonTextContainer}>
                   <ThemedText style={[styles.secondaryButtonText, styles.disabledText]}>Set Intention</ThemedText>
                   <ThemedText style={styles.comingSoonText}>Coming Soon</ThemedText>
                 </View>
@@ -194,14 +196,21 @@ const styles = StyleSheet.create({
   buttonContent: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: 12,
+    padding: 4,
+  },
+  buttonTextContainer: {
+    flexDirection: 'column',
+    gap: 2,
   },
   activeButton: {
     backgroundColor: Theme.colors.card,
+    borderWidth: 1,
+    borderColor: Theme.colors.primary + '20',
   },
   disabledButton: {
     backgroundColor: Theme.colors.cardLight,
-    opacity: 0.7,
+    opacity: 0.8,
   },
   disabledText: {
     color: Theme.colors.textLight,
