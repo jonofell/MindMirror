@@ -68,7 +68,7 @@ import { useNetworkStatus } from '@/hooks/useNetworkStatus';
 import { syncOfflineEntries } from '@/lib/offlineStorage';
 import { useEffect } from 'react';
 import { StyleSheet } from 'react-native';
-import Theme from '@/constants/Theme';
+import { Theme } from '@/constants/Theme';
 
 export function RootLayoutNew() {
   const isConnected = useNetworkStatus();
