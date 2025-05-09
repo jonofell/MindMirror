@@ -32,6 +32,7 @@ export default function JournalScreen() {
         setOffset(0);
       }
 
+      const { data: { user } } = await supabase.auth.getUser();
       const {
         data: entriesData,
         error,
@@ -39,6 +40,7 @@ export default function JournalScreen() {
       } = await supabase
         .from("entries")
         .select("*", { count: "exact" })
+        .eq('user_id', user?.id)
         .order("timestamp", { ascending: false })
         .range(offset, offset + LIMIT - 1);
 
@@ -82,7 +84,7 @@ export default function JournalScreen() {
                     try {
                       // Delete from Supabase
                       await supabase.from('entries').delete().eq('id', entry.id);
-                      
+
                       // Delete from local storage
                       const storedEntries = await AsyncStorage.getItem('journal_entries');
                       if (storedEntries) {
@@ -90,7 +92,7 @@ export default function JournalScreen() {
                         const updatedEntries = parsedEntries.filter(e => e.id !== entry.id);
                         await AsyncStorage.setItem('journal_entries', JSON.stringify(updatedEntries));
                       }
-                      
+
                       // Update state
                       setEntries(entries.filter(e => e.id !== entry.id));
                     } catch (error) {
