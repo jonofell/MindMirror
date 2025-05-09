@@ -17,7 +17,7 @@ import { Theme } from "@/constants/Theme";
 import { supabase } from "@/lib/supabase";
 import "react-native-get-random-values";
 import { v4 as uuidv4 } from "uuid";
-import { useTheme } from "@/hooks/useTheme";
+import { useTheme } from "@/lib/ThemeContext";
 
 const PROMPTS = [
   "What's on your mind?",
