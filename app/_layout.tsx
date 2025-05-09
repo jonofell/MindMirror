@@ -1,4 +1,3 @@
-
 import { DarkTheme } from '@react-navigation/native';
 import { useFonts,
   Poppins_400Regular,
@@ -61,27 +60,28 @@ function RootLayoutNav() {
 
   return (
     <ErrorBoundary>
-      {!isConnected && (
-        <View style={styles.offlineBanner}>
-          <ThemedText style={styles.offlineText}>
-            You are offline. Changes will be saved locally.
-          </ThemedText>
-        </View>
-      )}
-      <Stack screenOptions={{ headerShown: false }}>
-        {session ? (
-          <>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="+not-found" options={{ title: 'Not Found' }} />
-          </>
-        ) : (
-          <>
-            <Stack.Screen name="login" options={{ headerShown: false }} />
-            <Stack.Screen name="+not-found" options={{ title: 'Not Found' }} />
-          </>
+      <ThemeProvider>
+        {!isConnected && (
+          <View style={styles.offlineBanner}>
+            <ThemedText style={styles.offlineText}>
+              You are offline. Changes will be saved locally.
+            </ThemedText>
+          </View>
         )}
-      </Stack>
-      <StatusBar style="light" />
+        <Stack screenOptions={{ headerShown: false }}>
+          {session ? (
+            <>
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              <Stack.Screen name="+not-found" options={{ title: 'Not Found' }} />
+            </>
+          ) : (
+            <>
+              <Stack.Screen name="login" options={{ headerShown: false }} />
+              <Stack.Screen name="+not-found" options={{ title: 'Not Found' }} />
+            </>
+          )}
+        </Stack>
+      </ThemeProvider>
     </ErrorBoundary>
   );
 }
