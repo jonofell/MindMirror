@@ -6,6 +6,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ThemedText } from "@/components/ThemedText";
 import { Theme } from "@/constants/Theme";
 import { IconSymbol } from "@/components/ui/IconSymbol";
+import { supabase } from "@/lib/supabase";
 
 export default function HomeScreen() {
   const router = useRouter();
