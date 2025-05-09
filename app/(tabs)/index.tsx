@@ -1,7 +1,6 @@
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { useTheme } from "@/lib/ThemeContext";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ThemedText } from "@/components/ThemedText";
@@ -17,9 +16,13 @@ export default function HomeScreen() {
 
   useEffect(() => {
     const getUserName = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user?.user_metadata?.name) {
-        setUserName(user.user_metadata.name);
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user?.user_metadata?.name) {
+          setUserName(user.user_metadata.name);
+        }
+      } catch (error) {
+        console.error("Error fetching user:", error);
       }
     };
     getUserName();
@@ -28,23 +31,22 @@ export default function HomeScreen() {
   const calculateStreak = async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
-      const { data: entries } = await supabase
+      if (!user) return 0;
+
+      const { data: entries, error } = await supabase
         .from('entries')
         .select('*')
-        .eq('user_id', user?.id)
+        .eq('user_id', user.id)
         .order('timestamp', { ascending: false });
 
+      if (error) throw error;
       if (!entries || entries.length === 0) return 0;
 
-      // Sort entries by timestamp in descending order (newest first)
       const sortedEntries = entries.sort((a, b) => b.timestamp - a.timestamp);
-
-      // Check if the most recent entry is from today or yesterday
       const mostRecentDate = new Date(sortedEntries[0].timestamp * 1000);
       const today = new Date();
       const dayDiff = Math.floor((today.getTime() - mostRecentDate.getTime()) / (1000 * 60 * 60 * 24));
 
-      // If the most recent entry is older than yesterday, streak is 0
       if (dayDiff > 1) {
         setStreak(0);
         return 0;
@@ -53,7 +55,6 @@ export default function HomeScreen() {
       let currentStreak = 1;
       let lastDate = new Date(sortedEntries[0].timestamp * 1000);
 
-      // Count consecutive days
       for (let i = 1; i < sortedEntries.length; i++) {
         const currentDate = new Date(sortedEntries[i].timestamp * 1000);
         const daysBetween = Math.floor((lastDate.getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24));
@@ -74,44 +75,23 @@ export default function HomeScreen() {
     }
   };
 
-  const clearStorage = async () => {
-    try {
-      // Clear local storage
-      await AsyncStorage.clear();
-      setLatestEntry("");
-      setStreak(0);
-
-      const { data: { user } } = await supabase.auth.getUser();
-      // Clear Supabase entries for current user only
-      const { error } = await supabase
-        .from('entries')
-        .delete()
-        .eq('user_id', user?.id); // Delete only current user's entries
-
-      if (error) {
-        console.error("Error clearing Supabase:", error);
-        return;
-      }
-
-      console.log("Storage cleared successfully");
-    } catch (error) {
-      console.error("Error clearing storage:", error);
-    }
-  };
-
   useEffect(() => {
     const loadLatestEntry = async () => {
       try {
         const { data: { user } } = await supabase.auth.getUser();
-        const { data: entries } = await supabase
+        if (!user) return;
+
+        const { data: entries, error } = await supabase
           .from('entries')
           .select('*')
-          .eq('user_id', user?.id)
+          .eq('user_id', user.id)
           .order('timestamp', { ascending: false })
           .limit(1);
 
+        if (error) throw error;
         if (entries && entries.length > 0) {
-          setLatestEntry(entries[0].content.split('\n\n')[1] || entries[0].content);
+          const content = entries[0].content.split('\n\n')[1] || entries[0].content;
+          setLatestEntry(content);
         }
       } catch (error) {
         console.error("Error loading latest journal entry:", error);
@@ -175,14 +155,12 @@ export default function HomeScreen() {
             </TouchableOpacity>
           </View>
 
-
-
-          {latestEntry && latestEntry.length > 0 && (
+          {latestEntry ? (
             <View style={styles.entryCard}>
               <ThemedText style={styles.entryTitle}>Latest Entry</ThemedText>
               <ThemedText style={styles.entryText}>{latestEntry}</ThemedText>
             </View>
-          )}
+          ) : null}
 
           <View style={styles.bottomContainer}>
             <ThemedText style={styles.versionText}>MindMirror Beta v1.4</ThemedText>
@@ -260,7 +238,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 20,
-    ...Theme.shadows.soft,
   },
   mainButtonText: {
     color: '#FFF',
@@ -282,7 +259,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    ...Theme.shadows.soft,
   },
   secondaryButtonText: {
     fontSize: 16,
@@ -300,7 +276,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFF',
     padding: 20,
     borderRadius: 20,
-    ...Theme.shadows.soft,
   },
   entryTitle: {
     fontSize: 24,
@@ -313,20 +288,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins_400Regular',
     marginBottom: 15,
   },
-  clearButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    alignSelf: 'flex-end',
-    padding: 8,
-    borderRadius: 15,
-    backgroundColor: '#FFF0F0',
-  },
-  clearButtonText: {
-    fontSize: 12,
-    marginLeft: 4,
-    color: '#FF0000',
-    fontFamily: 'Poppins_600SemiBold',
-  },
   bottomContainer: {
     alignItems: 'center',
     marginTop: 'auto',
@@ -337,20 +298,5 @@ const styles = StyleSheet.create({
     color: '#888',
     fontFamily: 'Poppins_600SemiBold',
     opacity: 0.7,
-  },
-  clearStorageButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    alignSelf: 'flex-end',
-    padding: 8,
-    marginBottom: 20,
-    borderRadius: 15,
-    backgroundColor: '#FFF0F0',
-  },
-  clearStorageText: {
-    fontSize: 12,
-    marginLeft: 4,
-    color: '#FF0000',
-    fontFamily: 'Poppins_600SemiBold',
   },
 });
