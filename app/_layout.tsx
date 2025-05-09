@@ -62,3 +62,46 @@ function RootLayoutNav() {
     </ThemeProvider>
   );
 }
+
+import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { useNetworkStatus } from '@/hooks/useNetworkStatus';
+import { syncOfflineEntries } from '@/lib/offlineStorage';
+import { useEffect } from 'react';
+import { StyleSheet } from 'react-native';
+import Theme from '@/constants/Theme';
+
+export function RootLayoutNew() {
+  const isConnected = useNetworkStatus();
+
+  useEffect(() => {
+    if (isConnected) {
+      syncOfflineEntries();
+    }
+  }, [isConnected]);
+
+  return (
+    <ErrorBoundary>
+      {!isConnected && (
+        <View style={styles.offlineBanner}>
+          <ThemedText style={styles.offlineText}>
+            You are offline. Changes will be saved locally.
+          </ThemedText>
+        </View>
+      )}
+      <Stack />
+    </ErrorBoundary>
+  );
+}
+
+const styles = StyleSheet.create({
+  offlineBanner: {
+    backgroundColor: Theme.colors.primary,
+    padding: 8,
+    alignItems: 'center',
+  },
+  offlineText: {
+    color: '#FFF',
+    fontSize: 14,
+    fontFamily: 'Poppins_400Regular',
+  },
+});
