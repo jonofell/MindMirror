@@ -17,6 +17,7 @@ import { Theme } from "@/constants/Theme";
 import { supabase } from "@/lib/supabase";
 import "react-native-get-random-values";
 import { v4 as uuidv4 } from "uuid";
+import { useTheme } from "@/hooks/useTheme";
 
 const PROMPTS = [
   "What's on your mind?",
@@ -190,7 +191,7 @@ export default function NewJournalEntry() {
   return (
     <SafeAreaView style={styles.container}>
       <LinearGradient
-        colors={["#FFDAB9", "#ADD8E6"]}
+        colors={useTheme().getGradientColors()}
         style={{ flex: 1 }}
       >
         <KeyboardAvoidingView
