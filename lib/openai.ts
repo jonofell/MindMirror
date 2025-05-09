@@ -11,17 +11,13 @@ export async function generateSuggestions(entries: string[], mood: string): Prom
     return INITIAL_PROMPTS;
   }
 
-  const controller = new AbortController();
-  const signal = controller.signal;
-
   try {
     const { data, error } = await supabase.functions.invoke('clever-processor', {
       body: { 
         entries: entries.map(entry => ({ response: entry })),
         mood,
         timestamp: new Date().toISOString()
-      },
-      signal
+      }
     });
 
     if (error) {
@@ -30,15 +26,7 @@ export async function generateSuggestions(entries: string[], mood: string): Prom
     }
 
     return data?.suggestions || INITIAL_PROMPTS;
-  } catch (error: any) {
-    if (error.name === 'AbortError' || error === 'canceled') {
-      // Don't attempt to abort if already aborted
-      if (!signal.aborted) {
-        controller.abort();
-      }
-      console.log('Request was canceled');
-      return INITIAL_PROMPTS;
-    }
+  } catch (error) {
     console.error('Error generating suggestions:', error);
     return INITIAL_PROMPTS;
   }
