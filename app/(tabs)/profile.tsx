@@ -10,7 +10,7 @@ import { supabase } from '@/lib/supabase';
 export default function ProfileScreen() {
   return (
     <LinearGradient
-      colors={['#FFF5F5', '#FFF']}
+      colors={[Theme.colors.gradientStart, Theme.colors.gradientEnd]}
       style={styles.container}
     >
       <ThemedText style={styles.logo}>MindMirror</ThemedText>
@@ -80,14 +80,13 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
   },
   logo: {
     fontSize: 40,
     fontFamily: 'Poppins_600SemiBold',
     color: Theme.colors.primary,
     textAlign: 'center',
-    marginTop: '20%',
+    marginTop: 60,
     marginBottom: 40,
   },
   buttonContainer: {
