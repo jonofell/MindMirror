@@ -77,11 +77,12 @@ export default function HomeScreen() {
       setLatestEntry("");
       setStreak(0);
 
-      // Clear Supabase entries
+      const { data: { user } } = await supabase.auth.getUser();
+      // Clear Supabase entries for current user only
       const { error } = await supabase
         .from('entries')
         .delete()
-        .neq('id', '0'); // Delete all entries
+        .eq('user_id', user?.id); // Delete only current user's entries
 
       if (error) {
         console.error("Error clearing Supabase:", error);

@@ -77,13 +77,15 @@ export const getSession = async (): Promise<Session | null> => {
 };
 
 export const createEntry = async (content: string, mood: string, reflection?: string) => {
+  const { data: { user } } = await supabase.auth.getUser();
   const { data, error } = await supabase
     .from('entries')
     .insert([{
       content,
       mood,
       reflection,
-      timestamp: Math.floor(Date.now() / 1000)
+      timestamp: Math.floor(Date.now() / 1000),
+      user_id: user?.id
     }])
     .select()
     .single();
@@ -92,9 +94,11 @@ export const createEntry = async (content: string, mood: string, reflection?: st
 };
 
 export const fetchUserEntries = async (limit = 20, offset = 0) => {
+  const { data: { user } } = await supabase.auth.getUser();
   const { data, error, count } = await supabase
     .from('entries')
     .select('*', { count: 'exact' })
+    .eq('user_id', user?.id)
     .order('timestamp', { ascending: false })
     .range(offset, offset + limit - 1);
 
