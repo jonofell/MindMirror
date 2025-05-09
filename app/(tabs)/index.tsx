@@ -13,6 +13,16 @@ export default function HomeScreen() {
   const [userName, setUserName] = useState("Friend");
   const [streak, setStreak] = useState(0);
 
+  useEffect(() => {
+    const getUserName = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user?.user_metadata?.name) {
+        setUserName(user.user_metadata.name);
+      }
+    };
+    getUserName();
+  }, []);
+
   const calculateStreak = async () => {
     try {
       const storedEntries = await AsyncStorage.getItem("journal_entries");
