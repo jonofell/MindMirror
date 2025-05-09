@@ -6,6 +6,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { MoodLineChart } from '@/components/charts/MoodLineChart';
 import { BubbleChart } from '@/components/charts/BubbleChart';
 import { MoodInsights } from '@/components/charts/MoodInsights';
+import { MoodAnalysis } from '@/components/charts/MoodAnalysis';
 import { Theme } from '@/constants/Theme';
 import { JournalEntry } from '@/types/journal';
 import { supabase } from '@/lib/supabase';
