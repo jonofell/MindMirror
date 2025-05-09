@@ -12,6 +12,8 @@ export default function LoginScreen() {
   const [password, setPassword] = useState('');
   const [isLogin, setIsLogin] = useState(true);
 
+  const [registrationSuccess, setRegistrationSuccess] = useState(false);
+
   const handleAuth = async () => {
     try {
       const { error } = isLogin 
@@ -20,7 +22,10 @@ export default function LoginScreen() {
       
       if (error) throw error;
       if (!isLogin) {
-        alert('Check your email for verification link');
+        setRegistrationSuccess(true);
+        setEmail('');
+        setPassword('');
+        setIsLogin(true);
         return;
       }
       router.replace('/(tabs)');
@@ -34,6 +39,11 @@ export default function LoginScreen() {
       colors={[Theme.colors.gradientStart, Theme.colors.gradientEnd]}
       style={styles.container}
     >
+      {registrationSuccess && (
+        <View style={styles.successMessage}>
+          <ThemedText style={styles.successText}>Registration successful! Please log in.</ThemedText>
+        </View>
+      )}
       <View style={styles.formContainer}>
         <ThemedText style={styles.title}>
           {isLogin ? 'Welcome Back' : 'Create Account'}
@@ -74,6 +84,21 @@ export default function LoginScreen() {
 }
 
 const styles = StyleSheet.create({
+  successMessage: {
+    backgroundColor: '#4CAF50',
+    padding: 10,
+    borderRadius: 5,
+    position: 'absolute',
+    top: 40,
+    left: 20,
+    right: 20,
+    zIndex: 1,
+  },
+  successText: {
+    color: 'white',
+    textAlign: 'center',
+    fontFamily: 'Poppins_400Regular',
+  },
   container: {
     flex: 1,
     justifyContent: 'center',
