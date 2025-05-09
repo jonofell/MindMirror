@@ -1,4 +1,4 @@
-import { DarkTheme } from '@react-navigation/native';
+import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts,
   Poppins_400Regular,
   Poppins_600SemiBold,
@@ -9,14 +9,6 @@ import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { View } from 'react-native';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
-import { ThemeProvider } from '@/lib/ThemeContext';
-import { ErrorBoundary } from '@/components/ErrorBoundary';
-import { useNetworkStatus } from '@/hooks/useNetworkStatus';
-import { syncOfflineEntries } from '@/lib/offlineStorage';
-import { useEffect } from 'react';
-import { StyleSheet } from 'react-native';
-import { Theme } from '@/constants/Theme';
-import { ThemedText } from '@/components/ThemedText';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -33,22 +25,15 @@ export default function RootLayout() {
 
   return (
     <AuthProvider>
-      <ThemeProvider>
-        <RootLayoutNav />
-      </ThemeProvider>
+      <RootLayoutNav />
     </AuthProvider>
   );
 }
 
+import { ThemedText } from '@/components/ThemedText';
+
 function RootLayoutNav() {
   const { session, loading } = useAuth();
-  const isConnected = useNetworkStatus();
-
-  useEffect(() => {
-    if (isConnected) {
-      syncOfflineEntries();
-    }
-  }, [isConnected]);
 
   if (loading) {
     return (
@@ -59,29 +44,51 @@ function RootLayoutNav() {
   }
 
   return (
-    <ErrorBoundary>
-      <ThemeProvider>
-        {!isConnected && (
-          <View style={styles.offlineBanner}>
-            <ThemedText style={styles.offlineText}>
-              You are offline. Changes will be saved locally.
-            </ThemedText>
-          </View>
+    <ThemeProvider value={DarkTheme}>
+      <Stack screenOptions={{ headerShown: false }}>
+        {session ? (
+          <>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="+not-found" options={{ title: 'Not Found' }} />
+          </>
+        ) : (
+          <>
+            <Stack.Screen name="login" options={{ headerShown: false }} />
+            <Stack.Screen name="+not-found" options={{ title: 'Not Found' }} />
+          </>
         )}
-        <Stack screenOptions={{ headerShown: false }}>
-          {session ? (
-            <>
-              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-              <Stack.Screen name="+not-found" options={{ title: 'Not Found' }} />
-            </>
-          ) : (
-            <>
-              <Stack.Screen name="login" options={{ headerShown: false }} />
-              <Stack.Screen name="+not-found" options={{ title: 'Not Found' }} />
-            </>
-          )}
-        </Stack>
-      </ThemeProvider>
+      </Stack>
+      <StatusBar style="light" />
+    </ThemeProvider>
+  );
+}
+
+import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { useNetworkStatus } from '@/hooks/useNetworkStatus';
+import { syncOfflineEntries } from '@/lib/offlineStorage';
+import { useEffect } from 'react';
+import { StyleSheet } from 'react-native';
+import { Theme } from '@/constants/Theme';
+
+export function RootLayoutNew() {
+  const isConnected = useNetworkStatus();
+
+  useEffect(() => {
+    if (isConnected) {
+      syncOfflineEntries();
+    }
+  }, [isConnected]);
+
+  return (
+    <ErrorBoundary>
+      {!isConnected && (
+        <View style={styles.offlineBanner}>
+          <ThemedText style={styles.offlineText}>
+            You are offline. Changes will be saved locally.
+          </ThemedText>
+        </View>
+      )}
+      <Stack />
     </ErrorBoundary>
   );
 }

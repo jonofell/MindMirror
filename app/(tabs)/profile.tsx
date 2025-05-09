@@ -3,17 +3,14 @@ import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Theme } from '@/constants/Theme';
-import { useTheme } from '@/lib/ThemeContext';
 import { router } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { supabase } from '@/lib/supabase';
 
 export default function ProfileScreen() {
-  const { toggleTheme, getGradientColors } = useTheme();
-  
   return (
     <LinearGradient
-      colors={getGradientColors()}
+      colors={[Theme.colors.gradientStart, Theme.colors.gradientEnd]}
       style={styles.container}
     >
       <ThemedText style={styles.logo}>MindMirror</ThemedText>
@@ -21,13 +18,6 @@ export default function ProfileScreen() {
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={styles.button}>
           <ThemedText style={styles.buttonText}>Profile</ThemedText>
-        </TouchableOpacity>
-
-        <TouchableOpacity 
-          style={styles.button}
-          onPress={toggleTheme}
-        >
-          <ThemedText style={styles.buttonText}>Change Theme</ThemedText>
         </TouchableOpacity>
 
         <TouchableOpacity 
