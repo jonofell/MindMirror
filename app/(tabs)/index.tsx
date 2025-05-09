@@ -26,11 +26,14 @@ export default function HomeScreen() {
 
   const calculateStreak = async () => {
     try {
-      const storedEntries = await AsyncStorage.getItem("journal_entries");
-      if (!storedEntries) return 0;
+      const { data: { user } } = await supabase.auth.getUser();
+      const { data: entries } = await supabase
+        .from('entries')
+        .select('*')
+        .eq('user_id', user?.id)
+        .order('timestamp', { ascending: false });
 
-      const entries = JSON.parse(storedEntries);
-      if (entries.length === 0) return 0;
+      if (!entries || entries.length === 0) return 0;
 
       // Sort entries by timestamp in descending order (newest first)
       const sortedEntries = entries.sort((a, b) => b.timestamp - a.timestamp);
@@ -98,14 +101,16 @@ export default function HomeScreen() {
   useEffect(() => {
     const loadLatestEntry = async () => {
       try {
-        const storedEntries = await AsyncStorage.getItem("journal_entries");
-        console.log("Stored entries:", storedEntries);
-        if (storedEntries) {
-          const entries = JSON.parse(storedEntries);
-          console.log("Parsed entries:", entries);
-          if (entries.length > 0) {
-            setLatestEntry(entries[0].content.split('\n\n')[1] || entries[0].content);
-          }
+        const { data: { user } } = await supabase.auth.getUser();
+        const { data: entries } = await supabase
+          .from('entries')
+          .select('*')
+          .eq('user_id', user?.id)
+          .order('timestamp', { ascending: false })
+          .limit(1);
+
+        if (entries && entries.length > 0) {
+          setLatestEntry(entries[0].content.split('\n\n')[1] || entries[0].content);
         }
       } catch (error) {
         console.error("Error loading latest journal entry:", error);
