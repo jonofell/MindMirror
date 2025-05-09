@@ -15,9 +15,14 @@ export default function LoginScreen() {
 
   const handleAuth = async () => {
     try {
+      if (!isLogin && !name) {
+        alert('Please enter your name');
+        return;
+      }
+      
       const { error } = isLogin 
         ? await signIn(email, password)
-        : await signUp(email, password);
+        : await signUp(email, password, name);
 
       if (error) throw error;
       if (!isLogin) {
@@ -47,6 +52,15 @@ export default function LoginScreen() {
         <ThemedText style={styles.title}>
           {isLogin ? 'Welcome Back' : 'Create Account'}
         </ThemedText>
+        {!isLogin && (
+          <TextInput
+            style={styles.input}
+            placeholder="Name"
+            value={name}
+            onChangeText={setName}
+            placeholderTextColor="#999"
+          />
+        )}
         <TextInput
           style={styles.input}
           placeholder="Email"
