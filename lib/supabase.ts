@@ -1,4 +1,3 @@
-
 import 'react-native-url-polyfill/auto';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createClient } from '@supabase/supabase-js';
@@ -48,12 +47,14 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   },
 });
 
-export const signUp = async (email: string, password: string) => {
-  const { data, error } = await supabase.auth.signUp({
+export const signUp = async (email: string, password: string, name?: string) => {
+  return await supabase.auth.signUp({
     email,
     password,
+    options: {
+      data: { name }
+    }
   });
-  return { data, error };
 };
 
 export const signIn = async (email: string, password: string) => {
@@ -86,7 +87,7 @@ export const createEntry = async (content: string, mood: string, reflection?: st
     }])
     .select()
     .single();
-  
+
   return { data, error };
 };
 
@@ -96,7 +97,7 @@ export const fetchUserEntries = async (limit = 20, offset = 0) => {
     .select('*', { count: 'exact' })
     .order('timestamp', { ascending: false })
     .range(offset, offset + limit - 1);
-    
+
   return { data, error, count };
 };
 
@@ -104,6 +105,6 @@ export const invokeEdgeFunction = async (functionName: string, payload: any) => 
   const { data, error } = await supabase.functions.invoke(functionName, {
     body: payload
   });
-  
+
   return { data, error };
 };

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { View, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
@@ -10,8 +9,8 @@ import { router } from 'expo-router';
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
   const [isLogin, setIsLogin] = useState(true);
-
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
 
   const handleAuth = async () => {
@@ -19,7 +18,7 @@ export default function LoginScreen() {
       const { error } = isLogin 
         ? await signIn(email, password)
         : await signUp(email, password);
-      
+
       if (error) throw error;
       if (!isLogin) {
         setRegistrationSuccess(true);
@@ -69,7 +68,7 @@ export default function LoginScreen() {
             {isLogin ? 'Login' : 'Sign Up'}
           </ThemedText>
         </TouchableOpacity>
-        
+
         <TouchableOpacity 
           style={styles.switchButton} 
           onPress={() => setIsLogin(!isLogin)}
