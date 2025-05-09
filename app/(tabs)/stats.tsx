@@ -52,6 +52,11 @@ export default function StatsScreen() {
         </View>
 
         <View style={styles.chartContainer}>
+          <ThemedText style={styles.chartTitle}>Longest Mood Streaks</ThemedText>
+          <MoodStreakChart entries={entries} />
+        </View>
+
+        <View style={styles.chartContainer}>
           <ThemedText style={styles.chartTitle}>Mood Insights</ThemedText>
           <MoodInsights entries={entries} />
         </View>
