@@ -1,10 +1,10 @@
-
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ThemedText } from '@/components/ThemedText';
 import { MoodLineChart } from '@/components/charts/MoodLineChart';
+import { MoodStreakChart } from '@/components/charts/MoodStreakChart';
 import { MoodInsights } from '@/components/charts/MoodInsights';
 import { MoodAnalysis } from '@/components/charts/MoodAnalysis';
 import { Theme } from '@/constants/Theme';
