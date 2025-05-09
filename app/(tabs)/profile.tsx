@@ -98,6 +98,8 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     borderWidth: 1,
     borderColor: '#E5E7EB',
+    width: '50%',
+    alignSelf: 'center',
   },
   buttonText: {
     fontSize: 18,
