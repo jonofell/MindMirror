@@ -4,7 +4,6 @@ import { LinearGradient } from 'expo-linear-gradient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ThemedText } from '@/components/ThemedText';
 import { MoodLineChart } from '@/components/charts/MoodLineChart';
-import { BubbleChart } from '@/components/charts/BubbleChart';
 import { MoodInsights } from '@/components/charts/MoodInsights';
 import { MoodAnalysis } from '@/components/charts/MoodAnalysis';
 import { Theme } from '@/constants/Theme';
@@ -46,11 +45,6 @@ export default function StatsScreen() {
         <View style={styles.chartContainer}>
           <ThemedText style={styles.chartTitle}>Mood Over Time</ThemedText>
           <MoodLineChart entries={entries} />
-        </View>
-
-        <View style={styles.chartContainer}>
-          <ThemedText style={styles.chartTitle}>Mood vs Entry Length</ThemedText>
-          <BubbleChart entries={entries} />
         </View>
 
         <View style={styles.chartContainer}>
