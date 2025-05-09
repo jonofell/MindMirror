@@ -1,7 +1,7 @@
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { ThemeProvider, useTheme } from "@/lib/ThemeContext";
+import { useTheme } from "@/lib/ThemeContext";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ThemedText } from "@/components/ThemedText";
@@ -125,7 +125,7 @@ export default function HomeScreen() {
   return (
     <View style={styles.container}>
       <LinearGradient
-        colors={useTheme().getGradientColors()}
+        colors={[Theme.colors.gradientStart, Theme.colors.gradientEnd]}
         style={styles.gradient}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
