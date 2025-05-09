@@ -56,6 +56,11 @@ export default function StatsScreen() {
           <ThemedText style={styles.chartTitle}>Mood Insights</ThemedText>
           <MoodInsights entries={entries} />
         </View>
+
+        <View style={styles.chartContainer}>
+          <ThemedText style={styles.chartTitle}>Mood Analysis</ThemedText>
+          <MoodAnalysis entries={entries} />
+        </View>
       </LinearGradient>
     </ScrollView>
   );
