@@ -1,5 +1,6 @@
+
 import React, { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { View, StyleSheet, ScrollView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ThemedText } from '@/components/ThemedText';
@@ -19,18 +20,21 @@ export default function StatsScreen() {
 
   const loadEntries = async () => {
     try {
-      const { data: entries, error } = await supabase
+      const { data: { user } } = await supabase.auth.getUser();
+      const { data: entriesData } = await supabase
         .from('entries')
         .select('*')
-        .order('timestamp', { ascending: false });
+        .eq('user_id', user?.id);
 
-      if (error) throw error;
-      setEntries(entries || []);
+      if (entriesData) {
+        setEntries(entriesData);
+      }
     } catch (error) {
       console.error('Error loading entries:', error);
-      // Load from local storage as fallback
       const storedEntries = await AsyncStorage.getItem('journal_entries');
-      setEntries(storedEntries ? JSON.parse(storedEntries) : []);
+      if (storedEntries) {
+        setEntries(JSON.parse(storedEntries));
+      }
     }
   };
 
