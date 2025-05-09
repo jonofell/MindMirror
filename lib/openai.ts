@@ -28,11 +28,7 @@ export async function generateSuggestions(entries: string[], mood: string): Prom
 
     return data?.suggestions || INITIAL_PROMPTS;
   } catch (error) {
-    if (error === 'canceled' || error === 'timedout') {
-      console.log('Request was canceled or timed out');
-    } else {
-      console.error('Error generating suggestions:', error);
-    }
+    console.error('Error generating suggestions:', error);
     return INITIAL_PROMPTS;
   }
 }
